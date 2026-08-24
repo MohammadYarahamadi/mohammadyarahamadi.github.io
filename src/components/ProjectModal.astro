@@ -1,13 +1,15 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
+import DemoSlot from "./DemoSlot.astro";
 
 interface Props {
 	project: CollectionEntry<"projects">;
 }
 
 const { project } = Astro.props;
-const { title, role, tags, period, status, links } = project.data;
+const { title, role, tags, period, status, links, hasDemo, demoComponent } =
+	project.data;
 const { Content } = await render(project);
 ---
 
@@ -34,6 +36,7 @@ const { Content } = await render(project);
 		<div class="modal__body">
 			<Content />
 		</div>
+		{hasDemo && <DemoSlot demoComponent={demoComponent} />}
 		{
 			links && links.length > 0 && (
 				<div class="modal__links">
