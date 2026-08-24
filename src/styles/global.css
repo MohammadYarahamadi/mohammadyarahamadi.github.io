@@ -1,0 +1,73 @@
+/* Reset */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+img,
+picture,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+/* Design tokens */
+:root {
+	--color-bg: #0b0d10;
+	--color-bg-elevated: #14171b;
+	--color-text: #eef1f5;
+	--color-text-muted: #9aa3ad;
+	--color-accent: #5eead4;
+	--color-accent-strong: #2dd4bf;
+	--color-border: #23272c;
+
+	--font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 1rem;
+	--space-4: 1.5rem;
+	--space-5: 2.5rem;
+	--space-6: 4rem;
+
+	--radius: 12px;
+	--max-width: 72rem;
+
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.container {
+	width: 100%;
+	max-width: var(--max-width);
+	margin-inline: auto;
+	padding-inline: var(--space-4);
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
