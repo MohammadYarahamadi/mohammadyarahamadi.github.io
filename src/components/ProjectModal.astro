@@ -52,11 +52,19 @@ const { Content } = await render(project);
 </div>
 
 <style>
+	/* Only declare `display` when the [hidden] attribute is absent — an
+	   author `display` declaration on the base rule would otherwise beat
+	   the browser's built-in `[hidden] { display: none }`, since author
+	   styles win over user-agent styles regardless of specificity. That
+	   left every modal full-screen and invisible, swallowing all clicks. */
+	.modal:not([hidden]) {
+		display: flex;
+	}
+
 	.modal {
 		position: fixed;
 		inset: 0;
 		z-index: 100;
-		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: var(--space-4);
