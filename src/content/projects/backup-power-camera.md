@@ -14,13 +14,13 @@ Built a camera system designed to keep working through power outages — the
 exact scenario where security cameras are most needed and most likely to go
 dark.
 
-## Problem
+### Problem
 
 Most home/small-site camera systems fail the moment mains power (and often
 the local internet/Wi-Fi router) goes down — precisely when they matter
 most.
 
-## Approach
+### Approach
 
 - **Battery backup**: a battery stage that seamlessly takes over powering
   the camera and its controller when mains power is lost, with no gap in
@@ -31,7 +31,7 @@ most.
 - Power-state monitoring so the system can report when it has switched to
   battery, and how much runtime is left
 
-## Outcome
+### Outcome
 
 A camera system that keeps recording and stays remotely reachable through a
 full local power outage — validated during real outages, not just bench

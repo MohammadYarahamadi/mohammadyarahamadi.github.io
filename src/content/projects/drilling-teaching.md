@@ -12,7 +12,7 @@ order: 50
 Built the IoT and software components for a teaching program designed to
 simulate and demonstrate industrial drilling operations for students.
 
-## Scope
+### Scope
 
 - Sensor instrumentation to represent drilling parameters (e.g. depth,
   pressure, or rotational speed, depending on the simulated scenario)
@@ -21,7 +21,7 @@ simulate and demonstrate industrial drilling operations for students.
   engineering background
 - Integration between the physical/simulated rig and the software layer
 
-## Outcome
+### Outcome
 
 A working teaching tool that let students see how sensor data maps to
 real drilling operations, bridging the gap between the physical process and

@@ -21,8 +21,18 @@ const projects = defineCollection({
 			)
 			.optional(),
 		hasDemo: z.boolean().default(false),
-		demoComponent: z.string().optional(),
+		// Enumerated rather than a free string so a typo fails the build
+		// instead of silently rendering no demo. Keep in sync with the
+		// components wired up in src/components/DemoSlot.astro.
+		demoComponent: z
+			.enum(["SousVideDashboard", "RovModelViewer", "CameraSystemDiagram"])
+			.optional(),
 		order: z.number().default(0),
+	})
+	.refine((data) => !data.hasDemo || data.demoComponent !== undefined, {
+		message:
+			"hasDemo: true requires a demoComponent — otherwise the card shows a 'Live demo' badge with nothing behind it.",
+		path: ["demoComponent"],
 	}),
 });
 

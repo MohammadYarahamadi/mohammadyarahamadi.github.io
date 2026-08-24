@@ -9,6 +9,25 @@
 
 html {
 	scroll-behavior: smooth;
+	/* Reserve the scrollbar's width so locking body scroll when a modal
+	   opens doesn't shift the whole page sideways. */
+	scrollbar-gutter: stable;
+}
+
+/* Covers card hover lifts, modal transitions, the nav underline and smooth
+   scrolling — the per-component styles don't each need their own guard. */
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
 }
 
 img,

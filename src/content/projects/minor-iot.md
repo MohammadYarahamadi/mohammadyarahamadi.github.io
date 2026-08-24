@@ -3,7 +3,7 @@ title: "Assorted IoT Projects"
 summary: "A handful of smaller IoT builds — sensors, connectivity, and small automations."
 role: "Solo builder"
 tags: ["IoT", "embedded", "hardware"]
-period: "2021–ongoing"
+period: "2021–2023"
 status: "completed"
 hasDemo: false
 order: 40
@@ -13,7 +13,7 @@ A collection of smaller IoT projects built alongside the larger ones on this
 page — quicker builds exploring sensors, connectivity, and small home
 automations.
 
-## Examples
+### Examples
 
 - Sensor nodes reporting environmental data (temperature/humidity) over
   Wi-Fi to a small local dashboard

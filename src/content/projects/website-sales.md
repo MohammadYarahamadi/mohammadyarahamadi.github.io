@@ -13,7 +13,7 @@ Worked on the sales side of a small team that built websites for customers,
 handling outreach, discovery calls, and closing deals for custom website
 builds.
 
-## What this involved
+### What this involved
 
 - Identifying and reaching out to prospective small-business customers
 - Running discovery calls to understand what customers actually needed —
@@ -22,7 +22,7 @@ builds.
   deliver on, and managing expectations through the process
 - Closing deals and maintaining the client relationship through delivery
 
-## Why it matters
+### Why it matters
 
 This is the project on this page that isn't a code artifact — and
 deliberately so. It shaped how I think about building things: understanding

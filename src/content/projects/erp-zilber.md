@@ -15,7 +15,7 @@ software: modeling processes accurately, integrating disparate systems, and
 building backend infrastructure that a business actually depends on day to
 day.
 
-## Focus areas
+### Focus areas
 
 - Backend architecture and integrations between ERP modules and other
   business systems

@@ -9,33 +9,36 @@ export default function SousVideDashboard() {
 	const [history, setHistory] = useState<number[]>(() =>
 		Array(HISTORY_LENGTH).fill(20),
 	);
-	const frame = useRef<number>(0);
+	// The simulated temperature is advanced in a ref rather than inside a
+	// state updater: updaters must be pure, and React double-invokes them in
+	// StrictMode — which with Math.random() and a nested setHistory() call
+	// produced doubled, mismatched history entries.
+	const tempRef = useRef(20);
 
 	useEffect(() => {
 		let last = performance.now();
+		let frame = 0;
 
 		function tick(now: number) {
 			const dt = (now - last) / 1000;
 			last = now;
 
-			setCurrent((prev) => {
-				// Simple approach toward target with a bit of overshoot, like a
-				// loosely-tuned PID loop settling on its setpoint.
-				const error = target - prev;
-				const step = error * Math.min(dt * 0.8, 1);
-				const noise = (Math.random() - 0.5) * 0.05;
-				const next = prev + step + noise;
+			// Simple approach toward target with a bit of overshoot, like a
+			// loosely-tuned PID loop settling on its setpoint.
+			const error = target - tempRef.current;
+			const step = error * Math.min(dt * 0.8, 1);
+			const noise = (Math.random() - 0.5) * 0.05;
+			const next = tempRef.current + step + noise;
 
-				setHistory((h) => [...h.slice(1), next]);
+			tempRef.current = next;
+			setCurrent(next);
+			setHistory((h) => [...h.slice(1), next]);
 
-				return next;
-			});
-
-			frame.current = requestAnimationFrame(tick);
+			frame = requestAnimationFrame(tick);
 		}
 
-		frame.current = requestAnimationFrame(tick);
-		return () => cancelAnimationFrame(frame.current);
+		frame = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(frame);
 	}, [target]);
 
 	const min = 15;

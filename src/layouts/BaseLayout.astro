@@ -23,6 +23,12 @@ const {
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		{/* Scroll-reveal hides content until observed, so it must only apply
+		    when JS is actually running — otherwise a failed script leaves the
+		    whole page blank. Inline and in <head> so it lands before paint. */}
+		<script is:inline>
+			document.documentElement.classList.add("js");
+		</script>
 	</head>
 	<body>
 		<Nav />
@@ -30,9 +36,12 @@ const {
 			<slot />
 		</main>
 		<Footer />
+		{/* Modals live outside <main> so the modal script can mark the page
+		    behind them inert without also disabling the modal itself. */}
+		<slot name="overlays" />
 		<script>
 			import "../scripts/reveal.ts";
-				import "../scripts/modal.ts";
+			import "../scripts/modal.ts";
 		</script>
 	</body>
 </html>

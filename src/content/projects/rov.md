@@ -15,7 +15,7 @@ covering the communication link between the surface station and the ROV, the
 embedded firmware running on the vehicle, and the backend services handling
 telemetry and control.
 
-## My contributions
+### My contributions
 
 - **Networking**: designed and implemented the tethered communication link
   between the topside control station and the ROV, keeping control latency
@@ -25,7 +25,7 @@ telemetry and control.
 - **Backend**: services for logging telemetry, relaying commands, and
   exposing vehicle state to the operator interface
 
-## Outcome
+### Outcome
 
 A functioning ROV capable of controlled underwater navigation with live
 telemetry feedback to the surface operator.
