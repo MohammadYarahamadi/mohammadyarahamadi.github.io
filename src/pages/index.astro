@@ -1,10 +1,19 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import About from "../components/About.astro";
+import Contact from "../components/Contact.astro";
 ---
 
-<BaseLayout title="Portfolio">
+<BaseLayout title="Mohyar — Portfolio">
 	<div id="top"></div>
-	<p class="container" style="padding-block: 4rem;">
-		Scaffold ready — sections coming next.
-	</p>
+	<Hero />
+	<About />
+	<section id="projects" class="container" style="padding-block: 4rem;">
+		<h2 style="font-size: 1.75rem; letter-spacing: -0.01em;">Projects</h2>
+		<p style="color: var(--color-text-muted); margin-top: 0.5rem;">
+			Project cards coming next.
+		</p>
+	</section>
+	<Contact />
 </BaseLayout>
