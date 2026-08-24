@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# 3D source assets — large originals, only the built GLB in public/ is committed
+*.STL
+*.stl
+*.PSD
+*.psd
+tools/out/
