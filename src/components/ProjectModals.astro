@@ -1,0 +1,8 @@
+---
+import { getCollection } from "astro:content";
+import ProjectModal from "./ProjectModal.astro";
+
+const projects = await getCollection("projects");
+---
+
+{projects.map((project) => <ProjectModal project={project} />)}

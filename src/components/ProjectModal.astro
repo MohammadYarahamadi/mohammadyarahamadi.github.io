@@ -1,0 +1,168 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+
+interface Props {
+	project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { title, role, tags, period, status, links } = project.data;
+const { Content } = await render(project);
+---
+
+<div
+	class="modal"
+	id={`modal-${project.id}`}
+	data-project-modal
+	role="dialog"
+	aria-modal="true"
+	aria-labelledby={`modal-title-${project.id}`}
+	hidden
+>
+	<div class="modal__panel">
+		<button class="modal__close" type="button" data-close-modal aria-label="Close">
+			&times;
+		</button>
+		<p class="modal__meta">
+			{status === "ongoing" ? "Current" : period} · {role}
+		</p>
+		<h2 class="modal__title" id={`modal-title-${project.id}`}>{title}</h2>
+		<ul class="modal__tags">
+			{tags.map((tag) => <li>{tag}</li>)}
+		</ul>
+		<div class="modal__body">
+			<Content />
+		</div>
+		{
+			links && links.length > 0 && (
+				<div class="modal__links">
+					{links.map((link) => (
+						<a href={link.url} target="_blank" rel="noopener noreferrer">
+							{link.label} ↗
+						</a>
+					))}
+				</div>
+			)
+		}
+	</div>
+</div>
+
+<style>
+	.modal {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-4);
+		background: rgba(0, 0, 0, 0.6);
+		opacity: 0;
+		transition: opacity 0.2s var(--ease-out);
+	}
+
+	.modal[data-open] {
+		opacity: 1;
+	}
+
+	.modal__panel {
+		position: relative;
+		max-width: 40rem;
+		width: 100%;
+		max-height: 85vh;
+		overflow-y: auto;
+		background: var(--color-bg-elevated);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		padding: var(--space-5);
+		transform: translateY(12px) scale(0.98);
+		transition: transform 0.2s var(--ease-out);
+	}
+
+	.modal[data-open] .modal__panel {
+		transform: none;
+	}
+
+	.modal__close {
+		position: absolute;
+		top: var(--space-3);
+		right: var(--space-3);
+		background: none;
+		border: none;
+		color: var(--color-text-muted);
+		font-size: 1.5rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.modal__close:hover,
+	.modal__close:focus-visible {
+		color: var(--color-text);
+	}
+
+	.modal__meta {
+		color: var(--color-accent);
+		font-weight: 600;
+		font-size: 0.875rem;
+	}
+
+	.modal__title {
+		font-size: 1.75rem;
+		letter-spacing: -0.01em;
+		margin-top: var(--space-1);
+	}
+
+	.modal__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+		list-style: none;
+		margin-top: var(--space-2);
+	}
+
+	.modal__tags li {
+		font-size: 0.75rem;
+		color: var(--color-text-muted);
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		padding: 0.15rem 0.55rem;
+	}
+
+	.modal__body {
+		margin-top: var(--space-4);
+		color: var(--color-text-muted);
+		line-height: 1.7;
+	}
+
+	.modal__body :global(h2) {
+		color: var(--color-text);
+		font-size: 1.125rem;
+		margin-top: var(--space-4);
+		margin-bottom: var(--space-2);
+	}
+
+	.modal__body :global(ul) {
+		padding-left: 1.25rem;
+		margin-top: var(--space-2);
+	}
+
+	.modal__body :global(p) {
+		margin-top: var(--space-2);
+	}
+
+	.modal__links {
+		display: flex;
+		gap: var(--space-3);
+		margin-top: var(--space-4);
+	}
+
+	.modal__links a {
+		color: var(--color-accent);
+		font-weight: 600;
+	}
+
+	.modal__links a:hover {
+		text-decoration: underline;
+	}
+</style>
