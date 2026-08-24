@@ -3,13 +3,20 @@ import type { CollectionEntry } from "astro:content";
 
 interface Props {
 	project: CollectionEntry<"projects">;
+	index?: number;
 }
 
-const { project } = Astro.props;
+const { project, index = 0 } = Astro.props;
 const { title, summary, role, tags, period, status, hasDemo } = project.data;
+const revealDelay = `${Math.min(index, 6) * 60}ms`;
 ---
 
-<article class="card" data-reveal data-project-id={project.id}>
+<article
+	class="card"
+	data-reveal
+	data-project-id={project.id}
+	style={`--reveal-delay: ${revealDelay}`}
+>
 	<div class="card__top">
 		<span class={`badge ${status === "ongoing" ? "badge--ongoing" : ""}`}>
 			{status === "ongoing" ? "Current" : period}

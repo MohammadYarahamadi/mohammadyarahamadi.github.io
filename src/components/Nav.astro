@@ -52,12 +52,32 @@ const links = [
 	}
 
 	.nav__links a {
+		position: relative;
+		display: inline-block;
 		color: var(--color-text-muted);
 		transition: color 0.2s var(--ease-out);
+	}
+
+	.nav__links a::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 100%;
+		height: 1px;
+		background: var(--color-accent);
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.25s var(--ease-out);
 	}
 
 	.nav__links a:hover,
 	.nav__links a:focus-visible {
 		color: var(--color-text);
+	}
+
+	.nav__links a:hover::after,
+	.nav__links a:focus-visible::after {
+		transform: scaleX(1);
 	}
 </style>
