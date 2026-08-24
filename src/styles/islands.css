@@ -49,3 +49,107 @@
 	font-size: 0.8125rem;
 	margin-top: 0.5rem;
 }
+
+.demo__button--ghost {
+	background: none;
+	border: 1px solid #23272c;
+	color: #9aa3ad;
+}
+
+.demo__button--ghost:hover {
+	background: none;
+	border-color: #5eead4;
+	color: #eef1f5;
+}
+
+/* --- 3D viewport ------------------------------------------------------- */
+.demo__viewport {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 16 / 10;
+	margin-top: 0.75rem;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #0f1216;
+}
+
+.demo__viewport canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.demo__poster {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.demo__pins {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+/* Pins are positioned by rovScene.ts writing transform directly, so they need
+   to start at the origin of the viewport rather than in normal flow. */
+.demo__pin {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.15rem 0.5rem 0.15rem 0.15rem;
+	background: rgba(15, 18, 22, 0.82);
+	border: 1px solid #23272c;
+	border-radius: 999px;
+	color: #9aa3ad;
+	font: inherit;
+	font-size: 0.75rem;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.demo__pin:hover,
+.demo__pin:focus-visible {
+	border-color: #5eead4;
+	color: #eef1f5;
+}
+
+.demo__pin[aria-pressed="true"] {
+	border-color: #5eead4;
+	color: #04211c;
+	background: #5eead4;
+}
+
+.demo__pin-dot {
+	display: grid;
+	place-items: center;
+	width: 1.25rem;
+	height: 1.25rem;
+	border-radius: 999px;
+	background: #5eead4;
+	color: #04211c;
+	font-weight: 700;
+	font-size: 0.7rem;
+}
+
+.demo__pin[aria-pressed="true"] .demo__pin-dot {
+	background: #04211c;
+	color: #5eead4;
+}
+
+.demo__overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	background: rgba(11, 13, 16, 0.72);
+	color: #eef1f5;
+	font-size: 0.875rem;
+}
