@@ -88,6 +88,95 @@ function camKey(d: number) {
 
 const AXES = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] } as const;
 
+// The team's livery: a navy-grey hull with white and blue speed stripes that
+// fan out from behind the tail across the top and the slanted sides, and
+// black thrusters. Stripe bands are fractions of the fan's outer edge (the
+// hull's widest point at the front), measured outward from the centre line.
+const LIVERY = {
+	hull: 0x6ea8dc, // lighter than the stripe blue
+	white: 0xe8edf1,
+	blue: 0x1f7ad1,
+	thruster: 0x1b1f24,
+	hardware: 0x2a3038,
+	apexBehind: 0.18, // fan origin, as a fraction of hull length behind the tail
+	start: 0.08, // stripes begin this far (fraction of length) from the tail
+	bands: [
+		[0, 0.17, "white"],
+		[0.17, 0.26, "blue"],
+		[0.62, 0.72, "white"],
+		[0.72, 0.82, "blue"],
+	] as const,
+};
+
+/** Paint the livery: stripes are computed per pixel from the top-down
+ *  position, because the hull has no UVs and its big flat faces are only a
+ *  few triangles (vertex colours would smear). Only the top deck and the
+ *  sloped sides get stripes; walls and brackets stay plain. */
+function paintLivery(nodes: Record<string, Object3D>) {
+	const dark = (hex: number, roughness = 0.45) =>
+		new MeshStandardMaterial({ color: hex, roughness, metalness: 0.3 });
+	for (const [name, node] of Object.entries(nodes)) {
+		const mat = name.startsWith("thruster_") || name.startsWith("prop_")
+			? dark(LIVERY.thruster)
+			: name === "hardware"
+				? dark(LIVERY.hardware, 0.6)
+				: null;
+		if (mat) node.traverse((o) => { if ((o as Mesh).isMesh) (o as Mesh).material = mat; });
+	}
+
+	const hull = nodes.hull as Mesh | undefined;
+	if (!hull?.isMesh) return;
+	const box = new Box3().setFromObject(hull);
+	const len = box.max.x - box.min.x;
+	const apexX = box.min.x - LIVERY.apexBehind * len;
+	const apexZ = (box.min.z + box.max.z) / 2;
+	const spread = (box.max.z - apexZ) / (box.max.x - apexX);
+	const white = new Color(LIVERY.white);
+	const blue = new Color(LIVERY.blue);
+
+	const mat = new MeshStandardMaterial({ color: LIVERY.hull, roughness: 0.5, metalness: 0.15 });
+	mat.onBeforeCompile = (shader) => {
+		shader.uniforms.uApex = { value: [apexX, apexZ] };
+		shader.uniforms.uSpread = { value: spread };
+		shader.uniforms.uStart = { value: box.min.x + LIVERY.start * len };
+		shader.uniforms.uTopY = { value: box.max.y };
+		shader.uniforms.uWhite = { value: white };
+		shader.uniforms.uBlue = { value: blue };
+		shader.vertexShader = shader.vertexShader
+			.replace("#include <common>", "#include <common>\nvarying vec3 vLivPos;\nvarying vec3 vLivN;")
+			.replace(
+				"#include <project_vertex>",
+				"#include <project_vertex>\nvLivPos = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvLivN = normalize(mat3(modelMatrix) * objectNormal);",
+			);
+		const band = (a: number, b: number) =>
+			`(smoothstep(${a.toFixed(3)} - aa, ${a.toFixed(3)} + aa, t) - smoothstep(${b.toFixed(3)} - aa, ${b.toFixed(3)} + aa, t))`;
+		const mix = LIVERY.bands
+			.map(([a, b, c]) => `col = mix(col, ${c === "white" ? "uWhite" : "uBlue"}, ${band(a, b)});`)
+			.join("\n");
+		shader.fragmentShader = shader.fragmentShader
+			.replace(
+				"#include <common>",
+				"#include <common>\nvarying vec3 vLivPos;\nvarying vec3 vLivN;\nuniform vec2 uApex;\nuniform float uSpread;\nuniform float uStart;\nuniform float uTopY;\nuniform vec3 uWhite;\nuniform vec3 uBlue;",
+			)
+			.replace(
+				"#include <color_fragment>",
+				`#include <color_fragment>
+				vec3 livN = normalize(vLivN);
+				// sloped faces and the top deck only: the front thrusters' flat
+				// mounting brackets sit lower and stay plain
+				bool deck = livN.y < 0.95 || vLivPos.y > uTopY - 0.01;
+				if (livN.y > 0.3 && deck && vLivPos.x > uStart) {
+					float t = abs(vLivPos.z - uApex.y) / max(vLivPos.x - uApex.x, 1e-4) / uSpread;
+					float aa = fwidth(t) * 0.75;
+					vec3 col = diffuseColor.rgb;
+					${mix}
+					diffuseColor.rgb = col;
+				}`,
+			);
+	};
+	hull.material = mat;
+}
+
 /** A light shaft: an open cone whose vertex colour fades from the lens out. */
 function beamMesh(radius: number, length: number, spread: number) {
 	const geo = new CylinderGeometry(spread, radius, length, 32, 8, true); // top = far end
@@ -166,6 +255,7 @@ export async function startScene({ stage, status, gauge, depth }: SceneOpts) {
 	const centre = box.getCenter(new Vector3());
 	const radius = box.getSize(new Vector3()).length() / 2;
 	const nodes = Object.fromEntries(model.children.map((n) => [n.name, n]));
+	paintLivery(nodes);
 
 	// ---- acrylic covers: clear, drawn after the solids ----
 	model.traverse((o) => {

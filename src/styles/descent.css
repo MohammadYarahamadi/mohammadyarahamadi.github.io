@@ -86,8 +86,8 @@ body.descent {
 .stage.live canvas { opacity: 1; }
 .stage__poster {
 	position: absolute; inset: 0; margin: auto; width: min(100%, 560px); height: auto; max-height: 70%;
-	object-fit: contain; border-radius: 10px; opacity: .9; transition: opacity .6s ease;
-	mix-blend-mode: screen;
+	/* transparent render of the painted model; shown until the 3D is live */
+	object-fit: contain; transition: opacity .6s ease;
 }
 .stage.live .stage__poster { opacity: 0; }
 .stage__cap {
