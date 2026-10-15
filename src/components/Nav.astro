@@ -1,14 +1,15 @@
 ---
 const links = [
-	{ href: "#about", label: "About" },
-	{ href: "#projects", label: "Projects" },
-	{ href: "#contact", label: "Contact" },
+	// Root-relative so the links also work from project pages.
+	{ href: "/#about", label: "About" },
+	{ href: "/#projects", label: "Projects" },
+	{ href: "/#contact", label: "Contact" },
 ];
 ---
 
 <header class="nav">
 	<div class="container nav__inner">
-		<a href="#top" class="nav__brand">Portfolio</a>
+		<a href="/#top" class="nav__brand">Portfolio</a>
 		<nav aria-label="Primary">
 			<ul class="nav__links">
 				{

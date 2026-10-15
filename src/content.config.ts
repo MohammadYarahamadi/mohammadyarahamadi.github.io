@@ -25,8 +25,11 @@ const projects = defineCollection({
 		// instead of silently rendering no demo. Keep in sync with the
 		// components wired up in src/components/DemoSlot.astro.
 		demoComponent: z
-			.enum(["SousVideDashboard", "RovModelViewer", "CameraSystemDiagram"])
+			.enum(["SousVideDashboard", "CameraSystemDiagram"])
 			.optional(),
+		// A project with its own page links there from its card instead of
+		// opening a modal (e.g. the ROV's scroll story at /projects/rov/).
+		page: z.string().optional(),
 		order: z.number().default(0),
 	})
 	.refine((data) => !data.hasDemo || data.demoComponent !== undefined, {

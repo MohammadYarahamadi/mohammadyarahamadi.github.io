@@ -10,7 +10,7 @@
  * count and blow the size budget.
  *
  * Usage:
- *   node tools/build_glb.mjs [--tris 70000] [--out public/models/rov-v1.glb]
+ *   node tools/build_glb.mjs [--out public/models/rov-v2.glb] [--dump <stem>]
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -24,7 +24,7 @@ const argOf = (k, d) => {
   const i = args.indexOf(k);
   return i >= 0 ? args[i + 1] : d;
 };
-const OUT = argOf("--out", "public/models/rov-v1.glb");
+const OUT = argOf("--out", "public/models/rov-v2.glb");
 const DUMP = argOf("--dump", "");
 const NORMAL_ANGLE = Math.cos((42 * Math.PI) / 180);
 
@@ -33,10 +33,13 @@ const NORMAL_ANGLE = Math.cos((42 * Math.PI) / 180);
 // flat panels decimate to almost nothing anyway, and starves the small but
 // geometrically dense thrusters that the viewer actually looks at.
 const TARGETS = {
-  frame: 14000,
-  enclosure: 7000,
-  thruster: 4200, // each
-  prop: 3000,     // each — animated focal point
+  hull: 14000,
+  thruster_5: 6000, // the ducted front pair: duct, struts and mount bracket
+  thruster_6: 6000,
+  thruster: 4200,   // each
+  prop: 3000,       // each — animated focal point
+  led: 900,         // acrylic covers: plain cylinders
+  camera: 1200,
   hardware: 7000,
 };
 const targetFor = (name) => {
@@ -54,6 +57,19 @@ function surfaceArea(pos, idx) {
     a += 0.5 * Math.hypot(cx, cy, cz);
   }
   return a;
+}
+
+/** Rotate packed xyz triples in place by unit quaternion q = [x, y, z, w]. */
+function rotateAll(arr, q) {
+  const [qx, qy, qz, qw] = q;
+  for (let i = 0; i < arr.length; i += 3) {
+    const x = arr[i], y = arr[i + 1], z = arr[i + 2];
+    // t = 2 * cross(q.xyz, v); v' = v + w * t + cross(q.xyz, t)
+    const tx = 2 * (qy * z - qz * y), ty = 2 * (qz * x - qx * z), tz = 2 * (qx * y - qy * x);
+    arr[i] = x + qw * tx + (qy * tz - qz * ty);
+    arr[i + 1] = y + qw * ty + (qz * tx - qx * tz);
+    arr[i + 2] = z + qw * tz + (qx * ty - qy * tx);
+  }
 }
 
 /** Drop vertices no longer referenced after simplification. */
@@ -150,6 +166,10 @@ async function main() {
     .setBaseColorFactor([0.62, 0.68, 0.72, 1]).setMetallicFactor(0.15).setRoughnessFactor(0.55);
   const matAccent = doc.createMaterial("accent")
     .setBaseColorFactor([0.37, 0.92, 0.83, 1]).setMetallicFactor(0.25).setRoughnessFactor(0.4);
+  // The LED and camera covers were clear acrylic.
+  const matAcrylic = doc.createMaterial("acrylic")
+    .setBaseColorFactor([0.86, 0.94, 0.98, 0.22]).setAlphaMode("BLEND")
+    .setMetallicFactor(0).setRoughnessFactor(0.06);
 
   let before = 0, after = 0;
   const dumped = [];
@@ -182,13 +202,20 @@ async function main() {
       for (let i = 0; i < fpos.length; i += 3) {
         fpos[i] -= px; fpos[i + 1] -= py; fpos[i + 2] -= pz;
       }
+      // An angled prop is stored in its pivot's local frame, whose +Y is the
+      // real spin axis: undo the node rotation on the geometry here.
+      if (g.rot) {
+        const inv = [-g.rot[0], -g.rot[1], -g.rot[2], g.rot[3]];
+        rotateAll(fpos, inv);
+        rotateAll(fnrm, inv);
+      }
     }
 
     const prim = doc.createPrimitive()
       .setAttribute("POSITION", doc.createAccessor().setType("VEC3").setArray(fpos).setBuffer(buffer))
       .setAttribute("NORMAL", doc.createAccessor().setType("VEC3").setArray(fnrm).setBuffer(buffer))
       .setIndices(doc.createAccessor().setType("SCALAR").setArray(fidx).setBuffer(buffer))
-      .setMaterial(g.axis ? matAccent : matBody);
+      .setMaterial(g.axis ? matAccent : g.role ? matAcrylic : matBody);
 
     const mesh = doc.createMesh(g.name).addPrimitive(prim);
     if (g.axis) {
@@ -200,8 +227,14 @@ async function main() {
       const pivot = doc.createNode(g.name)
         .setTranslation(g.pivot)
         .setExtras({ spinAxis: g.axis, spinSign: g.sign });
+      if (g.rot) pivot.setRotation(g.rot);
       pivot.addChild(doc.createNode(`${g.name}_mesh`).setMesh(mesh));
       scene.addChild(pivot);
+    } else if (g.role) {
+      // Covers carry where their emitter/lens sits so the runtime can place
+      // the LED light and camera without hardcoded coordinates.
+      scene.addChild(doc.createNode(g.name).setMesh(mesh)
+        .setExtras({ role: g.role, base: g.base, tip: g.tip, radius: g.radius }));
     } else {
       scene.addChild(doc.createNode(g.name).setMesh(mesh));
     }

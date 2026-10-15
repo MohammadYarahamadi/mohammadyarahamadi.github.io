@@ -4,7 +4,10 @@
 Does the geometry work that needs the part topology:
   - drops the 40 battery cells (53% of the triangles, sealed inside the hull)
   - detects each thruster's axis of revolution and splits it into a static
-    half and a rotating propeller half
+    half and a rotating propeller half; the two angled, ducted front
+    thrusters get a free axis (one of them is pulled out of the hull, where
+    the CAD export welded it)
+  - separates the acrylic LED and camera covers on the front panel
   - joins the remaining small bodies into one "hardware" group to keep the
     draw-call count down
   - centres the assembly and scales it so its longest dimension is 1.0
@@ -28,9 +31,24 @@ CACHE = "tools/out/parts.pkl"
 OUT_DIR = "tools/out"
 
 BATTERY_TRIS = 23800   # 40 identical 21700 cells
-THRUSTER_TRIS = 91066  # 4 identical thruster assemblies
-FRAME_TRIS = 177681
-ENCLOSURE_TRIS = 163819
+THRUSTER_TRIS = 91066  # 4 identical thruster assemblies (rear + mid)
+HULL_TRIS = 177681     # hull shell; one front thruster is welded into it
+FRONT_THRUSTER_TRIS = 163819  # the free front thruster; its mirror twin is in the hull
+CAMERA_TRIS = 4590     # the camera's acrylic cover, front centre
+
+# The front panel sits at x = 680.4 mm; the two LED covers stand 17 mm proud
+# of it, either side of the camera. Hull triangles in front of this plane and
+# inside the panel's z band are the LED covers.
+LED_FRONT_X = 681.0
+PANEL_Z = (150.0, 415.0)
+
+# Blade band of the ducted front thrusters, measured on the model in mm:
+# radius from the hub (16.5) to just inside the duct throat (34.5), and the
+# axial span of the blades relative to the assembly's vertex centroid. The
+# struts and duct wall also fall in this band but form separate welded
+# components, which is how they are told apart from the three blades.
+BLADE_R = (16.5, 34.5)
+BLADE_T = (-6.0, 21.0)
 
 # Axial offset (mm from the thruster centroid, along its own axis) separating
 # the rotating propeller from the static motor body. Verified by rendering:
@@ -112,6 +130,133 @@ def split_thruster(verts, tris, idx, ax):
     return static, prop, ctr, sign, max(rmax_pos, rmax_neg)
 
 
+def vertex_points(verts, tris, idx):
+    seen = set()
+    for i in idx:
+        for k in range(3):
+            seen.add(tris[i * 3 + k])
+    return [(verts[v * 3], verts[v * 3 + 1], verts[v * 3 + 2]) for v in seen]
+
+
+def enclosing_axis(points):
+    """Axis of a solid of revolution that isn't aligned to x/y/z: the
+    direction about which the points' maximum radius is smallest (a duct seen
+    end-on is a circle; from any other angle it looks wider). Coarse grid
+    over the hemisphere, then a fine pass around the best cell."""
+    n = len(points)
+    c = [sum(p[k] for p in points) / n for k in range(3)]
+    q = [(p[0] - c[0], p[1] - c[1], p[2] - c[2]) for p in points[:: max(1, n // 6000)]]
+
+    def unit(el, az):
+        e, a = math.radians(el), math.radians(az)
+        return (math.cos(e) * math.cos(a), math.sin(e), math.cos(e) * math.sin(a))
+
+    def score(ax):
+        m = 0.0
+        for x, y, z in q:
+            t = x * ax[0] + y * ax[1] + z * ax[2]
+            r2 = x * x + y * y + z * z - t * t
+            if r2 > m:
+                m = r2
+        return m
+
+    best = min((score(unit(el, az)), el, az)
+               for el in range(-90, 91, 3) for az in range(0, 180, 3))
+    _s, el0, az0 = best
+    best = min((score(unit(el0 + i * 0.25, az0 + j * 0.25)), el0 + i * 0.25, az0 + j * 0.25)
+               for i in range(-12, 13) for j in range(-12, 13))
+    return unit(best[1], best[2]), c
+
+
+def axial_radial(p, ax, c):
+    x, y, z = p[0] - c[0], p[1] - c[1], p[2] - c[2]
+    t = x * ax[0] + y * ax[1] + z * ax[2]
+    return t, math.sqrt(max(0.0, x * x + y * y + z * z - t * t))
+
+
+def extract_mirror_twin(verts, tris, src, host, ax, ctr, z_sum):
+    """Pull the mirror image (across z = z_sum/2) of thruster `src` out of
+    the `host` part it was welded into. The CAD re-tessellated the copy, so
+    vertices don't match exactly; instead keep host triangles that lie
+    inside src's radial profile (max radius per 2 mm along the axis),
+    mirrored. What's left over is the mounting bracket, which stays in the
+    host."""
+    prof = {}
+    for p in vertex_points(verts, tris, src):
+        t, r = axial_radial(p, ax, ctr)
+        b = round(t / 2) * 2
+        prof[b] = max(prof.get(b, 0.0), r)
+    tmin, tmax = min(prof) - 1, max(prof) + 1
+    max_ = (ax[0], ax[1], -ax[2])
+    mctr = (ctr[0], ctr[1], z_sum - ctr[2])
+
+    twin, rest = [], []
+    for i in host:
+        inside = True
+        for k in range(3):
+            vi = tris[i * 3 + k]
+            t, r = axial_radial((verts[vi * 3], verts[vi * 3 + 1], verts[vi * 3 + 2]), max_, mctr)
+            b = round(t / 2) * 2
+            lim = max(prof.get(b, 0.0), prof.get(b - 2, 0.0), prof.get(b + 2, 0.0)) + 1.0
+            if not (tmin <= t <= tmax and r <= lim):
+                inside = False
+                break
+        (twin if inside else rest).append(i)
+    return twin, rest, max_, mctr
+
+
+def welded_components(tris, idx):
+    parent = {}
+
+    def find(a):
+        while parent.setdefault(a, a) != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+
+    for i in idx:
+        for k in (1, 2):
+            ra, rb = find(tris[i * 3]), find(tris[i * 3 + k])
+            if ra != rb:
+                parent[ra] = rb
+    out = defaultdict(list)
+    for i in idx:
+        out[find(tris[i * 3])].append(i)
+    return sorted(out.values(), key=len, reverse=True)
+
+
+def split_ducted(verts, tris, idx, ax, ctr):
+    """Split a ducted front thruster into (static, blades, blade_centroid).
+    The three blades are the large welded components inside BLADE_R/BLADE_T
+    that stay clear of the duct wall; their centroid lies on the spin axis by
+    symmetry, so it is the pivot."""
+    band = []
+    for i in idx:
+        c = [sum(verts[tris[i * 3 + k] * 3 + j] for k in range(3)) / 3 for j in range(3)]
+        t, r = axial_radial(c, ax, ctr)
+        if BLADE_R[0] < r < BLADE_R[1] and BLADE_T[0] <= t <= BLADE_T[1]:
+            band.append(i)
+    blades = []
+    for comp in welded_components(tris, band):
+        if len(comp) < 1000:
+            break
+        rmax = max(axial_radial(p, ax, ctr)[1] for p in vertex_points(verts, tris, comp))
+        if rmax <= BLADE_R[1] - 2.0:  # the duct throat ring reaches the band edge
+            blades.extend(comp)
+    bs = set(blades)
+    pts = vertex_points(verts, tris, blades)
+    pivot = [sum(p[k] for p in pts) / len(pts) for k in range(3)]
+    return [i for i in idx if i not in bs], blades, pivot
+
+
+def quat_from_y(v):
+    """Quaternion (x, y, z, w) rotating +Y onto unit vector v."""
+    # cross((0,1,0), v) = (v.z, 0, -v.x); w = 1 + dot = 1 + v.y
+    x, y, z, w = v[2], 0.0, -v[0], 1.0 + v[1]
+    n = math.sqrt(x * x + y * y + z * z + w * w)
+    return [x / n, y / n, z / n, w / n]
+
+
 def emit(verts, tris, idx):
     """Compact a triangle selection into its own vertex/index arrays."""
     remap = {}
@@ -141,19 +286,40 @@ def main():
         (p for p, c in counts.items() if c == THRUSTER_TRIS),
         key=lambda p: centroid_of(verts, tris, by_part[p])[0],
     )
-    frame = [p for p, c in counts.items() if c == FRAME_TRIS]
-    enclosure = [p for p, c in counts.items() if c == ENCLOSURE_TRIS]
+    hull = [p for p, c in counts.items() if c == HULL_TRIS]
+    front = [p for p, c in counts.items() if c == FRONT_THRUSTER_TRIS]
+    camera = [p for p, c in counts.items() if c == CAMERA_TRIS]
+    if not (hull and front and camera):
+        raise SystemExit("expected hull, front thruster and camera parts; STL changed?")
 
     print("dropping %d battery cells (%d triangles)" % (len(cells), len(cells) * BATTERY_TRIS))
-    print("thrusters: %s" % thrusters)
+    print("thrusters: %s, front: %s" % (thrusters, front))
 
     groups = []
-    used = set(cells) | set(thrusters) | set(frame) | set(enclosure)
+    used = set(cells) | set(thrusters) | set(hull) | set(front) | set(camera)
 
-    if frame:
-        groups.append(("frame", by_part[frame[0]], None))
-    if enclosure:
-        groups.append(("enclosure", by_part[enclosure[0]], None))
+    # --- hull, with the welded-in front thruster and LED covers taken out ---
+    all_mn, all_mx = bbox_of(verts, tris, range(len(part_of_tri)))
+    z_sum = all_mn[2] + all_mx[2]  # the assembly is mirror-symmetric in z
+    f_idx = by_part[front[0]]
+    f_ax, f_ctr = enclosing_axis(vertex_points(verts, tris, f_idx))
+    twin, _bracket, t_ax, t_ctr = extract_mirror_twin(
+        verts, tris, f_idx, by_part[hull[0]], f_ax, f_ctr, z_sum)
+    print("  front thruster axis %s; twin pulled from hull: %d tris (source %d)"
+          % ([round(a, 3) for a in f_ax], len(twin), len(f_idx)))
+    twin_set = set(twin)
+
+    leds = ([], [])
+    hull_idx = []
+    for i in by_part[hull[0]]:
+        if i in twin_set:
+            continue
+        c = [sum(verts[tris[i * 3 + k] * 3 + j] for k in range(3)) / 3 for j in range(3)]
+        if c[0] > LED_FRONT_X and PANEL_Z[0] < c[2] < PANEL_Z[1]:
+            leds[0 if c[2] < z_sum / 2 else 1].append(i)
+        else:
+            hull_idx.append(i)
+    groups.append(("hull", hull_idx, None))
 
     for n, p in enumerate(thrusters, start=1):
         idx = by_part[p]
@@ -165,6 +331,29 @@ def main():
         )
         groups.append(("thruster_%d" % n, static, None))
         groups.append(("prop_%d" % n, prop, {"axis": ax, "pivot": ctr, "sign": sign}))
+
+    # --- the two angled, ducted front thrusters ---
+    # Their axis isn't x/y/z, so the prop's pivot node gets a rotation that
+    # maps its local +Y onto the real axis and the runtime spins local Y.
+    # The twin is a mirror image, so its blades are handed the other way.
+    n = len(thrusters)
+    for idx, ax, ctr, sign in ((f_idx, f_ax, f_ctr, 1.0), (twin, t_ax, t_ctr, -1.0)):
+        n += 1
+        static, blades, pivot = split_ducted(verts, tris, idx, ax, ctr)
+        print("  thruster_%d ducted axis=%s  static=%6d prop=%6d"
+              % (n, [round(a, 3) for a in ax], len(static), len(blades)))
+        groups.append(("thruster_%d" % n, static, None))
+        groups.append(("prop_%d" % n, blades,
+                       {"axis": 1, "pivot": pivot, "sign": sign, "rot": quat_from_y(ax)}))
+
+    # --- acrylic covers: LEDs either side, camera in the middle ---
+    for name, idx, role in (("led_1", leds[0], "led"), ("led_2", leds[1], "led"),
+                            ("camera", by_part[camera[0]], "camera")):
+        mn, mx = bbox_of(verts, tris, idx)
+        cy, cz = (mn[1] + mx[1]) / 2, (mn[2] + mx[2]) / 2
+        print("  %-8s %5d tris  dia %.1f  x %.1f-%.1f" % (name, len(idx), mx[1] - mn[1], mn[0], mx[0]))
+        groups.append((name, idx, {"role": role, "base": [mn[0], cy, cz],
+                                   "tip": [mx[0], cy, cz], "radius": (mx[1] - mn[1]) / 2}))
 
     rest = []
     for p, idx in by_part.items():
@@ -198,10 +387,17 @@ def main():
             "idx_offset": len(idx_blob),
             "index_count": len(I),
         }
-        if meta:
+        if meta and "role" in meta:
+            g["role"] = meta["role"]
+            g["base"] = [(meta["base"][c] - ctr[c]) * scale for c in range(3)]
+            g["tip"] = [(meta["tip"][c] - ctr[c]) * scale for c in range(3)]
+            g["radius"] = meta["radius"] * scale
+        elif meta:
             g["axis"] = "xyz"[meta["axis"]]
             g["sign"] = meta["sign"]
             g["pivot"] = [(meta["pivot"][c] - ctr[c]) * scale for c in range(3)]
+            if "rot" in meta:
+                g["rot"] = meta["rot"]
         manifest["groups"].append(g)
         pos_blob += P.tobytes()
         idx_blob += I.tobytes()

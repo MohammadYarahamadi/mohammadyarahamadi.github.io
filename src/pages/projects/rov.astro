@@ -1,0 +1,158 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/descent.css";
+---
+
+{/* The ROV project as a scroll story: scrolling dives from the surface to the
+    ROV's 30 m maximum depth. Text and figures are plain HTML; the depth
+    gauge, water colour, particles and footage are src/scripts/descent.ts, and
+    the 3D model (src/scripts/descentScene.ts) loads lazily on top. */}
+<BaseLayout
+	title="ROV — Mohyar"
+	description="A tethered ROV I built the control chain for: controller, UDP over Wi-Fi and tether, Raspberry Pi and ESP32 driving six thrusters, down to 30 m."
+	bodyClass="descent"
+>
+	<Fragment slot="head">
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+		/>
+	</Fragment>
+
+	<div class="rays" aria-hidden="true"></div>
+	<video class="deepbg" id="deepbg" src="/media/rov-deep.mp4" poster="/media/rov-deep.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+	<canvas id="particles" aria-hidden="true"></canvas>
+
+	<div class="sky">
+		<svg viewBox="0 0 1200 46" preserveAspectRatio="none" aria-hidden="true">
+			<path d="M0 22 C 100 10, 200 34, 300 22 S 500 10, 600 22 S 800 34, 900 22 S 1100 10, 1200 22 V46 H0 Z"></path>
+		</svg>
+	</div>
+
+	<div class="layout">
+		<div class="story" id="story">
+			<section class="sec" data-depth="0" data-cap="At the surface">
+				<div class="sec__inner" data-reveal>
+					<span class="depth-tag">0 m <span>· Surface</span></span>
+					<h1>ROV</h1>
+					<p class="lede">A tethered underwater vehicle driven with a controller. I built the whole chain, from the controller on the laptop down to the thrusters, and the network that brings the camera video back up.</p>
+					<p class="muted">2022–2023 · Networking, embedded, controls</p>
+					<span class="cue"><i></i>Scroll to dive</span>
+				</div>
+			</section>
+
+			<section class="sec" data-depth="5" data-cap="LEDs switch on automatically in the dark">
+				<div class="sec__inner" data-reveal>
+					<span class="depth-tag">5 m <span>· The vehicle</span></span>
+					<h2>Six thrusters, a camera and two lights</h2>
+					<p class="muted">An operator on the surface drives the ROV with a controller and watches its camera on a laptop. Under the clear acrylic covers on the front sit the IP camera and two LEDs, which switch on by themselves once it gets dark.</p>
+					<dl class="facts">
+						<div><dt>Envelope (CAD)</dt><dd>716 × 550 × 120 mm</dd></div>
+						<div><dt>Thrusters</dt><dd>6</dd></div>
+						<div><dt>Max depth</dt><dd>30 m</dd></div>
+						<div><dt>Control</dt><dd>Bluetooth controller</dd></div>
+						<div><dt>Link</dt><dd>UDP over Wi-Fi + tether</dd></div>
+						<div><dt>On board</dt><dd>Raspberry Pi + ESP32</dd></div>
+						<div><dt>Camera</dt><dd>IP camera, front centre</dd></div>
+						<div><dt>Lights</dt><dd>2 LEDs, automatic</dd></div>
+						<div><dt>Leak sensor</dt><dd>Our own design</dd></div>
+						<div><dt>If it leaks</dt><dd>Surfaces by itself</dd></div>
+					</dl>
+				</div>
+			</section>
+
+			<section class="sec" data-depth="12" data-cap="Camera · front centre, behind acrylic">
+				<div class="sec__inner" data-reveal>
+					<span class="depth-tag">12 m <span>· System overview</span></span>
+					<h2>From the controller to the thrusters</h2>
+					<p class="muted">Commands go down: controller to laptop, over Wi-Fi to the modem buoy, down the tether to a switch inside the ROV, then to the Raspberry Pi. The Pi decodes them and sends PWM values to the ESP32, which drives the thrusters. The camera's video takes the same network back up to the laptop.</p>
+					<figure class="feed">
+						<div class="feed__frame">
+							<video id="feed" src="/media/rov-feed.mp4" poster="/media/rov-feed.jpg" muted loop playsinline preload="metadata" aria-label="Footage from the ROV's camera: a school of fish around a structure's leg, with the tether in view"></video>
+							<span class="feed__tag"><i></i>IP camera · on the laptop</span>
+						</div>
+						<figcaption class="muted">The ROV's own camera: fish around the legs of an offshore platform, with the yellow tether in view.</figcaption>
+					</figure>
+					<svg class="diagram" viewBox="0 0 340 500" role="img" aria-labelledby="diag-t">
+						<title id="diag-t">Control chain: controller, Bluetooth, laptop, Wi-Fi with UDP, modem buoy, tether, network switch, Raspberry Pi, USB serial, ESP32, PWM, six thrusters. The IP camera connects to the switch and its video travels back up to the laptop. A leak sensor of our own design feeds the Raspberry Pi.</title>
+						<defs>
+							<marker id="arr-c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-cmd" d="M0 0 L8 4 L0 8 Z"></path></marker>
+							<marker id="arr-s" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-vid" d="M0 0 L8 4 L0 8 Z"></path></marker>
+							<marker id="arr-v" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-vid" d="M0 0 L8 4 L0 8 Z"></path></marker>
+						</defs>
+						<text class="small" x="0" y="12">SURFACE</text>
+						<rect x="95" y="20" width="150" height="34" rx="6"></rect><text x="170" y="41" text-anchor="middle">Controller</text>
+						<path class="cmd" d="M185 54 V82" marker-end="url(#arr-c)"></path><text class="lbl" x="196" y="72">Bluetooth</text>
+						<rect x="95" y="84" width="150" height="34" rx="6"></rect><text x="170" y="105" text-anchor="middle">Laptop</text>
+						<path class="cmd" d="M185 118 V146" marker-end="url(#arr-c)"></path><text class="lbl" x="196" y="136">Wi-Fi · UDP</text>
+						<path class="vid" d="M155 148 V120" marker-end="url(#arr-v)"></path>
+						<rect x="95" y="148" width="150" height="34" rx="6"></rect><text x="170" y="169" text-anchor="middle">Modem buoy</text>
+						<path class="waterline" d="M0 204 C 40 196, 80 212, 120 204 S 200 196, 240 204 S 320 212, 340 204"></path>
+						<text class="small" x="0" y="222">UNDERWATER</text>
+						<path class="cmd tether" d="M185 182 V246" marker-end="url(#arr-c)"></path><text class="lbl" x="196" y="232">Tether</text>
+						<path class="vid" d="M155 248 V184" marker-end="url(#arr-v)"></path>
+						<rect x="95" y="248" width="150" height="34" rx="6"></rect><text x="170" y="269" text-anchor="middle">Network switch</text>
+						<rect x="0" y="298" width="80" height="34" rx="6"></rect><text x="40" y="319" text-anchor="middle">IP camera</text>
+						<path class="vid" d="M40 298 V272 H93" marker-end="url(#arr-v)"></path>
+						<path class="cmd" d="M185 282 V310" marker-end="url(#arr-c)"></path>
+						<rect x="95" y="312" width="150" height="34" rx="6"></rect><text x="170" y="333" text-anchor="middle">Raspberry Pi</text>
+						<rect x="262" y="312" width="78" height="34" rx="6"></rect><text x="301" y="333" text-anchor="middle">Leak sensor</text>
+						<path class="sig" d="M262 329 H247" marker-end="url(#arr-s)"></path>
+						<path class="cmd" d="M185 346 V374" marker-end="url(#arr-c)"></path><text class="lbl" x="196" y="364">USB serial</text>
+						<rect x="95" y="376" width="150" height="34" rx="6"></rect><text x="170" y="397" text-anchor="middle">ESP32</text>
+						<path class="cmd" d="M185 410 V438" marker-end="url(#arr-c)"></path><text class="lbl" x="196" y="428">PWM</text>
+						<rect x="95" y="440" width="150" height="34" rx="6"></rect><text x="170" y="461" text-anchor="middle">Thrusters ×6</text>
+					</svg>
+					<p class="legend"><b>Orange</b> commands going down · <span class="vid-key">dashed</span> camera video going up</p>
+				</div>
+			</section>
+
+			<section class="sec" data-depth="20" data-cap="Exploded view · 6 thrusters">
+				<div class="sec__inner" data-reveal>
+					<span class="depth-tag">20 m <span>· What I built</span></span>
+					<h2>The whole chain, controller to propeller</h2>
+					<div class="work">
+						<article><h3>Controller &amp; laptop</h3><p class="muted">Reads the controller over Bluetooth and sends the operator's commands as UDP packets.</p></article>
+						<article><h3>Network</h3><p class="muted">A modem buoy at the surface, the tether, and a switch inside the ROV make one IP network. Commands go down it and the camera's video comes back up.</p></article>
+						<article><h3>Raspberry Pi</h3><p class="muted">Receives the UDP commands, decodes them, and sends PWM values to the ESP32 over USB serial.</p></article>
+						<article><h3>ESP32</h3><p class="muted">Turns those values into the PWM signals that drive the six thrusters.</p></article>
+						<article><h3>Leak sensor</h3><p class="muted">We made our own sensor to detect water getting inside the hull. It reports to the Raspberry Pi, and if it detects a leak the ROV automatically rises back to the surface.</p></article>
+					</div>
+				</div>
+			</section>
+
+			<section class="sec" data-depth="30" data-cap="Max depth · 30 m">
+				<div class="sec__inner" data-reveal>
+					<span class="depth-tag">30 m <span>· Outcome</span></span>
+					<h2>Down to 30 metres</h2>
+					<p class="muted">Driven with a controller, with live camera video on the laptop and a leak sensor that brings it back up on its own, taken down to 30 m.</p>
+					<div class="links">
+						<a class="btn" href="#top" data-top>Back to the surface</a>
+						<a class="btn btn--ghost" href="/#projects">All projects</a>
+					</div>
+					<p class="muted">Want to talk about it? <span class="email">mohyar1380@gmail.com</span></p>
+				</div>
+			</section>
+		</div>
+
+		<div class="stage-col" aria-hidden="true">
+			<div class="stage" id="stage">
+				<img class="stage__poster" alt="" src="/models/rov-poster.webp" width="1000" height="640">
+				<span class="stage__status" id="status" role="status">Loading 3D model…</span>
+				<span class="stage__cap" id="cap">At the surface</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="gauge" id="gauge" aria-hidden="true">
+		<div class="gauge__rail"></div>
+		<div class="gauge__marker" id="g-marker"></div>
+		<div class="gauge__read" id="g-read">0.0 m</div>
+	</div>
+</BaseLayout>
+
+<script>
+	import "../../scripts/descent.ts";
+</script>

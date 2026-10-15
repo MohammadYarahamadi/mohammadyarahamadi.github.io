@@ -7,11 +7,14 @@ import Footer from "../components/Footer.astro";
 interface Props {
 	title: string;
 	description?: string;
+	/** Lets a page restyle the body, e.g. a page with its own background. */
+	bodyClass?: string;
 }
 
 const {
 	title,
 	description = "Portfolio of hardware, embedded, and software projects.",
+	bodyClass,
 } = Astro.props;
 ---
 
@@ -29,8 +32,9 @@ const {
 		<script is:inline>
 			document.documentElement.classList.add("js");
 		</script>
+		<slot name="head" />
 	</head>
-	<body>
+	<body class={bodyClass}>
 		<Nav />
 		<main>
 			<slot />

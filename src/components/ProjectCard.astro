@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { project, index = 0 } = Astro.props;
-const { title, summary, role, tags, period, status, hasDemo } = project.data;
+const { title, summary, role, tags, period, status, hasDemo, page } = project.data;
 const revealDelay = `${Math.min(index, 6) * 60}ms`;
 ---
 
@@ -22,6 +22,7 @@ const revealDelay = `${Math.min(index, 6) * 60}ms`;
 			{status === "ongoing" ? "Current" : period}
 		</span>
 		{hasDemo && <span class="badge badge--demo">Live demo</span>}
+		{page && <span class="badge badge--demo">3D story</span>}
 	</div>
 	<h3 class="card__title">{title}</h3>
 	<p class="card__role">{role}</p>
@@ -29,9 +30,17 @@ const revealDelay = `${Math.min(index, 6) * 60}ms`;
 	<ul class="card__tags">
 		{tags.map((tag) => <li>{tag}</li>)}
 	</ul>
-	<button class="card__cta" type="button" data-open-project={project.id}>
-		View details
-	</button>
+	{
+		page ? (
+			<a class="card__cta" href={page}>
+				Explore the project →
+			</a>
+		) : (
+			<button class="card__cta" type="button" data-open-project={project.id}>
+				View details
+			</button>
+		)
+	}
 </article>
 
 <style>

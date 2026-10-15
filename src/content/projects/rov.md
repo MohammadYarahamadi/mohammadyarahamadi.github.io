@@ -1,31 +1,31 @@
 ---
 title: "ROV (Remotely Operated Vehicle)"
-summary: "Networking, embedded firmware, and backend systems for an underwater ROV."
-role: "Networking, embedded, backend"
-tags: ["networking", "embedded", "backend", "robotics"]
+summary: "A tethered underwater vehicle with six thrusters, a camera and two LEDs, driven with a controller down to 30 m."
+role: "Networking, embedded, controls"
+tags: ["networking", "embedded", "robotics", "UDP"]
 period: "2022–2023"
 status: "completed"
-hasDemo: true
-demoComponent: "RovModelViewer"
+page: "/projects/rov/"
 order: 20
 ---
 
-Worked as part of a team building an underwater remotely operated vehicle,
-covering the communication link between the surface station and the ROV, the
-embedded firmware running on the vehicle, and the backend services handling
-telemetry and control.
+A tethered underwater vehicle driven with a controller. I built the whole
+chain, from the controller on the laptop down to the thrusters, and the
+network that brings the camera video back up.
 
-### My contributions
+### How it works
 
-- **Networking**: designed and implemented the tethered communication link
-  between the topside control station and the ROV, keeping control latency
-  low and the link resilient
-- **Embedded programming**: firmware for reading sensors and driving
-  thrusters/actuators in response to control commands
-- **Backend**: services for logging telemetry, relaying commands, and
-  exposing vehicle state to the operator interface
+- **Controller & laptop**: reads the controller over Bluetooth and sends the
+  operator's commands as UDP packets over Wi-Fi to a modem buoy
+- **Network**: the buoy, the tether and a switch inside the ROV form one IP
+  network; commands go down it and the IP camera's video comes back up
+- **Raspberry Pi**: receives the UDP commands, decodes them, and sends PWM
+  values to the ESP32 over USB serial
+- **ESP32**: turns those values into PWM signals for the six thrusters
+- **Leak sensor**: our own design, read by the Raspberry Pi; if water gets
+  inside the hull, the ROV rises back to the surface by itself
 
 ### Outcome
 
-A functioning ROV capable of controlled underwater navigation with live
-telemetry feedback to the surface operator.
+Driven with a controller, with live camera video on the laptop, down to 30 m.
+Two LEDs behind clear acrylic covers switch on automatically once it gets dark.
