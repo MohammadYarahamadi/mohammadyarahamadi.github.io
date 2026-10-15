@@ -190,12 +190,21 @@ async function main() {
       .setIndices(doc.createAccessor().setType("SCALAR").setArray(fidx).setBuffer(buffer))
       .setMaterial(g.axis ? matAccent : matBody);
 
-    const node = doc.createNode(g.name).setMesh(doc.createMesh(g.name).addPrimitive(prim));
+    const mesh = doc.createMesh(g.name).addPrimitive(prim);
     if (g.axis) {
-      node.setTranslation(g.pivot);
-      node.setExtras({ spinAxis: g.axis, spinSign: g.sign });
+      // The spin pivot lives on a parent node, with the mesh on a child.
+      // meshopt's quantization rewrites the translation of whichever node
+      // holds the mesh (to store its dequantization offset, the bbox centre),
+      // and a 3-blade prop's bbox centre is ~5mm off its axis — so a pivot on
+      // the mesh node itself would make every prop orbit eccentrically.
+      const pivot = doc.createNode(g.name)
+        .setTranslation(g.pivot)
+        .setExtras({ spinAxis: g.axis, spinSign: g.sign });
+      pivot.addChild(doc.createNode(`${g.name}_mesh`).setMesh(mesh));
+      scene.addChild(pivot);
+    } else {
+      scene.addChild(doc.createNode(g.name).setMesh(mesh));
     }
-    scene.addChild(node);
   }
 
   console.log(`\ntotal: ${before} -> ${after} triangles`);

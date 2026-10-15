@@ -37,7 +37,8 @@ export interface PinSpec {
 }
 
 export interface SceneOpts {
-	canvas: HTMLCanvasElement;
+	/** Container the scene appends its own <canvas> to (removed on dispose). */
+	stage: HTMLElement;
 	host: HTMLElement;
 	buffer: ArrayBuffer;
 	pins: PinSpec[];
@@ -46,6 +47,7 @@ export interface SceneOpts {
 
 export interface RovScene {
 	setSpin(on: boolean): void;
+	setReducedMotion(on: boolean): void;
 	setActive(id: string | null, view?: [number, number, number]): void;
 	nudge(dir: -1 | 1): void;
 	reset(): void;
@@ -60,8 +62,14 @@ const TWEEN_MS = 520;
 const HOME: [number, number, number] = [0.95, 0.62, 0.95];
 
 export async function createScene(opts: SceneOpts): Promise<RovScene> {
-	const { canvas, host, buffer, pins } = opts;
+	const { stage, host, buffer, pins } = opts;
 	let reducedMotion = opts.reducedMotion;
+
+	// Each scene gets its own canvas. dispose() force-loses the WebGL context,
+	// and a canvas never gets a working context back — so reusing one, or two
+	// overlapping loads sharing one, would leave the rebuilt viewer broken.
+	const canvas = document.createElement("canvas");
+	stage.appendChild(canvas);
 
 	const renderer = new WebGLRenderer({
 		canvas,
@@ -94,9 +102,16 @@ export async function createScene(opts: SceneOpts): Promise<RovScene> {
 
 	const loader = new GLTFLoader();
 	loader.setMeshoptDecoder(MeshoptDecoder);
-	const gltf = await new Promise<any>((res, rej) =>
-		loader.parse(buffer, "", res, rej),
-	);
+	let gltf: any;
+	try {
+		gltf = await new Promise<any>((res, rej) => loader.parse(buffer, "", res, rej));
+	} catch (e) {
+		// Nothing else holds the renderer or canvas yet, so release them here.
+		renderer.dispose();
+		renderer.forceContextLoss();
+		canvas.remove();
+		throw e;
+	}
 	const model: Object3D = gltf.scene;
 	scene.add(model);
 
@@ -127,7 +142,8 @@ export async function createScene(opts: SceneOpts): Promise<RovScene> {
 	controls.minDistance = radius * 0.8;
 	controls.maxDistance = radius * 5;
 	controls.target.copy(centre);
-	camera.position.copy(centre).add(new Vector3(...HOME).multiplyScalar(radius * 1.6));
+	const homeDistance = new Vector3(...HOME).length() * radius * 1.6;
+	camera.position.copy(centre).add(new Vector3(...HOME).normalize().multiplyScalar(homeDistance));
 	controls.update();
 
 	// ---- render scheduling ------------------------------------------------
@@ -226,8 +242,10 @@ export async function createScene(opts: SceneOpts): Promise<RovScene> {
 	};
 	canvas.addEventListener("webglcontextlost", onLost);
 
-	function flyTo(dir: [number, number, number]) {
-		const to = new Vector3(...dir).normalize().multiplyScalar(camera.position.distanceTo(controls.target));
+	/** Fly to a viewing direction; keeps the current zoom unless `dist` is given. */
+	function flyTo(dir: [number, number, number], dist?: number) {
+		const d = dist ?? camera.position.distanceTo(controls.target);
+		const to = new Vector3(...dir).normalize().multiplyScalar(d);
 		to.add(controls.target);
 		if (reducedMotion) {
 			camera.position.copy(to);
@@ -244,6 +262,13 @@ export async function createScene(opts: SceneOpts): Promise<RovScene> {
 		setSpin(on) {
 			spinning = on && !reducedMotion;
 			if (spinning) invalidate();
+		},
+		setReducedMotion(on) {
+			reducedMotion = on;
+			if (on) {
+				spinning = false;
+				tween = null;
+			}
 		},
 		setActive(id, view) {
 			for (const m of meshes) {
@@ -267,7 +292,7 @@ export async function createScene(opts: SceneOpts): Promise<RovScene> {
 			invalidate();
 		},
 		reset() {
-			flyTo(HOME);
+			flyTo(HOME, homeDistance);
 		},
 		resize,
 		pause() {
@@ -306,6 +331,7 @@ export async function createScene(opts: SceneOpts): Promise<RovScene> {
 			// Astro never unmounts islands, so without an explicit context loss
 			// the GPU allocation would outlive the modal for the page's lifetime.
 			renderer.forceContextLoss();
+			canvas.remove();
 		},
 	};
 }

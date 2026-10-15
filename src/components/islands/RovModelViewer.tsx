@@ -13,7 +13,9 @@ const SUBSYSTEMS = [
 		label: "Tether link",
 		anchor: [0.30, 0.16, 0.0] as [number, number, number],
 		view: [0.55, 0.95, 0.45] as [number, number, number],
-		meshes: ["hardware"],
+		// No highlight: the tether isn't in the model, and "hardware" is the
+		// screws and rails, which would point at the wrong thing.
+		meshes: [],
 		description:
 			"Networked communication link between the surface station and the ROV — carries control commands down and telemetry back up.",
 	},
@@ -68,7 +70,9 @@ async function fetchModel(onProgress: (pct: number) => void, signal: AbortSignal
 		if (done) break;
 		chunks.push(value);
 		got += value.length;
-		onProgress(Math.round((got / total) * 100));
+		// content-length is the compressed size if the server gzips the GLB,
+		// while the stream yields decompressed bytes — so cap it.
+		onProgress(Math.min(100, Math.round((got / total) * 100)));
 	}
 	const out = new Uint8Array(got);
 	let off = 0;
@@ -107,9 +111,12 @@ export default function RovModelViewer() {
 	const [active, setActive] = useState<string | null>(null);
 	const [spin, setSpin] = useState(false);
 	const [err, setErr] = useState("");
+	// Bumped by Retry so the load effect reruns even though nothing else changed.
+	const [attempt, setAttempt] = useState(0);
 
 	const hostRef = useRef<HTMLDivElement>(null);
-	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const stageRef = useRef<HTMLDivElement>(null);
+	const reducedRef = useRef(false);
 	const pinRefs = useRef<(HTMLButtonElement | null)[]>([]);
 	const sceneRef = useRef<RovScene | null>(null);
 	const disposeTimer = useRef<number | undefined>(undefined);
@@ -172,7 +179,7 @@ export default function RovModelViewer() {
 					import("./rovScene"),
 					fetchModel(setProgress, ac.signal),
 				]);
-				if (cancelled || !canvasRef.current || !hostRef.current) return;
+				if (cancelled || !stageRef.current || !hostRef.current) return;
 
 				const pins: PinSpec[] = SUBSYSTEMS.map((s, i) => ({
 					id: s.id,
@@ -182,11 +189,11 @@ export default function RovModelViewer() {
 				})).filter((p) => p.el);
 
 				const sc = await createScene({
-					canvas: canvasRef.current,
+					stage: stageRef.current,
 					host: hostRef.current,
 					buffer,
 					pins,
-					reducedMotion: reduced,
+					reducedMotion: reducedRef.current,
 				});
 				if (cancelled) {
 					sc.dispose();
@@ -218,11 +225,18 @@ export default function RovModelViewer() {
 				setPhase("idle");
 			}, DISPOSE_DELAY_MS);
 		};
-	}, [wantsLive, visible, reduced]);
+	}, [wantsLive, visible, attempt]);
 
 	useEffect(() => {
 		sceneRef.current?.setSpin(spin);
 	}, [spin, phase]);
+
+	// The scene is built once and reads this flag at creation, so keep it in
+	// sync if the visitor changes the OS preference while the page is open.
+	useEffect(() => {
+		reducedRef.current = reduced;
+		sceneRef.current?.setReducedMotion(reduced);
+	}, [reduced, phase]);
 
 	// The canvas only leaves display:none when the phase turns live, so re-measure
 	// once React has painted that — otherwise the first frame sizes against zero.
@@ -284,11 +298,17 @@ export default function RovModelViewer() {
 					<img src={POSTER_URL} alt="Render of the ROV" width={1000} height={640}
 						className="demo__poster" loading="lazy" />
 				)}
-				<canvas ref={canvasRef} aria-hidden="true"
+				{/* rovScene.ts creates its own <canvas> in here and removes it on
+				    dispose. A disposed canvas's WebGL context is force-lost and
+				    never comes back, so no canvas is ever reused or shared. */}
+				<div ref={stageRef} className="demo__stage" aria-hidden="true"
 					style={{ display: phase === "live" ? "block" : "none" }} />
 
+				{/* hidden, not visibility:hidden — modal.ts's focus trap skips
+				    elements with no layout, so unloaded pins can't become its
+				    last stop and let focus escape the modal. */}
 				<div className="demo__pins" role="group" aria-label="ROV subsystems"
-					style={{ visibility: phase === "live" ? "visible" : "hidden" }}>
+					hidden={phase !== "live"}>
 					{SUBSYSTEMS.map((s, i) => (
 						<button key={s.id} type="button" className="demo__pin"
 							ref={(el) => { pinRefs.current[i] = el; }}
@@ -310,7 +330,7 @@ export default function RovModelViewer() {
 					<div className="demo__overlay">
 						<span>Couldn't load the model ({err}).</span>
 						<button className="demo__button" type="button"
-							onClick={() => { setPhase("idle"); setErr(""); }}>
+							onClick={() => { setErr(""); setAttempt((a) => a + 1); }}>
 							Retry
 						</button>
 					</div>

@@ -73,6 +73,11 @@
 	background: #0f1216;
 }
 
+.demo__stage {
+	position: absolute;
+	inset: 0;
+}
+
 .demo__viewport canvas {
 	display: block;
 	width: 100%;

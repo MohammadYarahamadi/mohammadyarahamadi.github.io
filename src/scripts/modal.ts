@@ -22,7 +22,10 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 		container.querySelectorAll<HTMLElement>(
 			'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
 		),
-	);
+		// Skip controls with no layout (display:none, [hidden]): they can't take
+		// focus, and if one ends up first or last the Tab wrap never fires and
+		// focus walks out of the modal.
+	).filter((el) => el.getClientRects().length > 0);
 }
 
 // Hide page content from assistive tech and the tab order while a modal is
