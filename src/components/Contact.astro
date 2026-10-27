@@ -1,11 +1,11 @@
 ---
-const { eyebrow = "08 · Contact" } = Astro.props;
+const { eyebrow = "" } = Astro.props;
 const email = "mohyar1380@gmail.com";
 ---
 
 <section class="j-section contact" id="contact" data-world="plain" data-chapter="08 · Contact" aria-labelledby="contact-title">
 	<div>
-		<p class="eyebrow">{eyebrow}</p>
+		{eyebrow && <p class="eyebrow">{eyebrow}</p>}
 		<h2 id="contact-title">Have hardware that needs a brain?</h2>
 		<p>Projects, teaching, or a question about ESP32s. My inbox is open.</p>
 		<div class="j-actions">
@@ -14,7 +14,7 @@ const email = "mohyar1380@gmail.com";
 				{email}
 			</a>
 			<a class="btn" href="#top">
-				Back to the surface
+				Back to top
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
 			</a>
 		</div>

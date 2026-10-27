@@ -36,6 +36,19 @@ for (const name of ["vibe"]) {
 	}
 }
 
+// "Next project" switches in place instead of reloading the page (the link
+// itself, ?vibe=…#projects, is the no-JS fallback).
+document.querySelector(".d-next")?.addEventListener("click", (e) => {
+	const link = (e.target as Element).closest<HTMLAnchorElement>("a[data-vibe]");
+	const radio = link && document.querySelector<HTMLInputElement>(`#vibe-${link.dataset.vibe}`);
+	if (!radio) return;
+	e.preventDefault();
+	radio.checked = true;
+	radio.dispatchEvent(new Event("change"));
+	document.getElementById("projects")?.scrollIntoView();
+	radio.focus({ preventScroll: true });
+});
+
 // On phones the picker is a sideways-scrolling row: bring the picked chip
 // into view (without scrolling the page itself).
 const chip = document.querySelector('input[name="vibe"]:checked')?.closest("label");

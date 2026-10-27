@@ -1113,7 +1113,7 @@ html:not(.js) .w-web { background: #eef2f6; }
 }
 
 .timeline small {
-	font: 500 11px var(--font-mono);
+	font: 500 13px var(--font-mono);
 	letter-spacing: 0.1em;
 	color: var(--color-accent);
 }

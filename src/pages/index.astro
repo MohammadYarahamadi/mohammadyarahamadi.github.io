@@ -12,11 +12,11 @@ import "../styles/deep.css";
 // (?vibe=), where the whole page takes on the mood. This page stays in the
 // plain welcome colours throughout (data-zone="welcome").
 const doors = [
-	{ id: "rov", tag: "01 · Hardware", title: "ROV", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
-	{ id: "school", tag: "02 · Software", title: "Gamified School", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
-	{ id: "drill", tag: "03 · Simulation", title: "Drilling Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
-	{ id: "iot", tag: "04 · IoT", title: "IoT builds", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
-	{ id: "web", tag: "05 · Web", title: "Web & Enterprise", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
+	{ id: "rov", tag: "Hardware", title: "ROV", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
+	{ id: "school", tag: "Software", title: "Gamified School", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
+	{ id: "drill", tag: "Simulation", title: "Drilling Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
+	{ id: "iot", tag: "IoT", title: "IoT builds", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
+	{ id: "web", tag: "Web", title: "Web & Enterprise", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
 ];
 
 // Decorative particles: position, size, speed and delay per particle.
@@ -50,7 +50,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 	<section class="d-welcome" id="top" aria-labelledby="d-welcome-title">
 		<h1 id="d-welcome-title">Hi, I'm <strong>Mohyar</strong>.</h1>
-		<p class="d-welcome__role">Embedded software engineer · IoT · Web developer</p>
+		<p class="d-welcome__role"><span>Embedded software engineer</span> <span>· IoT</span> <span>· Web developer</span></p>
 		<p class="d-lede">
 			I write the code that makes hardware think, talk and dive: firmware for ESP32 and
 			Raspberry Pi, networked video, and the web apps on top. Here's who I am and what I work
@@ -63,7 +63,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 	</section>
 
 	<div class="j-plain d-plain d-plain--welcome">
-		<About eyebrow="About" />
+		<About />
 		<Skills eyebrow="" title="What I work with" />
 	</div>
 
@@ -93,6 +93,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 	</section>
 
 	<div class="j-plain d-plain">
-		<Contact eyebrow="Contact" />
+		<Contact />
 	</div>
 </BaseLayout>

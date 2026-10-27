@@ -11,11 +11,11 @@ import "../../styles/deep.css";
 // so it works without JS. src/scripts/deep.ts remembers the choice (?vibe=
 // and localStorage), so the homepage's doors can open a given project.
 const vibes = [
-	{ id: "rov", label: "ROV" },
-	{ id: "school", label: "Gamified School" },
-	{ id: "drill", label: "Drilling Simulation" },
-	{ id: "iot", label: "IoT builds" },
-	{ id: "web", label: "Web & Enterprise" },
+	{ id: "rov", label: "ROV", tag: "Hardware", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
+	{ id: "school", label: "Gamified School", tag: "Software", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
+	{ id: "drill", label: "Drilling Simulation", tag: "Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
+	{ id: "iot", label: "IoT builds", tag: "IoT", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
+	{ id: "web", label: "Web & Enterprise", tag: "Web", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
 ];
 
 // The ROV hero card's stack, by layer
@@ -87,14 +87,14 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 		<div class="d-panel d-panel--rov">
 			<div class="d-copy">
-				<h1><strong>ROV</strong> project</h1>
+				<h1><strong>ROV</strong></h1>
 				<p class="d-lede">
 					A tethered underwater vehicle, driven with a controller. I built the chain from the
 					laptop down to six thrusters, and the network that brings the camera back up.
 				</p>
 				<div class="d-actions">
 					<a class="btn btn--primary" href="#dive">Start the dive ↓</a>
-					<a class="btn" href="#work">See all five</a>
+					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
 			<div class="d-visual d-card-spec">
@@ -116,7 +116,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 		<div class="d-panel d-panel--school">
 			<div class="d-copy">
-				<h1><strong>Gamified School</strong> project</h1>
+				<h1><strong>Gamified School</strong></h1>
 				<p class="d-lede">
 					A learning platform I built with AI for the college students I was teaching. Git,
 					Docker, PostgreSQL and system design become quests, with Docker and PostgreSQL
@@ -124,7 +124,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				</p>
 				<div class="d-actions">
 					<button class="btn btn--primary" type="button" data-open-project="gamified-school">Read more</button>
-					<a class="btn" href="#work">See all five</a>
+					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
 			<div class="d-visual d-card-quest" aria-hidden="true">
@@ -137,14 +137,14 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 		<div class="d-panel d-panel--drill">
 			<div class="d-copy">
-				<h1><strong>Drilling Simulation</strong> project</h1>
+				<h1><strong>Drilling Simulation</strong></h1>
 				<p class="d-lede">
 					A physical well-drilling simulator built for a company. ESP32 boards act as the rig's
 					control panels, so trainees work with real panels and controls, not just a screen.
 				</p>
 				<div class="d-actions">
 					<button class="btn btn--primary" type="button" data-open-project="drilling-simulation">Read more</button>
-					<a class="btn" href="#work">See all five</a>
+					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
 			<div class="d-visual d-card-rig" aria-hidden="true">
@@ -165,7 +165,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 		<div class="d-panel d-panel--iot">
 			<div class="d-copy">
-				<h1><strong>IoT</strong> projects</h1>
+				<h1><strong>IoT</strong> builds</h1>
 				<p class="d-lede">
 					A camera that keeps recording through a power cut, a sous vide controller and a smart
 					AC remote, all on ESP32. Two of them have live demos.
@@ -184,14 +184,14 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 		<div class="d-panel d-panel--web">
 			<div class="d-copy">
-				<h1><strong>Web &amp; Enterprise</strong> projects</h1>
+				<h1><strong>Web &amp; Enterprise</strong></h1>
 				<p class="d-lede">
 					Company websites, currently Dealfdi, plus Odoo ERP and CRM. Before that I sold the
 					websites our team built, so I know the client's side of the table.
 				</p>
 				<div class="d-actions">
 					<button class="btn btn--primary" type="button" data-open-project="web-enterprise">Read more</button>
-					<a class="btn" href="#work">See all five</a>
+					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
 			<div class="d-visual d-card-dash" aria-hidden="true">
@@ -311,7 +311,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					</p>
 					<div class="d-actions">
 						<a class="btn btn--primary" href="#dive">Back to the surface ↑</a>
-						<a class="btn" href="#work">See all five</a>
+						<a class="btn" href="#next">Next project ↓</a>
 					</div>
 				</section>
 			</div>
@@ -331,47 +331,23 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 		</div>
 	</section>
 
-	<section class="d-stations" id="work" aria-labelledby="work-title">
-		<div class="d-stations__head">
-			<p class="eyebrow">The work</p>
-			<h2 id="work-title">Five stations</h2>
-		</div>
-		<div class="d-grid">
-			<article class="d-card d-card--rov">
-				<p class="d-card__tag">01 · Hardware</p>
-				<h3>ROV</h3>
-				<p>Controller to thrusters, video back up, and a leak sensor that surfaces it on its own.</p>
-				<a class="d-card__link" href="?vibe=rov#dive">Take the dive ↓</a>
-			</article>
-			<article class="d-card d-card--school">
-				<p class="d-card__tag">02 · Software</p>
-				<h3>Gamified School</h3>
-				<p>Built with AI for my college students: Git, Docker, PostgreSQL and system design as quests.</p>
-				<button class="d-card__link" type="button" data-open-project="gamified-school">Read more →</button>
-			</article>
-			<article class="d-card d-card--drill">
-				<p class="d-card__tag">03 · Simulation</p>
-				<h3>Drilling Simulation</h3>
-				<p>ESP32 boards play the rig's control panels as real hardware, built for a company.</p>
-				<button class="d-card__link" type="button" data-open-project="drilling-simulation">Read more →</button>
-			</article>
-			<article class="d-card d-card--iot">
-				<p class="d-card__tag">04 · IoT</p>
-				<h3>Small builds</h3>
-				<p>Backup-power camera, sous vide controller and a smart AC remote.</p>
-				<button class="d-card__link" type="button" data-open-project="backup-power-camera">Read more →</button>
-			</article>
-			<article class="d-card d-card--web">
-				<p class="d-card__tag">05 · Web</p>
-				<h3>Web &amp; Enterprise</h3>
-				<p>Company websites, Odoo ERP and CRM, and the sales side behind them.</p>
-				<button class="d-card__link" type="button" data-open-project="web-enterprise">Read more →</button>
-			</article>
-		</div>
+	{/* Points on to the project after the picked one; deep.css shows only that card. */}
+	<section class="d-next" id="next" aria-labelledby="next-title">
+		<h2 id="next-title">Next project</h2>
+		{
+			vibes.map((v) => (
+				<a class={`d-card d-card--${v.id}`} href={`?vibe=${v.id}#projects`} data-vibe={v.id}>
+					<span class="d-card__tag">{v.tag}</span>
+					<h3>{v.label}</h3>
+					<p>{v.text}</p>
+					<span class="d-card__link" aria-hidden="true">Open {v.label} →</span>
+				</a>
+			))
+		}
 	</section>
 
 	<div class="j-plain d-plain">
-		<Contact eyebrow="Contact" />
+		<Contact />
 	</div>
 
 	<ProjectModals slot="overlays" />
