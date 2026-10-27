@@ -462,33 +462,96 @@ body.deep {
 	max-width: 560px;
 }
 
-.d-visual--rov img {
-	width: 100%;
-	height: auto;
-	filter: drop-shadow(0 0 40px var(--d-glow-soft));
-	animation: d-bob 6s ease-in-out infinite;
-}
-
-@keyframes d-bob {
-	50% { translate: 0 -10px; }
-}
-
-.d-tags {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 8px;
-	margin-top: 16px;
-	list-style: none;
-}
-
-.d-tags li {
-	padding: 6px 12px;
+/* ROV: a spec sheet (the 3D model lives in the dive below) */
+.d-card-spec {
+	padding: 28px;
 	border: 1px solid var(--color-border);
-	border-radius: 999px;
+	border-radius: 22px;
 	background: var(--d-card);
-	font: 12px var(--font-mono);
+	backdrop-filter: blur(8px);
+	box-shadow: 0 0 80px -20px var(--d-glow-soft);
+}
+
+.d-card-spec__head {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 8px;
+	font: 500 12px var(--font-mono);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
 	color: var(--color-text-muted);
+}
+
+.d-card-spec__live {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--color-accent);
+}
+
+.d-card-spec__live i {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--color-accent);
+	box-shadow: 0 0 12px var(--color-accent);
+	animation: d-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes d-pulse {
+	50% { opacity: 0.35; }
+}
+
+.d-card-spec dl div {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 16px;
+	padding: 14px 0;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.d-card-spec dt {
+	font: 12px var(--font-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+}
+
+.d-card-spec dd {
+	font: 600 17px var(--d-display);
+	text-align: right;
+}
+
+/* a depth bar, surface to 30 m */
+.d-card-spec__depth {
+	height: 6px;
+	margin-top: 20px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+	overflow: hidden;
+}
+
+.d-card-spec__depth i {
+	display: block;
+	height: 100%;
+	width: 100%;
+	border-radius: inherit;
+	background: linear-gradient(90deg, var(--color-accent), #2c7896);
+	transform-origin: left;
+	animation: d-sound 3.2s var(--ease-out) 0.3s both;
+}
+
+@keyframes d-sound {
+	from { transform: scaleX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.d-card-spec__live i,
+	.d-card-spec__depth i {
+		animation: none;
+	}
 }
 
 .d-card-quest {
@@ -1350,11 +1413,6 @@ body.deep {
 
 .d-stage.fallback .d-stage__poster {
 	display: block;
-}
-
-/* The hero has no ROV picture; the 3D model lives in the dive below. */
-.d-visual--rov img {
-	display: none;
 }
 
 /* ---- welcome ----

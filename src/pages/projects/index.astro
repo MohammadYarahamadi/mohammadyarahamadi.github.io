@@ -88,13 +88,15 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					<a class="btn" href="#work">See all five</a>
 				</div>
 			</div>
-			<div class="d-visual d-visual--rov">
-				<img src="/models/rov-poster.webp" alt="3D render of the ROV" width="1000" height="640" />
-				<ul class="d-tags">
-					<li>Raspberry Pi + ESP32</li>
-					<li>UDP over Wi-Fi + tether</li>
-					<li>Max depth 30 m</li>
-				</ul>
+			<div class="d-visual d-card-spec">
+				<div class="d-card-spec__head"><span>ROV · Spec sheet</span><span class="d-card-spec__live"><i aria-hidden="true"></i>Online</span></div>
+				<dl>
+					<div><dt>On board</dt><dd>Raspberry Pi + ESP32</dd></div>
+					<div><dt>Link</dt><dd>UDP over Wi-Fi + tether</dd></div>
+					<div><dt>Thrusters</dt><dd>6</dd></div>
+					<div><dt>Max depth</dt><dd>30 m</dd></div>
+				</dl>
+				<div class="d-card-spec__depth" aria-hidden="true"><i></i></div>
 			</div>
 		</div>
 
