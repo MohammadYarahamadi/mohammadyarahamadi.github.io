@@ -786,7 +786,7 @@ body.deep {
 }
 
 /* ---- next project ----
-   One card after the picked project, pointing to the next one (web wraps
+   One card after the picked project, pointing to the next one (IoT wraps
    round to the ROV). */
 .d-next {
 	max-width: 84rem;
@@ -868,12 +868,12 @@ body.deep {
 	text-decoration: none;
 }
 
-:root:has(#vibe-rov:checked) .d-card--school,
-:root:not(:has(input[name="vibe"]:checked)) .d-next .d-card--school,
+:root:has(#vibe-rov:checked) .d-card--web,
+:root:not(:has(input[name="vibe"]:checked)) .d-next .d-card--web,
+:root:has(#vibe-web:checked) .d-card--school,
 :root:has(#vibe-school:checked) .d-card--drill,
 :root:has(#vibe-drill:checked) .d-card--iot,
-:root:has(#vibe-iot:checked) .d-card--web,
-:root:has(#vibe-web:checked) .d-card--rov {
+:root:has(#vibe-iot:checked) .d-card--rov {
 	display: flex;
 }
 
