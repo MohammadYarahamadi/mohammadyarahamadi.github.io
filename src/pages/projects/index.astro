@@ -18,6 +18,13 @@ const vibes = [
 	{ id: "web", label: "Web & Enterprise" },
 ];
 
+// The ROV hero card's stack, by layer (from src/content/projects/rov.md)
+const rovStack: [string, string[]][] = [
+	["Hardware", ["Raspberry Pi", "ESP32", "IP camera", "Leak sensor (own design)"]],
+	["Links", ["Bluetooth", "UDP", "Wi-Fi", "Tether", "USB serial"]],
+	["Control", ["PWM", "6 thrusters"]],
+];
+
 const quest = ["git commit -m \"first\"", "docker run -d postgres", "CREATE TABLE heroes (...);", "SELECT * FROM heroes;"];
 const term: [string, boolean][] = [
 	["$ iot --list", true],
@@ -91,11 +98,16 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 			<div class="d-visual d-card-spec">
 				<div class="d-card-spec__head"><span>ROV · Spec sheet</span><span class="d-card-spec__live"><i aria-hidden="true"></i>Online</span></div>
 				<dl>
-					<div><dt>On board</dt><dd>Raspberry Pi + ESP32</dd></div>
-					<div><dt>Link</dt><dd>UDP over Wi-Fi + tether</dd></div>
-					<div><dt>Thrusters</dt><dd>6</dd></div>
 					<div><dt>Max depth</dt><dd>30 m</dd></div>
 				</dl>
+				{
+					rovStack.map(([group, items]) => (
+						<div class="d-card-spec__stack">
+							<p>{group}</p>
+							<ul>{items.map((t) => <li>{t}</li>)}</ul>
+						</div>
+					))
+				}
 				<div class="d-card-spec__depth" aria-hidden="true"><i></i></div>
 			</div>
 		</div>
