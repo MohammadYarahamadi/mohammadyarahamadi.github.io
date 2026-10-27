@@ -429,6 +429,13 @@ body.deep {
 	gap: 12px;
 }
 
+/* a column of equal-width buttons (the IoT panel's three projects) */
+.d-actions--stack {
+	flex-direction: column;
+	width: fit-content;
+	max-width: 100%;
+}
+
 .d-actions .btn {
 	min-height: 54px;
 	padding: 0 1.7rem;
