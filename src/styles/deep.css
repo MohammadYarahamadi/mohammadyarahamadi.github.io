@@ -818,19 +818,12 @@ body.deep {
 	border-color: var(--door-acc);
 }
 
-.d-card__tag {
-	font: 500 12px var(--font-mono);
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: var(--door-acc);
-}
-
 .d-card h3 {
 	font: 600 var(--door-size) / 1.3 var(--door-font);
 	letter-spacing: -0.01em;
 }
 
-.d-card p:not(.d-card__tag) {
+.d-card p {
 	flex: 1;
 	color: var(--door-muted);
 	font-size: 16px;
@@ -1667,13 +1660,6 @@ body.deep {
 .d-door a:focus-visible {
 	outline: 2px solid var(--door-acc);
 	outline-offset: 3px;
-}
-
-.d-door__tag {
-	font: 500 12px var(--font-mono);
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: var(--door-acc);
 }
 
 .d-door__title {

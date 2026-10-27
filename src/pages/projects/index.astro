@@ -11,11 +11,11 @@ import "../../styles/deep.css";
 // so it works without JS. src/scripts/deep.ts remembers the choice (?vibe=
 // and localStorage), so the homepage's doors can open a given project.
 const vibes = [
-	{ id: "rov", label: "ROV", tag: "Hardware", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
-	{ id: "school", label: "Gamified School", tag: "Software", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
-	{ id: "drill", label: "Drilling Simulation", tag: "Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
-	{ id: "iot", label: "IoT builds", tag: "IoT", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
-	{ id: "web", label: "Web & Enterprise", tag: "Web", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
+	{ id: "rov", label: "ROV", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
+	{ id: "school", label: "Gamified School", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
+	{ id: "drill", label: "Drilling Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
+	{ id: "iot", label: "IoT builds", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
+	{ id: "web", label: "Web & Enterprise", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
 ];
 
 // The ROV hero card's stack, by layer
@@ -337,7 +337,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 		{
 			vibes.map((v) => (
 				<a class={`d-card d-card--${v.id}`} href={`?vibe=${v.id}#projects`} data-vibe={v.id}>
-					<span class="d-card__tag">{v.tag}</span>
 					<h3>{v.label}</h3>
 					<p>{v.text}</p>
 					<span class="d-card__link" aria-hidden="true">Open {v.label} →</span>

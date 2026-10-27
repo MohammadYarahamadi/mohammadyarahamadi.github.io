@@ -12,11 +12,11 @@ import "../styles/deep.css";
 // (?vibe=), where the whole page takes on the mood. This page stays in the
 // plain welcome colours throughout (data-zone="welcome").
 const doors = [
-	{ id: "rov", tag: "Hardware", title: "ROV", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
-	{ id: "school", tag: "Software", title: "Gamified School", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
-	{ id: "drill", tag: "Simulation", title: "Drilling Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
-	{ id: "iot", tag: "IoT", title: "IoT builds", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
-	{ id: "web", tag: "Web", title: "Web & Enterprise", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
+	{ id: "rov", title: "ROV", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
+	{ id: "school", title: "Gamified School", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
+	{ id: "drill", title: "Drilling Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
+	{ id: "iot", title: "IoT builds", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
+	{ id: "web", title: "Web & Enterprise", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
 ];
 
 // Decorative particles: position, size, speed and delay per particle.
@@ -80,7 +80,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				doors.map((d) => (
 					<li class={`d-door d-door--${d.id}`}>
 						<a href={`/projects/?vibe=${d.id}`}>
-							<span class="d-door__tag">{d.tag}</span>
 							<span class="d-door__title">{d.title}</span>
 							<span class="d-door__text">{d.text}</span>
 							<span class="d-door__go" aria-hidden="true">Enter →</span>
