@@ -1,0 +1,74 @@
+---
+/** "From the pin to the browser": each layer of a connected device, and
+    the projects that use it. Shared by the homepage journey and /overview/,
+    which name the projects' sections differently. */
+interface Props {
+	journey?: boolean;
+}
+const { journey = false } = Astro.props;
+
+const href = journey
+	? { rov: "#rov", drill: "#drilling", school: "#school", iot: "#iot", web: "#web" }
+	: { rov: "#rov", drill: "#drilling-simulation", school: "#gamified-school", iot: "#builds", web: "#client-work" };
+
+const stack = [
+	{
+		layer: "Hardware & sensors",
+		what: "Leak sensor, control panels, battery backup, infrared, heaters",
+		used: [["ROV", href.rov], ["Drilling Simulation", href.drill], ["Camera", href.iot]],
+	},
+	{
+		layer: "Firmware",
+		what: "ESP32 and ESP32-CAM: PWM, panel I/O, closed-loop control",
+		used: [["ROV", href.rov], ["Drilling Simulation", href.drill], ["Sous vide", href.iot]],
+	},
+	{
+		layer: "Edge Linux",
+		what: "Raspberry Pi: decoding commands, serial links to the microcontroller",
+		used: [["ROV", href.rov]],
+	},
+	{
+		layer: "Networking & video",
+		what: "UDP control links, IP networks over a tether, IP camera video, cellular uplinks",
+		used: [["ROV", href.rov], ["Camera", href.iot]],
+	},
+	{
+		layer: "Web & business software",
+		what: "Company websites, Odoo ERP and CRM, 3D in the browser with Three.js",
+		used: [["Client work", href.web], ["Gamified School", href.school]],
+	},
+];
+---
+
+<section
+	class="h-section h-section--alt"
+	id="skills"
+	data-world={journey ? "plain" : undefined}
+	data-chapter={journey ? "06 · What I work with" : undefined}
+	aria-labelledby="skills-title"
+>
+	<div class="h-wrap">
+		<header class="h-head">
+			<p class="eyebrow">What I work with</p>
+			<h2 id="skills-title">From the pin to the browser</h2>
+			<p>Every layer of a connected device, and where each one shows up in the work.</p>
+		</header>
+		<ol class="h-stack">
+			{
+				stack.map((s, i) => (
+					<li>
+						<span class="h-stack__n" aria-hidden="true">{String(stack.length - i).padStart(2, "0")}</span>
+						<h3>{s.layer}</h3>
+						<p>{s.what}</p>
+						<ul class="h-stack__used" aria-label="Used in">
+							{s.used.map(([label, to]) => <li><a href={to}>{label}</a></li>)}
+						</ul>
+					</li>
+				))
+			}
+		</ol>
+		<p class="h-learning">
+			<span class="h-dot" aria-hidden="true"></span> Currently learning: how LLM systems are built and used.
+		</p>
+	</div>
+</section>

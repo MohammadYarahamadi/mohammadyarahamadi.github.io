@@ -1,0 +1,299 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectModals from "../components/ProjectModals.astro";
+import Stack from "../components/home/Stack.astro";
+import AboutMe from "../components/home/AboutMe.astro";
+import ContactBlock from "../components/home/ContactBlock.astro";
+import "../styles/home.css";
+
+const email = "mohyar1380@gmail.com";
+
+// The ROV's control chain, top to bottom: the signature diagram of the site.
+const chain = [
+	["Controller", "Bluetooth"],
+	["Laptop", "UDP over Wi-Fi"],
+	["Modem buoy", "Tether"],
+	["Switch", "IP network"],
+	["Raspberry Pi", "USB serial"],
+	["ESP32", "PWM"],
+	["6 thrusters", ""],
+];
+
+const cases = [
+	{
+		id: "drilling-simulation",
+		kind: "Industrial · built for a company",
+		title: "Drilling Simulation",
+		accent: "drill",
+		problem: "Trainees learning to drill a well need real rig controls under their hands, not just a screen.",
+		built: "ESP32 firmware for each of the rig's control panels, and the links between the panels and the simulation software.",
+		role: "Embedded + software",
+		stack: ["ESP32", "Firmware", "Hardware panels"],
+	},
+	{
+		id: "gamified-school",
+		kind: "Education · built with AI",
+		title: "Gamified School",
+		accent: "school",
+		problem: "The college students I taught needed hands-on practice with Git, Docker and PostgreSQL, with nothing to install.",
+		built: "A quest-based learning platform with XP and levels, and simulated Docker and PostgreSQL engines that run inside the app.",
+		role: "Teacher · built with AI",
+		stack: ["Git", "Docker (sim)", "PostgreSQL (sim)", "System design"],
+	},
+];
+
+const builds = [
+	{
+		id: "backup-power-camera",
+		title: "Backup-power camera",
+		text: "An ESP32-CAM that keeps recording through power cuts, on battery and a cellular (SIM) uplink.",
+		badge: "Interactive diagram",
+	},
+	{
+		id: "sous-vide",
+		title: "Sous vide controller",
+		text: "Holds a water bath at a set temperature with closed-loop (PID) control.",
+		badge: "Live simulation",
+	},
+	{
+		id: "ac-remote",
+		title: "Smart AC remote",
+		text: "An ESP32 that stands in for the air conditioner's remote, so the AC runs from the network.",
+		badge: "",
+	},
+];
+
+
+const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
+---
+
+{/* The one-minute overview: the plain, fast version of the homepage for
+    visitors who skip the journey (linked from its intro). Who Mohyar is,
+    the work as case studies (problem, role, what was built), the skills
+    stack, about and contact. Details open in the project modals; the ROV
+    links to its own scroll story at /projects/rov/. */}
+<BaseLayout
+	title="Overview · Mohyar, embedded & IoT engineer"
+	description="Mohyar builds the electronics, firmware and networks that make machines work: an underwater ROV driven to 30 m, ESP32 control panels for a drilling simulator, IoT devices, and websites and Odoo ERP for businesses."
+	bodyClass="home"
+>
+	<!-- ============ HERO ============ -->
+	<section class="h-hero" id="top" aria-labelledby="hero-title">
+		<div class="h-wrap h-hero__grid">
+			<div class="h-hero__text">
+				<p class="h-kicker"><span class="h-dot" aria-hidden="true"></span>Mohyar · Embedded &amp; IoT engineer</p>
+				<h1 id="hero-title">I build the electronics, firmware and networks that make machines&nbsp;work.</h1>
+				<p class="h-lede">
+					From an underwater ROV driven to 30&nbsp;m to ESP32 control panels for an oil-rig
+					training simulator, I take a project from the pin to the browser. I also teach,
+					which keeps my explanations clear.
+				</p>
+				<div class="h-actions">
+					<a class="btn btn--primary" href="#work">
+						See the work
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"></path></svg>
+					</a>
+					<a class="btn" href={`mailto:${email}`}>
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+						Email me
+					</a>
+				</div>
+			</div>
+
+			<a class="h-hero__visual" href="/projects/rov/" aria-label="ROV project: take the 3D dive">
+				<div class="h-hud" aria-hidden="true">
+					<span>ROV · flagship</span>
+					<span>Max depth 30 m</span>
+				</div>
+				<img src="/models/rov-poster.webp" alt="" width="1000" height="640" fetchpriority="high" />
+				<div class="h-hud h-hud--bottom" aria-hidden="true">
+					<span>716 × 550 × 120 mm</span>
+					<span class="h-hud__cta">Take the 3D dive →</span>
+				</div>
+			</a>
+		</div>
+
+		<ul class="h-wrap h-proof" aria-label="In short">
+			<li>
+				<strong>End to end</strong>
+				<span>Sensors, firmware, Linux, networking and the web on top.</span>
+			</li>
+			<li>
+				<strong>Proven in the water</strong>
+				<span>An ROV driven to 30&nbsp;m with live video over its own IP network.</span>
+			</li>
+			<li>
+				<strong>Teaches, too</strong>
+				<span>Arduino to kids, and sales and negotiation at college.</span>
+			</li>
+		</ul>
+	</section>
+
+	<!-- ============ WORK ============ -->
+	<section class="h-section" id="work" aria-labelledby="work-title">
+		<div class="h-wrap">
+			<header class="h-head">
+				<p class="eyebrow">Selected work</p>
+				<h2 id="work-title">Things I've built</h2>
+			</header>
+
+			<!-- Featured: ROV -->
+			<article class="h-feature" id="rov" aria-labelledby="rov-title">
+				<figure class="h-feed">
+					<video src="/media/rov-feed.mp4" poster="/media/rov-feed.jpg" muted loop playsinline preload="none" width="640" height="360" data-feed aria-label="Footage from the ROV's camera"></video>
+					<div class="h-feed__hud" aria-hidden="true">
+						<span class="h-rec">CAM</span>
+						<span>ROV camera</span>
+					</div>
+					<figcaption>Real footage from the ROV's own camera.</figcaption>
+				</figure>
+
+				<div class="h-feature__body">
+					<p class="h-case-kind">Flagship · underwater robotics</p>
+					<h3 id="rov-title">ROV: Remotely Operated Vehicle</h3>
+					<p class="h-feature__lede">
+						A tethered underwater vehicle with six thrusters, a camera and two lights, driven
+						with a game controller. I built the whole control chain and the network that brings
+						the video back up.
+					</p>
+					<dl class="h-facts">
+						<div><dt>My role</dt><dd>Networking, embedded, controls</dd></div>
+						<div><dt>Depth</dt><dd>Driven to 30&nbsp;m</dd></div>
+						<div><dt>Safety</dt><dd>Leak sensor: it surfaces by itself</dd></div>
+					</dl>
+					<div class="h-case-actions">
+						<a class="btn btn--primary" href="/projects/rov/">
+							Take the 3D dive
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={arrow} />
+						</a>
+					</div>
+				</div>
+
+				<div class="h-chain">
+					<p class="h-chain__label" id="chain-label">The control chain I built, from hand to thruster</p>
+					<ol aria-labelledby="chain-label">
+						{
+							chain.map(([node, link]) => (
+								<li>
+									<span class="h-chain__node">{node}</span>
+									{link && <span class="h-chain__link">{link}</span>}
+								</li>
+							))
+						}
+					</ol>
+					<p class="h-chain__note">The IP camera's video rides the same network back up to the laptop.</p>
+				</div>
+			</article>
+
+			<!-- Case studies -->
+			<div class="h-cases">
+				{
+					cases.map((c) => (
+						<article class={`h-case h-case--${c.accent}`} id={c.id} aria-labelledby={`${c.id}-title`}>
+							<div class="h-case__art" aria-hidden="true">
+								{c.accent === "drill" ? (
+									<svg viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.5">
+										<rect x="12" y="20" width="70" height="44" rx="3" />
+										<rect x="12" y="76" width="70" height="30" rx="3" />
+										<rect x="238" y="40" width="70" height="44" rx="3" />
+										<circle cx="26" cy="34" r="4" class="led" />
+										<circle cx="40" cy="34" r="4" class="led" />
+										<circle cx="26" cy="90" r="4" class="led" />
+										<path d="M82 42 H118 V58 H140 M82 91 H118 V66 H140 M180 62 H238" stroke-dasharray="4 4" />
+										<rect x="140" y="50" width="40" height="24" rx="3" />
+										<text x="160" y="66" text-anchor="middle" stroke="none" fill="currentColor" font-size="10" font-family="var(--font-mono)">ESP32</text>
+										<text x="273" y="66" text-anchor="middle" stroke="none" fill="currentColor" font-size="10" font-family="var(--font-mono)">SIM</text>
+										<text x="47" y="55" text-anchor="middle" stroke="none" fill="currentColor" font-size="9" font-family="var(--font-mono)">PANEL A</text>
+										<text x="47" y="102" text-anchor="middle" stroke="none" fill="currentColor" font-size="9" font-family="var(--font-mono)">PANEL B</text>
+									</svg>
+								) : (
+									<div class="h-quest">
+										<p><span>Quest 04</span><span>LVL 3</span></p>
+										<strong>Ship your first database</strong>
+										<ul>
+											<li class="done">docker run -d postgres</li>
+											<li class="done">CREATE TABLE heroes (…);</li>
+											<li>SELECT * FROM heroes;</li>
+										</ul>
+										<div class="h-xp"><i></i></div>
+									</div>
+								)}
+							</div>
+							<p class="h-case-kind">{c.kind}</p>
+							<h3 id={`${c.id}-title`}>{c.title}</h3>
+							<dl class="h-pb">
+								<div><dt>Problem</dt><dd>{c.problem}</dd></div>
+								<div><dt>What I built</dt><dd>{c.built}</dd></div>
+							</dl>
+							<ul class="h-chips" aria-label="Stack">
+								{c.stack.map((s) => <li>{s}</li>)}
+							</ul>
+							<div class="h-case__foot">
+								<span class="h-role">{c.role}</span>
+								<button class="h-more" type="button" data-open-project={c.id}>
+									Details<span class="visually-hidden">: {c.title}</span>
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={arrow} />
+								</button>
+							</div>
+						</article>
+					))
+				}
+			</div>
+
+			<!-- Small builds -->
+			<div class="h-sub" id="builds">
+				<h3 class="h-subhead">Smaller builds <span>IoT · ESP32</span></h3>
+				<ul class="h-builds">
+					{
+						builds.map((b) => (
+							<li>
+								<button class="h-build" type="button" data-open-project={b.id}>
+									<span class="h-build__top">
+										<strong>{b.title}</strong>
+										{b.badge && <span class="h-badge">{b.badge}</span>}
+									</span>
+									<span class="h-build__text">{b.text}</span>
+									<span class="h-build__more">
+										{b.badge ? "Open the demo" : "Details"}
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={arrow} />
+									</span>
+								</button>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<!-- Client work -->
+			<article class="h-client" id="client-work" aria-labelledby="client-title">
+				<div>
+					<p class="h-case-kind"><span class="h-live" aria-hidden="true"></span>Client work · ongoing</p>
+					<h3 id="client-title">Websites and Odoo ERP for businesses</h3>
+					<p>
+						Company websites, currently Dealfdi, and Odoo ERP and CRM set up and extended so a
+						business runs its operations in one place. Before that I was the sales side of a small
+						web team, so I know the client's side of the table too.
+					</p>
+				</div>
+				<ul class="h-client__list">
+					<li><strong>Websites</strong><span>Company sites, currently Dealfdi</span></li>
+					<li><strong>Odoo ERP &amp; CRM</strong><span>Setup and extension</span></li>
+					<li><strong>Sales</strong><span>Sold our team's websites</span></li>
+				</ul>
+				<button class="h-more" type="button" data-open-project="web-enterprise">
+					Details<span class="visually-hidden">: Websites and Odoo ERP</span>
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={arrow} />
+				</button>
+			</article>
+		</div>
+	</section>
+
+	<Stack />
+	<AboutMe />
+	<ContactBlock />
+
+	<ProjectModals slot="overlays" />
+	<script>
+		import "../scripts/home.ts";
+	</script>
+</BaseLayout>

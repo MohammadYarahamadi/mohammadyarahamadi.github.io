@@ -1,5 +1,12 @@
 ---
-const bars = [38, 56, 44, 72, 64, 90];
+// A pipeline, not numbers: the work moves from first contact to live as
+// the world scrolls by (journey.ts sets each row's --s stage, 0–3).
+const stages = ["Lead", "Scoping", "Build", "Live"];
+const deals = [
+	["Company website", "Dealfdi"],
+	["Odoo ERP", "Operations in one place"],
+	["Odoo CRM", "Customers and sales"],
+];
 ---
 
 <section class="j-scene w-web" id="web" data-world="web" data-chapter={"05 · Web & Enterprise · Dashboard"} aria-label="Web and Enterprise">
@@ -19,7 +26,7 @@ const bars = [38, 56, 44, 72, 64, 90];
 				<li>Sales</li>
 			</ul>
 			<div class="j-actions rv" style="--d:240ms">
-				<button class="btn" type="button" data-open-project="web-enterprise">Read more</button>
+				<button class="btn" type="button" data-open-project="web-enterprise">Read more<span class="visually-hidden">: websites and Odoo ERP</span></button>
 			</div>
 		</div>
 		<div class="dash rv" style="--d:160ms" aria-hidden="true">
@@ -32,10 +39,23 @@ const bars = [38, 56, 44, 72, 64, 90];
 				<div><p>Platform</p><strong>Odoo</strong></div>
 				<div><p>Modules</p><strong>ERP · CRM</strong></div>
 			</div>
-			<div class="bars">
-				{bars.map((h) => <i style={`--h:${h}`} />)}
+			<div class="pipe">
+				<div class="pipe__cols">{stages.map((st) => <span>{st}</span>)}</div>
+				<ul class="pipe__rows">
+					{
+						deals.map(([title, sub], i) => (
+							<li class="deal live" data-deal={i} style="--s:3">
+								<p>
+									<strong>{title}</strong>
+									<span>{sub}</span>
+									<em data-stage>Live</em>
+								</p>
+								<div class="deal__bar"><i></i></div>
+							</li>
+						))
+					}
+				</ul>
 			</div>
-			<p class="dash__note">Illustrative chart</p>
 		</div>
 	</div>
 </section>

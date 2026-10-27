@@ -4,7 +4,7 @@
  * on the active world and its background layer, updates the nav (chapter
  * pill, colours, progress bar) and the chapter rail, and drives the few
  * text bits CSS can't: depth readout, quest checklist, drill bit, panel
- * LEDs and terminal lines.
+ * LEDs, terminal lines and the web pipeline cards.
  *
  * The markup is server-rendered in its final state, so without JS (or with
  * reduced motion, where progress is pinned at 1) every world reads complete.
@@ -67,6 +67,9 @@ const dimLabel = q<SVGGElement>("[data-dimlabel]");
 const bitDepth = q("[data-bitdepth]");
 const panels = [...document.querySelectorAll<HTMLElement>("[data-panel]")];
 
+const deals = [...document.querySelectorAll<HTMLElement>("[data-deal]")];
+const STAGES = ["Lead", "Scoping", "Build", "Live"];
+
 const termLines = [...(q("[data-term]")?.children ?? [])].slice(0, -1) as HTMLElement[];
 
 const DETAILS: Record<string, (p: number) => void> = {
@@ -96,6 +99,16 @@ const DETAILS: Record<string, (p: number) => void> = {
 			el.classList.toggle("on", on);
 			const state = q("[data-state]", el);
 			if (state) state.textContent = on ? "ONLINE" : "STANDBY";
+		});
+	},
+	web(p) {
+		// staggered: each row starts a little after the one above it
+		deals.forEach((el, i) => {
+			const s = Math.max(0, Math.min(3, Math.floor(p * 4.8 - i * 0.6)));
+			el.style.setProperty("--s", String(s));
+			el.classList.toggle("live", s === 3);
+			const label = q("[data-stage]", el);
+			if (label) label.textContent = STAGES[s];
 		});
 	},
 	iot(p) {

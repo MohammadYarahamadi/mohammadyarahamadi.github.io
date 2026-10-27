@@ -11,18 +11,25 @@ const worlds = [
 <section class="j-scene w-intro" id="top" data-world="intro" data-chapter="00 · Intro" aria-label="Intro">
 	<div class="j-stick">
 		<div class="j-copy">
-			<p class="eyebrow rv">mohyar_ / Embedded software engineer · IoT · Web</p>
+			<p class="j-who rv"><span class="h-dot" aria-hidden="true"></span>Mohyar · Embedded &amp; IoT engineer</p>
 			<h1 class="rv" style="--d:80ms">
 				<span>Five projects.</span>
 				<span>Five different worlds.</span>
 			</h1>
 			<p class="j-lede rv" style="--d:160ms">
-				I write the code that makes hardware think, talk, and dive: firmware for ESP32 and
+				I build the electronics, firmware and networks that make machines work: ESP32 and
 				Raspberry Pi, networked video, and the web apps on top. Scroll to move through the
 				work. Each project changes the room around you, from the bottom of the sea to an
 				oil rig's control panels.
 			</p>
-			<ul class="j-worlds rv" style="--d:240ms">
+			<div class="j-actions rv" style="--d:220ms">
+				<a class="btn btn--primary" href="#rov">
+					Start the dive
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"></path></svg>
+				</a>
+				<a class="btn" href="/overview/">In a hurry? 1-minute overview</a>
+			</div>
+			<ul class="j-worlds rv" style="--d:280ms" aria-label="Jump to a world">
 				{
 					worlds.map(([id, label, color, radius]) => (
 						<li>

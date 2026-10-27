@@ -1,0 +1,41 @@
+---
+/** Contact: the email address with a Copy button (src/scripts/home.ts).
+    On the journey it also offers the way back up. */
+interface Props {
+	journey?: boolean;
+}
+const { journey = false } = Astro.props;
+const email = "mohyar1380@gmail.com";
+---
+
+<section
+	class="h-contact"
+	id="contact"
+	data-world={journey ? "plain" : undefined}
+	data-chapter={journey ? "08 · Contact" : undefined}
+	aria-labelledby="contact-title"
+>
+	<div class="h-wrap">
+		<p class="eyebrow">Contact</p>
+		<h2 id="contact-title">Have hardware that needs a brain?</h2>
+		<p>A project, a role, a workshop, or a question about ESP32s: send me an email.</p>
+		<div class="h-email">
+			<a class="h-email__addr" href={`mailto:${email}`}>{email}</a>
+			<button class="btn" type="button" data-copy={email}>
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
+				<span data-copy-label>Copy</span>
+			</button>
+		</div>
+		<p class="visually-hidden" aria-live="polite" data-copy-status></p>
+		{
+			journey && (
+				<p class="h-surface">
+					<a href="#top">
+						Back to the surface
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
+					</a>
+				</p>
+			)
+		}
+	</div>
+</section>

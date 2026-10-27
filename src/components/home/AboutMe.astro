@@ -1,0 +1,51 @@
+---
+/** About: short bio and a timeline. Shared by the homepage and /overview/. */
+interface Props {
+	journey?: boolean;
+}
+const { journey = false } = Astro.props;
+
+const timeline = [
+	["Education", "Computer Engineering degree", "Digital systems, networks and programming."],
+	["Engineering", "ESP32 and Raspberry Pi systems", "From an underwater ROV to an industrial drilling simulator."],
+	["Sales", "Selling the websites our team built", "Finding customers and working out what they actually needed."],
+	["Teaching", "Arduino for kids", "Teaching children to build and code at a robotics house."],
+	["Teaching", "Sales and negotiation", "A course at college."],
+	["Now", "Learning LLM systems", "How they are built and used, written up as I go."],
+];
+---
+
+<section
+	class="h-section"
+	id="about"
+	data-world={journey ? "plain" : undefined}
+	data-chapter={journey ? "07 · About" : undefined}
+	aria-labelledby="about-title"
+>
+	<div class="h-wrap h-about">
+		<header class="h-head">
+			<p class="eyebrow">About</p>
+			<h2 id="about-title">Engineer by degree, teacher by choice</h2>
+			<p>
+				I studied Computer Engineering and ended up where hardware meets software: wiring
+				sensors to microcontrollers, writing the firmware and services that talk to them, and
+				getting the network right in between.
+			</p>
+			<p>
+				I've also sold websites and taught, Arduino to children at a robotics house and sales
+				and negotiation at college. Both taught me to start from what people actually need.
+			</p>
+		</header>
+		<ol class="h-timeline">
+			{
+				timeline.map(([when, title, text], i) => (
+					<li class={i === timeline.length - 1 ? "now" : undefined}>
+						<small>{when}</small>
+						<strong>{title}</strong>
+						<span>{text}</span>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+</section>

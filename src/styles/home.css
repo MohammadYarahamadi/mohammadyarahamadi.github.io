@@ -1,9 +1,10 @@
 /* Homepage (src/pages/index.astro). One dark base with the cyan accent;
    each project keeps a small trace of its old "world" as an accent colour
    (blueprint orange, quest yellow, terminal green) instead of repainting
-   the whole page. Text never animates in on scroll. */
+   the whole page. Text never animates in on scroll. The stack, about and
+   contact sections (src/components/home/) also close the homepage journey. */
 
-.home {
+:root {
 	--h-line: #1d2732;
 	--h-surface: #0b1016;
 	--h-surface-2: #0f161e;
@@ -16,6 +17,23 @@
 
 html:has(body.home) {
 	scroll-padding-top: 88px;
+}
+
+.h-surface {
+	margin-top: 1.5rem;
+}
+
+.h-surface a {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 44px;
+	color: var(--h-muted);
+	font-size: 0.95rem;
+}
+
+.h-surface a:hover {
+	color: var(--color-text);
 }
 
 .h-wrap {
