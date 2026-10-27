@@ -16,5 +16,4 @@ training on it work with panels and controls, not just a screen.
 - ESP32 firmware for each control panel
 - The links between the panels and the simulation software
 
-[More details to come: the panels, how they talk to each other, and who uses
-the simulator.]
+<!-- TODO (owner): More details to come: the panels, how they talk to each other, and who uses the simulator. -->

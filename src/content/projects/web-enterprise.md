@@ -19,4 +19,4 @@ a business's operations in one place.
   finding customers, working out what they actually needed, and closing the
   deal. I have also taught sales and negotiation at college.
 
-[More details to come: projects, dates and screenshots.]
+<!-- TODO (owner): More details to come: projects, dates and screenshots. -->

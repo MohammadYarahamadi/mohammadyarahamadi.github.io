@@ -9,7 +9,7 @@ const { journey = false } = Astro.props;
 
 const links = [
 	// Root-relative so the links also work from project pages.
-	{ href: "/#rov", label: "Work" },
+	{ href: "/#work", label: "Work" },
 	{ href: "/#about", label: "About" },
 	{ href: "/#contact", label: "Contact" },
 ];
@@ -30,11 +30,14 @@ const links = [
 			<ul class="nav__links">
 				{
 					links.map((link) => (
-						<li>
+						<li class:list={{ "nav__dup": link.label === "Contact" }}>
 							<a href={link.href}>{link.label}</a>
 						</li>
 					))
 				}
+				<li class="nav__cta">
+					<a href="/#contact">Get in touch</a>
+				</li>
 			</ul>
 		</nav>
 	</div>
@@ -128,6 +131,35 @@ const links = [
 	.nav__links a:hover,
 	.nav__links a:focus-visible {
 		opacity: 1;
+	}
+
+	/* the one action every page should offer */
+	.nav__cta a {
+		margin-left: 0.25rem;
+		white-space: nowrap;
+		padding-inline: 1rem;
+		border: 1px solid color-mix(in srgb, var(--nav-acc) 55%, transparent);
+		color: var(--nav-acc);
+		opacity: 1;
+	}
+
+	.nav__cta a:hover {
+		background: color-mix(in srgb, var(--nav-acc) 12%, transparent);
+	}
+
+	/* phones: the button replaces the plain Contact link */
+	@media (max-width: 520px) {
+		.nav__dup {
+			display: none;
+		}
+
+		.nav__links a {
+			padding-inline: 0.5rem;
+		}
+
+		.nav__cta a {
+			padding-inline: 0.85rem;
+		}
 	}
 
 	@media (max-width: 760px) {

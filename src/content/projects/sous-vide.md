@@ -15,4 +15,4 @@ the water at a set temperature with closed-loop (PID) control.
 The simulation below shows the idea: press Run and watch the water heat up
 and settle at the setpoint.
 
-[More details to come: parts, tuning and photos.]
+<!-- TODO (owner): More details to come: parts, tuning and photos. -->

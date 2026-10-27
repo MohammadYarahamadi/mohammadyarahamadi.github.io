@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Backdrop from "../components/journey/Backdrop.astro";
+import Rail from "../components/journey/Rail.astro";
+import SceneIntro from "../components/journey/SceneIntro.astro";
+import SceneRov from "../components/journey/SceneRov.astro";
+import SceneSchool from "../components/journey/SceneSchool.astro";
+import SceneDrill from "../components/journey/SceneDrill.astro";
+import SceneIot from "../components/journey/SceneIot.astro";
+import SceneWeb from "../components/journey/SceneWeb.astro";
+import Skills from "../components/journey/Skills.astro";
+import About from "../components/About.astro";
+import Contact from "../components/Contact.astro";
+import ProjectModals from "../components/ProjectModals.astro";
+import "../styles/journey.css";
+---
+
+{/* Earlier homepage prototype, kept for comparison (noindex). A scroll journey: each project is a full-screen world
+    with its own look (src/styles/journey.css), driven by
+    src/scripts/journey.ts. Skills, about and contact follow in the plain
+    site style. Project details open in modals; the ROV has its own page. */}
+<BaseLayout
+	title="Mohyar · Embedded software engineer"
+	description="Embedded software, IoT and web: an underwater ROV, a gamified programming school, a drilling simulator, ESP32 builds, and websites and Odoo ERP for businesses."
+	journey
+>
+	<meta slot="head" name="robots" content="noindex" />
+	<div class="journey">
+		<Backdrop />
+		<Rail />
+		<SceneIntro />
+		<SceneRov />
+		<SceneSchool />
+		<SceneDrill />
+		<SceneIot />
+		<SceneWeb />
+		<div class="j-plain">
+			<Skills />
+			<About />
+			<Contact />
+		</div>
+	</div>
+	<ProjectModals slot="overlays" />
+	<script>
+		import "../scripts/journey.ts";
+	</script>
+</BaseLayout>

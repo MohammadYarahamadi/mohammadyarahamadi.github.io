@@ -21,4 +21,4 @@ cameras are most needed and most likely to go dark.
 
 The diagram below shows the switch-over.
 
-[More details to come: parts, runtime and photos.]
+<!-- TODO (owner): More details to come: parts, runtime and photos. -->
