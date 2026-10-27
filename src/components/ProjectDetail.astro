@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import DemoSlot from "./DemoSlot.astro";
+
+// A project's write-up (and live demo, if it has one) laid out on the page,
+// for /projects/. The same content files also fill the modals on /overview/.
+interface Props {
+	project: CollectionEntry<"projects">;
+	// Heading for the section; defaults to the project's title.
+	title?: string;
+	// The panel above already shows the write-up's opening paragraph.
+	repeatsLede?: boolean;
+}
+
+const { project, title, repeatsLede = false } = Astro.props;
+const { role, tags, period, status, hasDemo, demoComponent, links } = project.data;
+const { Content } = await render(project);
+---
+
+<article
+	class:list={["d-detail", { "d-detail--skip-lede": repeatsLede }]}
+	id={`detail-${project.id}`}
+	aria-labelledby={`detail-title-${project.id}`}
+>
+	<header class="d-detail__head">
+		<h2 id={`detail-title-${project.id}`}>{title ?? project.data.title}</h2>
+		<p class="d-detail__meta">{[status === "ongoing" ? "Current" : period, role].filter(Boolean).join(" · ")}</p>
+		<ul class="d-detail__tags">{tags.map((tag) => <li>{tag}</li>)}</ul>
+	</header>
+	<div class="d-detail__main">
+		<div class="d-detail__body">
+			<Content />
+		</div>
+		{hasDemo && <DemoSlot demoComponent={demoComponent} />}
+		{
+			links && links.length > 0 && (
+				<p class="d-detail__links">
+					{links.map((link) => (
+						<a href={link.url} target="_blank" rel="noopener noreferrer">
+							{link.label} ↗
+						</a>
+					))}
+				</p>
+			)
+		}
+	</div>
+</article>

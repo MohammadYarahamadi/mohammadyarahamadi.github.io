@@ -759,6 +759,140 @@ body.deep {
 	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
 }
 
+/* ---- project write-ups (src/components/ProjectDetail.astro) ----
+   Shown under the picked project's panel, in place of the old modals. */
+.d-details {
+	display: none;
+	flex-direction: column;
+	gap: clamp(40px, 5vw, 64px);
+	max-width: 84rem;
+	margin-inline: auto;
+	padding: var(--d-gap) var(--d-pad) 0;
+}
+
+:root:has(#vibe-school:checked) .d-details--school,
+:root:has(#vibe-drill:checked) .d-details--drill,
+:root:has(#vibe-iot:checked) .d-details--iot,
+:root:has(#vibe-web:checked) .d-details--web {
+	display: flex;
+}
+
+.d-detail {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+	gap: clamp(24px, 5vw, 72px);
+	padding-top: clamp(32px, 4vw, 48px);
+	border-top: 1px solid var(--color-border);
+	/* clear the sticky nav when jumped to */
+	scroll-margin-top: 80px;
+}
+
+.d-detail__head {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.d-detail__head h2 {
+	font: 600 clamp(28px, 3.4vw, 40px) / 1.1 var(--d-display);
+	letter-spacing: -0.02em;
+}
+
+:root:has(#vibe-school:checked) .d-detail__head h2 {
+	font-size: clamp(18px, 2vw, 24px);
+	line-height: 1.4;
+	letter-spacing: 0;
+}
+
+.d-detail__meta {
+	font: 500 13px var(--font-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-accent);
+}
+
+.d-detail__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	list-style: none;
+}
+
+.d-detail__tags li {
+	padding: 4px 12px;
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
+	background: var(--d-card);
+	font: 13px var(--font-mono);
+	color: var(--color-text-muted);
+}
+
+.d-detail__main {
+	max-width: 44rem;
+}
+
+.d-detail__body {
+	color: var(--color-text-muted);
+	font-size: clamp(16px, 1.3vw, 18px);
+	line-height: 1.7;
+}
+
+/* the panel above already says this */
+.d-detail--skip-lede .d-detail__body > p:first-child {
+	display: none;
+}
+
+.d-detail__body > :first-child,
+.d-detail--skip-lede .d-detail__body > p:first-child + * {
+	margin-top: 0;
+}
+
+.d-detail__body h3 {
+	margin: 28px 0 10px;
+	color: var(--color-text);
+	font: 600 clamp(19px, 1.6vw, 22px) / 1.3 var(--d-display);
+}
+
+:root:has(#vibe-school:checked) .d-detail__body h3 {
+	font-size: 14px;
+	line-height: 1.6;
+}
+
+.d-detail__body p {
+	margin-top: 12px;
+}
+
+.d-detail__body ul {
+	padding-left: 1.25rem;
+}
+
+.d-detail__body li + li {
+	margin-top: 6px;
+}
+
+.d-detail__body li::marker {
+	color: var(--color-accent);
+}
+
+.d-detail__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-top: 20px;
+}
+
+.d-detail__links a {
+	color: var(--color-accent);
+	font-weight: 600;
+}
+
+@media (max-width: 900px) {
+	.d-detail {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
 /* ---- next project ----
    One card after the picked project, pointing to the next one (IoT wraps
    round to the ROV). */

@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Contact from "../../components/Contact.astro";
-import ProjectModals from "../../components/ProjectModals.astro";
+import { getEntry } from "astro:content";
+import ProjectDetail from "../../components/ProjectDetail.astro";
 import SalesPipeline from "../../components/islands/SalesPipeline";
 import "../../styles/journey.css";
 import "../../styles/deep.css";
@@ -27,6 +28,13 @@ const rovStack: [string, string[]][] = [
 	["Video", ["RTSP", "ONVIF"]],
 	["Control", ["PWM", "6 thrusters"]],
 ];
+
+// Each project's write-up, shown under its panel while it is picked
+const entry = async (id: string) => (await getEntry("projects", id))!;
+const school = await entry("gamified-school");
+const drill = await entry("drilling-simulation");
+const web = await entry("web-enterprise");
+const iot = await Promise.all(["backup-power-camera", "sous-vide", "ac-remote"].map(entry));
 
 const quest = ["git commit -m \"first\"", "docker run -d postgres", "CREATE TABLE heroes (...);", "SELECT * FROM heroes;"];
 const term: [string, boolean][] = [
@@ -124,7 +132,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					simulated inside the app.
 				</p>
 				<div class="d-actions">
-					<button class="btn btn--primary" type="button" data-open-project="gamified-school">Read more</button>
+					<a class="btn btn--primary" href="#detail-gamified-school">The details ↓</a>
 					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
@@ -144,7 +152,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					control panels, so trainees work with real panels and controls, not just a screen.
 				</p>
 				<div class="d-actions">
-					<button class="btn btn--primary" type="button" data-open-project="drilling-simulation">Read more</button>
+					<a class="btn btn--primary" href="#detail-drilling-simulation">The details ↓</a>
 					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
@@ -172,9 +180,9 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					AC remote, all on ESP32. Two of them have live demos.
 				</p>
 				<div class="d-actions d-actions--stack">
-					<button class="btn btn--primary" type="button" data-open-project="backup-power-camera">Camera + live diagram</button>
-					<button class="btn" type="button" data-open-project="sous-vide">Sous vide + demo</button>
-					<button class="btn" type="button" data-open-project="ac-remote">AC remote</button>
+					<a class="btn btn--primary" href="#detail-backup-power-camera">Camera + live diagram ↓</a>
+					<a class="btn" href="#detail-sous-vide">Sous vide + demo ↓</a>
+					<a class="btn" href="#detail-ac-remote">AC remote ↓</a>
 				</div>
 			</div>
 			<div class="d-visual d-card-term" aria-hidden="true">
@@ -191,7 +199,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					websites our team built, so I know the client's side of the table.
 				</p>
 				<div class="d-actions">
-					<button class="btn btn--primary" type="button" data-open-project="web-enterprise">Read more</button>
+					<a class="btn btn--primary" href="#detail-web-enterprise">The details ↓</a>
 					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
@@ -201,6 +209,12 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 			</div>
 		</div>
 	</section>
+
+	{/* The write-ups, one block per project; deep.css shows the picked one's. */}
+	<div class="d-details d-details--school"><ProjectDetail project={school} title="About the project" repeatsLede /></div>
+	<div class="d-details d-details--drill"><ProjectDetail project={drill} title="About the project" repeatsLede /></div>
+	<div class="d-details d-details--iot">{iot.map((p) => <ProjectDetail project={p} />)}</div>
+	<div class="d-details d-details--web"><ProjectDetail project={web} title="About the project" repeatsLede /></div>
 
 	{/* The ROV's full dive, shown while the ROV is picked: the ROV project page, rebuilt in the deep style.
 	    src/scripts/deepDive.ts maps scroll to 0–30 m here and lazy-loads the
@@ -344,7 +358,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 		<Contact />
 	</div>
 
-	<ProjectModals slot="overlays" />
 	<script>
 		import "../../scripts/deep.ts";
 		import "../../scripts/deepDive.ts";
