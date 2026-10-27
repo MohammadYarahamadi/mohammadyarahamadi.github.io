@@ -55,6 +55,8 @@ export interface SceneOpts {
 	/** The fixed depth gauge, which covers the stage's right edge. */
 	gauge: HTMLElement;
 	depth: () => number;
+	/** Camera angle at 0 m, if not the side view (radians, as in KEYS). */
+	start?: { az: number; el: number };
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -74,16 +76,16 @@ const KEYS = [
 	{ d: 20, az: 0.72, el: 0.62 },
 	{ d: 30, az: 1.12, el: 0.18 },
 ];
-function camKey(d: number) {
-	for (let i = 1; i < KEYS.length; i++) {
-		const a = KEYS[i - 1];
-		const b = KEYS[i];
+function camKey(d: number, keys = KEYS) {
+	for (let i = 1; i < keys.length; i++) {
+		const a = keys[i - 1];
+		const b = keys[i];
 		if (d <= b.d) {
 			const t = smooth(a.d, b.d, d);
 			return { az: lerp(a.az, b.az, t), el: lerp(a.el, b.el, t) };
 		}
 	}
-	return KEYS[KEYS.length - 1];
+	return keys[keys.length - 1];
 }
 
 const AXES = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] } as const;
@@ -213,7 +215,8 @@ function beamMesh(radius: number, length: number, spread: number) {
 	);
 }
 
-export async function startScene({ stage, status, gauge, depth }: SceneOpts) {
+export async function startScene({ stage, status, gauge, depth, start }: SceneOpts) {
+	const keys = start ? [{ d: 0, ...start }, ...KEYS.slice(1)] : KEYS;
 	let renderer: WebGLRenderer;
 	try {
 		renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
@@ -401,7 +404,7 @@ export async function startScene({ stage, status, gauge, depth }: SceneOpts) {
 
 	function apply(d: number) {
 		const e = smooth(13, 19, d) * (1 - smooth(24, 28.5, d));
-		const { az, el } = camKey(d);
+		const { az, el } = camKey(d, keys);
 		// Fit the model's bounding sphere (grown by the explode) to whichever of
 		// the two fields of view is narrower: a tall, narrow stage clips the
 		// sides long before the top and bottom.

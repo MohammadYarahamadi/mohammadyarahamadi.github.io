@@ -1,0 +1,390 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Skills from "../components/journey/Skills.astro";
+import About from "../components/About.astro";
+import Contact from "../components/Contact.astro";
+import ProjectModals from "../components/ProjectModals.astro";
+import "../styles/journey.css";
+import "../styles/deep.css";
+
+// Direction B ("Bioluminescent Deep") from the Portfolio Glow-up canvas, as
+// a prototype next to the current homepage. The project picker at the top
+// sets the whole page's mood: each choice is a radio button, and deep.css
+// restyles the page from :root:has(...:checked), so it works without JS.
+// src/scripts/deep.ts only remembers the choice (?vibe= and localStorage).
+const vibes = [
+	{ id: "rov", label: "ROV" },
+	{ id: "school", label: "Gamified School" },
+	{ id: "drill", label: "Drilling Simulation" },
+	{ id: "iot", label: "IoT builds" },
+	{ id: "web", label: "Web & Enterprise" },
+];
+
+const quest = ["git commit -m \"first\"", "docker run -d postgres", "CREATE TABLE heroes (...);", "SELECT * FROM heroes;"];
+const term: [string, boolean][] = [
+	["$ iot --list", true],
+	["  esp32-cam   sous-vide   ac-remote", false],
+	["$ esp32-cam --status", true],
+	["  power ....... battery backup", false],
+	["$ sousvide --status", true],
+	["  heater ...... holding temperature", false],
+	["$ ac-remote --send power", true],
+	["  ir .......... sent", false],
+];
+
+// Decorative particles: position, size, speed and delay per particle.
+const particles = Array.from({ length: 18 }, (_, i) => ({
+	x: (i * 37 + 11) % 100,
+	y: (i * 53 + 7) % 100,
+	s: 3 + ((i * 7) % 6),
+	d: 14 + ((i * 11) % 16),
+	l: -((i * 13) % 20),
+}));
+---
+
+<BaseLayout
+	title="Mohyar · Embedded software engineer"
+	description="Embedded software, IoT and web: an underwater ROV, a gamified programming school, a drilling simulator, ESP32 builds, and websites and Odoo ERP for businesses."
+	bodyClass="deep"
+>
+	<meta slot="head" name="robots" content="noindex" />
+
+	<div class="d-sea" aria-hidden="true">
+		{vibes.map((v) => <div class={`d-sea__layer d-sea__layer--${v.id}`}></div>)}
+		<img class="d-sea__photo" src="/media/rov-deep.jpg" alt="" width="640" height="360" />
+		<div class="d-sea__rays"></div>
+		{
+			particles.map((p) => (
+				<span
+					class="d-particle"
+					style={`--x:${p.x}%;--y:${p.y}%;--s:${p.s}px;--dur:${p.d}s;--delay:${p.l}s`}
+				/>
+			))
+		}
+	</div>
+
+	<section class="d-hero" id="top" aria-labelledby="d-pick-legend">
+		<fieldset class="d-view">
+			<legend>View</legend>
+			<label class="d-view__opt">
+				<input type="radio" name="view" value="overview" id="view-overview" checked />
+				<span>Overview</span>
+			</label>
+			<label class="d-view__opt">
+				<input type="radio" name="view" value="dive" id="view-dive" />
+				<span>Full dive</span>
+			</label>
+		</fieldset>
+
+		<fieldset class="d-pick">
+			<legend id="d-pick-legend">Pick a project</legend>
+			<div class="d-pick__row">
+				{
+					vibes.map((v, i) => (
+						<label class="d-chip">
+							<input type="radio" name="vibe" value={v.id} id={`vibe-${v.id}`} checked={i === 0} />
+							<span class="d-chip__dot" aria-hidden="true" />
+							<span>{v.label}</span>
+						</label>
+					))
+				}
+			</div>
+		</fieldset>
+
+		<div class="d-panel d-panel--rov">
+			<div class="d-copy">
+				<h1><strong>ROV</strong> project</h1>
+				<p class="d-lede">
+					A tethered underwater vehicle, driven with a controller. I built the chain from the
+					laptop down to six thrusters, and the network that brings the camera back up.
+				</p>
+				<div class="d-actions">
+					<a class="btn btn--primary only-overview" href="/projects/rov/">Take the 3D dive →</a>
+					<a class="btn btn--primary only-dive" href="#dive">Start the dive ↓</a>
+					<a class="btn" href="#work">See all five</a>
+				</div>
+			</div>
+			<div class="d-visual d-visual--rov">
+				<img src="/models/rov-poster.webp" alt="3D render of the ROV" width="1000" height="640" />
+				<ul class="d-tags">
+					<li>Raspberry Pi + ESP32</li>
+					<li>UDP over Wi-Fi + tether</li>
+					<li>Max depth 30 m</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="d-panel d-panel--school">
+			<div class="d-copy">
+				<h1><strong>Gamified School</strong> project</h1>
+				<p class="d-lede">
+					A learning platform I built with AI for the college students I was teaching. Git,
+					Docker, PostgreSQL and system design become quests, with Docker and PostgreSQL
+					simulated inside the app.
+				</p>
+				<div class="d-actions">
+					<button class="btn btn--primary" type="button" data-open-project="gamified-school">Read more</button>
+					<a class="btn" href="#work">See all five</a>
+				</div>
+			</div>
+			<div class="d-visual d-card-quest" aria-hidden="true">
+				<div class="d-card-quest__head"><span>QUEST 04</span><span>LVL 4</span></div>
+				<p class="d-card-quest__title">Ship your first database</p>
+				<ul>{quest.map((q) => <li>{q}</li>)}</ul>
+				<div class="d-xp"><i></i></div>
+			</div>
+		</div>
+
+		<div class="d-panel d-panel--drill">
+			<div class="d-copy">
+				<h1><strong>Drilling Simulation</strong> project</h1>
+				<p class="d-lede">
+					A physical well-drilling simulator built for a company. ESP32 boards act as the rig's
+					control panels, so trainees work with real panels and controls, not just a screen.
+				</p>
+				<div class="d-actions">
+					<button class="btn btn--primary" type="button" data-open-project="drilling-simulation">Read more</button>
+					<a class="btn" href="#work">See all five</a>
+				</div>
+			</div>
+			<div class="d-visual d-card-rig" aria-hidden="true">
+				<svg viewBox="0 0 320 260" fill="none" stroke="currentColor" stroke-width="1.5">
+					<path d="M110 220 L160 30 L210 220"></path>
+					<path d="M122 175 H198 M134 130 H186 M146 85 H174"></path>
+					<path d="M60 220 H260"></path>
+					<path class="d-rig__pipe" d="M160 30 V250" stroke-dasharray="4 4"></path>
+					<path d="M152 240 L160 256 L168 240 Z" fill="currentColor"></path>
+				</svg>
+				<ul class="d-leds">
+					<li>ESP32 panel A <b>Online</b></li>
+					<li>ESP32 panel B <b>Online</b></li>
+					<li>ESP32 panel C <b>Online</b></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="d-panel d-panel--iot">
+			<div class="d-copy">
+				<h1><strong>IoT</strong> projects</h1>
+				<p class="d-lede">
+					A camera that keeps recording through a power cut, a sous vide controller and a smart
+					AC remote, all on ESP32. Two of them have live demos.
+				</p>
+				<div class="d-actions">
+					<button class="btn btn--primary" type="button" data-open-project="backup-power-camera">Camera + live diagram</button>
+					<button class="btn" type="button" data-open-project="sous-vide">Sous vide + demo</button>
+					<button class="btn" type="button" data-open-project="ac-remote">AC remote</button>
+				</div>
+			</div>
+			<div class="d-visual d-card-term" aria-hidden="true">
+				<div class="d-card-term__bar"><i></i><i></i><i></i></div>
+				<pre>{term.map(([t, cmd]) => <span class={cmd ? "cmd" : ""}>{t + "\n"}</span>)}<span class="cmd">$ <span class="blink">_</span></span></pre>
+			</div>
+		</div>
+
+		<div class="d-panel d-panel--web">
+			<div class="d-copy">
+				<h1><strong>Web &amp; Enterprise</strong> projects</h1>
+				<p class="d-lede">
+					Company websites, currently Dealfdi, plus Odoo ERP and CRM. Before that I sold the
+					websites our team built, so I know the client's side of the table.
+				</p>
+				<div class="d-actions">
+					<button class="btn btn--primary" type="button" data-open-project="web-enterprise">Read more</button>
+					<a class="btn" href="#work">See all five</a>
+				</div>
+			</div>
+			<div class="d-visual d-card-dash" aria-hidden="true">
+				<div class="d-kpis">
+					<div><small>Websites</small><b>Dealfdi</b></div>
+					<div><small>ERP</small><b>Odoo</b></div>
+					<div><small>Sales</small><b>CRM</b></div>
+				</div>
+				<div class="d-bars">
+					<i style="--h:38"></i><i style="--h:52"></i><i style="--h:45"></i><i style="--h:63"></i><i style="--h:58"></i><i style="--h:76"></i><i style="--h:70"></i><i style="--h:88"></i>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{/* Full dive view only: the ROV project page, rebuilt in the deep style.
+	    src/scripts/deepDive.ts maps scroll to 0–30 m here and lazy-loads the
+	    3D scene from the ROV page (src/scripts/descentScene.ts). */}
+	<section class="d-dive" id="dive" aria-labelledby="dive-title">
+		<video class="d-dive__deep" id="d-deepbg" src="/media/rov-deep.mp4" poster="/media/rov-deep.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+		<div class="d-dive__layout">
+			<div class="d-dive__story">
+				<section class="d-sec" data-depth="0" data-cap="At the surface">
+					<span class="d-depth">0 m <span>· Surface</span></span>
+					<h2 id="dive-title">The full dive</h2>
+					<p class="d-lede">
+						A tethered underwater vehicle driven with a controller. I built the whole chain,
+						from the controller on the laptop down to the thrusters, and the network that brings
+						the camera video back up. Scroll to take it down to 30 m.
+					</p>
+					<p class="d-muted">Networking, embedded, controls</p>
+				</section>
+
+				<section class="d-sec" data-depth="5" data-cap="LEDs switch on automatically in the dark">
+					<span class="d-depth">5 m <span>· The vehicle</span></span>
+					<h3>Six thrusters, a camera and two lights</h3>
+					<p class="d-muted">
+						An operator on the surface drives the ROV with a controller and watches its camera on
+						a laptop. Under the clear acrylic covers on the front sit the IP camera and two LEDs,
+						which switch on by themselves once it gets dark.
+					</p>
+					<dl class="d-facts">
+						<div><dt>Envelope (CAD)</dt><dd>716 × 550 × 120 mm</dd></div>
+						<div><dt>Thrusters</dt><dd>6</dd></div>
+						<div><dt>Max depth</dt><dd>30 m</dd></div>
+						<div><dt>Control</dt><dd>Bluetooth controller</dd></div>
+						<div><dt>Link</dt><dd>UDP over Wi-Fi + tether</dd></div>
+						<div><dt>On board</dt><dd>Raspberry Pi + ESP32</dd></div>
+						<div><dt>Camera</dt><dd>IP camera, front centre</dd></div>
+						<div><dt>Lights</dt><dd>2 LEDs, automatic</dd></div>
+						<div><dt>Leak sensor</dt><dd>Our own design</dd></div>
+						<div><dt>If it leaks</dt><dd>Surfaces by itself</dd></div>
+					</dl>
+				</section>
+
+				<section class="d-sec" data-depth="12" data-cap="Camera · front centre, behind acrylic">
+					<span class="d-depth">12 m <span>· System overview</span></span>
+					<h3>From the controller to the thrusters</h3>
+					<p class="d-muted">
+						Commands go down: controller to laptop, over Wi-Fi to the modem buoy, down the tether
+						to a switch inside the ROV, then to the Raspberry Pi. The Pi decodes them and sends PWM
+						values to the ESP32, which drives the thrusters. The camera's video takes the same
+						network back up to the laptop.
+					</p>
+					<figure class="d-feed">
+						<div class="d-feed__frame">
+							<video id="d-feed" src="/media/rov-feed.mp4" poster="/media/rov-feed.jpg" muted loop playsinline preload="metadata" aria-label="Footage from the ROV's camera: a school of fish around a structure's leg, with the tether in view"></video>
+							<span class="d-feed__tag"><i></i>IP camera · on the laptop</span>
+						</div>
+						<figcaption class="d-muted">The ROV's own camera: fish around the legs of an offshore platform, with the yellow tether in view.</figcaption>
+					</figure>
+					<svg class="d-diagram" viewBox="0 0 340 500" role="img" aria-labelledby="d-diag-t">
+						<title id="d-diag-t">Control chain: controller, Bluetooth, laptop, Wi-Fi with UDP, modem buoy, tether, network switch, Raspberry Pi, USB serial, ESP32, PWM, six thrusters. The IP camera connects to the switch and its video travels back up to the laptop. A leak sensor of our own design feeds the Raspberry Pi.</title>
+						<defs>
+							<marker id="d-arr-c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-cmd" d="M0 0 L8 4 L0 8 Z"></path></marker>
+							<marker id="d-arr-v" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-vid" d="M0 0 L8 4 L0 8 Z"></path></marker>
+						</defs>
+						<text class="small" x="0" y="12">SURFACE</text>
+						<rect x="95" y="20" width="150" height="34" rx="8"></rect><text x="170" y="41" text-anchor="middle">Controller</text>
+						<path class="cmd" d="M185 54 V82" marker-end="url(#d-arr-c)"></path><text class="lbl" x="196" y="72">Bluetooth</text>
+						<rect x="95" y="84" width="150" height="34" rx="8"></rect><text x="170" y="105" text-anchor="middle">Laptop</text>
+						<path class="cmd" d="M185 118 V146" marker-end="url(#d-arr-c)"></path><text class="lbl" x="196" y="136">Wi-Fi · UDP</text>
+						<path class="vid" d="M155 148 V120" marker-end="url(#d-arr-v)"></path>
+						<rect x="95" y="148" width="150" height="34" rx="8"></rect><text x="170" y="169" text-anchor="middle">Modem buoy</text>
+						<path class="waterline" d="M0 204 C 40 196, 80 212, 120 204 S 200 196, 240 204 S 320 212, 340 204"></path>
+						<text class="small" x="0" y="222">UNDERWATER</text>
+						<path class="cmd tether" d="M185 182 V246" marker-end="url(#d-arr-c)"></path><text class="lbl" x="196" y="232">Tether</text>
+						<path class="vid" d="M155 248 V184" marker-end="url(#d-arr-v)"></path>
+						<rect x="95" y="248" width="150" height="34" rx="8"></rect><text x="170" y="269" text-anchor="middle">Network switch</text>
+						<rect x="0" y="298" width="80" height="34" rx="8"></rect><text x="40" y="319" text-anchor="middle">IP camera</text>
+						<path class="vid" d="M40 298 V272 H93" marker-end="url(#d-arr-v)"></path>
+						<path class="cmd" d="M185 282 V310" marker-end="url(#d-arr-c)"></path>
+						<rect x="95" y="312" width="150" height="34" rx="8"></rect><text x="170" y="333" text-anchor="middle">Raspberry Pi</text>
+						<rect x="262" y="312" width="78" height="34" rx="8"></rect><text x="301" y="333" text-anchor="middle">Leak sensor</text>
+						<path class="vid solid" d="M262 329 H247" marker-end="url(#d-arr-v)"></path>
+						<path class="cmd" d="M185 346 V374" marker-end="url(#d-arr-c)"></path><text class="lbl" x="196" y="364">USB serial</text>
+						<rect x="95" y="376" width="150" height="34" rx="8"></rect><text x="170" y="397" text-anchor="middle">ESP32</text>
+						<path class="cmd" d="M185 410 V438" marker-end="url(#d-arr-c)"></path><text class="lbl" x="196" y="428">PWM</text>
+						<rect x="95" y="440" width="150" height="34" rx="8"></rect><text x="170" y="461" text-anchor="middle">Thrusters ×6</text>
+					</svg>
+					<p class="d-legend"><b>Glowing</b> commands going down · <span>dashed</span> camera video going up</p>
+				</section>
+
+				<section class="d-sec" data-depth="20" data-cap="Exploded view · 6 thrusters">
+					<span class="d-depth">20 m <span>· What I built</span></span>
+					<h3>The whole chain, controller to propeller</h3>
+					<div class="d-work">
+						<article><h4>Controller &amp; laptop</h4><p>Reads the controller over Bluetooth and sends the operator's commands as UDP packets.</p></article>
+						<article><h4>Network</h4><p>A modem buoy at the surface, the tether, and a switch inside the ROV make one IP network. Commands go down it and the camera's video comes back up.</p></article>
+						<article><h4>Raspberry Pi</h4><p>Receives the UDP commands, decodes them, and sends PWM values to the ESP32 over USB serial.</p></article>
+						<article><h4>ESP32</h4><p>Turns those values into the PWM signals that drive the six thrusters.</p></article>
+						<article><h4>Leak sensor</h4><p>We made our own sensor to detect water getting inside the hull. It reports to the Raspberry Pi, and if it detects a leak the ROV automatically rises back to the surface.</p></article>
+					</div>
+				</section>
+
+				<section class="d-sec" data-depth="30" data-cap="Max depth · 30 m">
+					<span class="d-depth">30 m <span>· Outcome</span></span>
+					<h3>Down to 30 metres</h3>
+					<p class="d-muted">
+						Driven with a controller, with live camera video on the laptop and a leak sensor that
+						brings it back up on its own, taken down to 30 m.
+					</p>
+					<div class="d-actions">
+						<a class="btn btn--primary" href="#dive">Back to the surface ↑</a>
+						<a class="btn" href="#work">See all five</a>
+					</div>
+				</section>
+			</div>
+
+			<div class="d-dive__stagecol" aria-hidden="true">
+				<div class="d-stage" id="d-stage">
+					<img class="d-stage__poster" alt="" src="/models/rov-poster.webp" width="1000" height="640" loading="lazy" />
+					<span class="d-stage__status" id="d-status" role="status"></span>
+					<span class="d-stage__cap" id="d-cap">At the surface</span>
+					<div class="d-gauge" id="d-gauge">
+						<div class="d-gauge__rail"></div>
+						<div class="d-gauge__marker" id="d-g-marker"></div>
+						<div class="d-gauge__read" id="d-g-read">0.0 m</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="d-stations" id="work" aria-labelledby="work-title">
+		<div class="d-stations__head">
+			<p class="eyebrow">The work</p>
+			<h2 id="work-title">Five stations</h2>
+		</div>
+		<div class="d-grid">
+			<article class="d-card d-card--rov">
+				<p class="d-card__tag">01 · Hardware</p>
+				<h3>ROV</h3>
+				<p>Controller to thrusters, video back up, and a leak sensor that surfaces it on its own.</p>
+				<a class="d-card__link only-overview" href="/projects/rov/">Take the 3D dive →</a>
+				<a class="d-card__link only-dive" href="#dive">Back to the dive ↑</a>
+			</article>
+			<article class="d-card d-card--school">
+				<p class="d-card__tag">02 · Software</p>
+				<h3>Gamified School</h3>
+				<p>Built with AI for my college students: Git, Docker, PostgreSQL and system design as quests.</p>
+				<button class="d-card__link" type="button" data-open-project="gamified-school">Read more →</button>
+			</article>
+			<article class="d-card d-card--drill">
+				<p class="d-card__tag">03 · Simulation</p>
+				<h3>Drilling Simulation</h3>
+				<p>ESP32 boards play the rig's control panels as real hardware, built for a company.</p>
+				<button class="d-card__link" type="button" data-open-project="drilling-simulation">Read more →</button>
+			</article>
+			<article class="d-card d-card--iot">
+				<p class="d-card__tag">04 · IoT</p>
+				<h3>Small builds</h3>
+				<p>Backup-power camera, sous vide controller and a smart AC remote.</p>
+				<button class="d-card__link" type="button" data-open-project="backup-power-camera">Read more →</button>
+			</article>
+			<article class="d-card d-card--web">
+				<p class="d-card__tag">05 · Web</p>
+				<h3>Web &amp; Enterprise</h3>
+				<p>Company websites, Odoo ERP and CRM, and the sales side behind them.</p>
+				<button class="d-card__link" type="button" data-open-project="web-enterprise">Read more →</button>
+			</article>
+		</div>
+	</section>
+
+	<div class="j-plain d-plain">
+		<Skills />
+		<About />
+		<Contact />
+	</div>
+
+	<ProjectModals slot="overlays" />
+	<script>
+		import "../scripts/deep.ts";
+		import "../scripts/deepDive.ts";
+	</script>
+</BaseLayout>

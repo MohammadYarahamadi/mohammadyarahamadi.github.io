@@ -1,0 +1,1430 @@
+@import "@fontsource-variable/sora";
+@import "@fontsource/press-start-2p";
+
+/* Direction B, "Bioluminescent Deep" (src/pages/deep.astro). One deep-sea
+   page whose mood follows the project picked at the top: each vibe below
+   re-points the site tokens from global.css, so the nav, buttons, skills,
+   about, contact and modals all follow along. */
+
+/* ---- vibes ---- */
+:root {
+	--d-display: "Sora Variable", var(--font-sans);
+	--d-h1: clamp(44px, 6vw, 84px);
+	--d-glow: #6ff7d8;
+	--d-glow-2: #b18cff;
+	--d-glow-soft: rgba(111, 247, 216, 0.28);
+	--d-card: rgba(6, 34, 58, 0.5);
+	--d-p-radius: 50%;
+	--d-p-rotate: 0deg;
+	--d-p-anim: d-rise;
+}
+
+/* ROV, the default: deep sea */
+:root:has(#vibe-rov:checked),
+:root:not(:has(input[name="vibe"]:checked)) {
+	--color-bg: #031426;
+	--color-bg-elevated: #06223a;
+	--color-text: #e4f3f7;
+	--color-text-muted: #a8c3cd;
+	--color-accent: #6ff7d8;
+	--color-accent-strong: #a6fbe8;
+	--color-accent-soft: rgba(111, 247, 216, 0.12);
+	--color-on-accent: #01231c;
+	--color-border: rgba(111, 247, 216, 0.18);
+}
+
+/* Gamified School: night arcade */
+:root:has(#vibe-school:checked) {
+	--color-bg: #120d24;
+	--color-bg-elevated: #1c1538;
+	--color-text: #f3eeff;
+	--color-text-muted: #bdb3dc;
+	--color-accent: #ffd23f;
+	--color-accent-strong: #ffe27a;
+	--color-accent-soft: rgba(255, 210, 63, 0.12);
+	--color-on-accent: #241a00;
+	--color-border: rgba(255, 210, 63, 0.2);
+	--d-display: "Press Start 2P", monospace;
+	--d-h1: clamp(28px, 3.9vw, 54px);
+	--d-glow: #ffd23f;
+	--d-glow-2: #ff5c8a;
+	--d-glow-soft: rgba(255, 210, 63, 0.3);
+	--d-card: rgba(28, 21, 56, 0.7);
+	--d-p-radius: 0;
+	--d-p-anim: d-blink;
+}
+
+/* Drilling Simulation: blueprint */
+:root:has(#vibe-drill:checked) {
+	--color-bg: #0b2a4a;
+	--color-bg-elevated: #0f355c;
+	--color-text: #e8f1ff;
+	--color-text-muted: #b0c6e2;
+	--color-accent: #ff8a3d;
+	--color-accent-strong: #ffab72;
+	--color-accent-soft: rgba(255, 138, 61, 0.12);
+	--color-on-accent: #2a1000;
+	--color-border: rgba(156, 200, 255, 0.24);
+	--d-display: "Space Grotesk Variable", var(--font-sans);
+	--d-glow: #ff8a3d;
+	--d-glow-2: #9cc8ff;
+	--d-glow-soft: rgba(255, 138, 61, 0.25);
+	--d-card: rgba(11, 42, 74, 0.75);
+	--d-p-radius: 1px;
+	--d-p-rotate: 45deg;
+	--d-p-anim: d-drift;
+}
+
+/* IoT: phosphor terminal */
+:root:has(#vibe-iot:checked) {
+	--color-bg: #020604;
+	--color-bg-elevated: #07120b;
+	--color-text: #d2f9de;
+	--color-text-muted: #8fc19f;
+	--color-accent: #7cf29c;
+	--color-accent-strong: #a7f3c0;
+	--color-accent-soft: rgba(124, 242, 156, 0.1);
+	--color-on-accent: #01200b;
+	--color-border: rgba(124, 242, 156, 0.2);
+	--d-display: var(--font-mono);
+	--d-h1: clamp(36px, 5vw, 68px);
+	--d-glow: #7cf29c;
+	--d-glow-2: #a7f3c0;
+	--d-glow-soft: rgba(124, 242, 156, 0.25);
+	--d-card: rgba(7, 18, 11, 0.8);
+	--d-p-radius: 0;
+	--d-p-anim: d-blink;
+}
+
+/* Web & Enterprise: daylight dashboard */
+:root:has(#vibe-web:checked) {
+	--color-bg: #eef2f6;
+	--color-bg-elevated: #ffffff;
+	--color-text: #0f172a;
+	--color-text-muted: #475569;
+	--color-accent: #0e7490;
+	--color-accent-strong: #155e75;
+	--color-accent-soft: rgba(14, 116, 144, 0.1);
+	--color-on-accent: #ffffff;
+	--color-border: #d5dde7;
+	--d-display: "Inter Variable", var(--font-sans);
+	--d-glow: #0e7490;
+	--d-glow-2: #6366f1;
+	--d-glow-soft: rgba(14, 116, 144, 0.16);
+	--d-card: rgba(255, 255, 255, 0.85);
+	--d-p-anim: d-rise;
+	color-scheme: light;
+}
+
+body.deep {
+	transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+/* Components that hard-code dark colours elsewhere */
+.deep .chip {
+	color: var(--color-text-muted);
+}
+
+/* ---- background ---- */
+.d-sea {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.d-sea__layer,
+.d-sea__photo,
+.d-sea__rays {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.8s ease;
+}
+
+.d-sea__layer--rov {
+	background: linear-gradient(180deg, #0b3550 0%, #06223a 35%, #031426 70%, #01070f 100%);
+}
+
+.d-sea__layer--school {
+	background:
+		radial-gradient(circle at 80% 10%, rgba(255, 92, 138, 0.18), transparent 40%),
+		radial-gradient(circle at 15% 80%, rgba(255, 210, 63, 0.1), transparent 40%),
+		linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 32px 32px,
+		linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 32px 32px,
+		#120d24;
+}
+
+.d-sea__layer--drill {
+	background:
+		linear-gradient(rgba(156, 200, 255, 0.14) 1px, transparent 1px) 0 0 / 120px 120px,
+		linear-gradient(90deg, rgba(156, 200, 255, 0.14) 1px, transparent 1px) 0 0 / 120px 120px,
+		linear-gradient(rgba(156, 200, 255, 0.06) 1px, transparent 1px) 0 0 / 24px 24px,
+		linear-gradient(90deg, rgba(156, 200, 255, 0.06) 1px, transparent 1px) 0 0 / 24px 24px,
+		linear-gradient(180deg, #0f355c, #0b2a4a 60%, #08203a);
+}
+
+.d-sea__layer--iot {
+	background:
+		repeating-linear-gradient(0deg, rgba(124, 242, 156, 0.035) 0 1px, transparent 1px 4px),
+		radial-gradient(ellipse at 50% 30%, rgba(124, 242, 156, 0.1), transparent 60%),
+		#020604;
+}
+
+.d-sea__layer--web {
+	background:
+		radial-gradient(circle at 85% 0%, rgba(99, 102, 241, 0.12), transparent 40%),
+		radial-gradient(circle at 0% 60%, rgba(14, 116, 144, 0.1), transparent 45%),
+		linear-gradient(180deg, #ffffff, #eef2f6 50%, #e6ecf3);
+}
+
+.d-sea__photo {
+	width: 100%;
+	height: 75vh;
+	object-fit: cover;
+	mix-blend-mode: screen;
+	mask-image: linear-gradient(180deg, #000 30%, transparent);
+}
+
+.d-sea__rays {
+	left: 25%;
+	right: 25%;
+	bottom: auto;
+	height: 90vh;
+	background: linear-gradient(180deg, rgba(180, 240, 255, 0.16), transparent);
+	transform: skewX(-12deg);
+	filter: blur(30px);
+}
+
+:root:has(#vibe-rov:checked) .d-sea__layer--rov,
+:root:not(:has(input[name="vibe"]:checked)) .d-sea__layer--rov,
+:root:has(#vibe-school:checked) .d-sea__layer--school,
+:root:has(#vibe-drill:checked) .d-sea__layer--drill,
+:root:has(#vibe-iot:checked) .d-sea__layer--iot,
+:root:has(#vibe-web:checked) .d-sea__layer--web {
+	opacity: 1;
+}
+
+:root:has(#vibe-rov:checked) .d-sea__photo {
+	opacity: 0.3;
+}
+
+:root:has(#vibe-rov:checked) .d-sea__rays,
+:root:has(#vibe-web:checked) .d-sea__rays {
+	opacity: 1;
+}
+
+:root:has(#vibe-web:checked) .d-sea__rays {
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), transparent);
+}
+
+.d-particle {
+	position: absolute;
+	left: var(--x);
+	top: var(--y);
+	width: var(--s);
+	height: var(--s);
+	border-radius: var(--d-p-radius);
+	background: var(--d-glow);
+	box-shadow: 0 0 calc(var(--s) * 3) var(--d-glow);
+	opacity: 0.7;
+	rotate: var(--d-p-rotate);
+	animation: var(--d-p-anim) var(--dur) linear var(--delay) infinite;
+	transition: background-color 0.6s ease, box-shadow 0.6s ease, border-radius 0.6s ease;
+}
+
+.d-particle:nth-child(3n) {
+	background: var(--d-glow-2);
+	box-shadow: 0 0 calc(var(--s) * 3) var(--d-glow-2);
+}
+
+:root:has(#vibe-web:checked) .d-particle {
+	opacity: 0.25;
+	box-shadow: none;
+}
+
+@keyframes d-rise {
+	from { translate: 0 30vh; opacity: 0; }
+	15% { opacity: 0.7; }
+	85% { opacity: 0.7; }
+	to { translate: 2vw -40vh; opacity: 0; }
+}
+
+@keyframes d-blink {
+	0%, 100% { opacity: 0.15; }
+	50% { opacity: 0.85; }
+}
+
+@keyframes d-drift {
+	from { translate: -2vw 0; }
+	50% { translate: 2vw 3vh; }
+	to { translate: -2vw 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.d-particle {
+		animation: none;
+	}
+}
+
+/* ---- hero ---- */
+.d-hero {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(32px, 5vw, 56px);
+	max-width: 84rem;
+	min-height: calc(100svh - 73px);
+	margin-inline: auto;
+	/* keep the picker clear of the sticky nav when jumping to #top */
+	scroll-margin-top: 80px;
+	padding: clamp(32px, 5vw, 64px) clamp(16px, 5vw, 72px) 64px;
+}
+
+.d-pick {
+	border: 0;
+	min-width: 0;
+}
+
+.d-pick legend {
+	margin-bottom: 14px;
+	font: 500 12px var(--font-mono);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+}
+
+.d-pick__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.d-chip {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 52px;
+	padding: 0 20px;
+	border: 1.5px solid color-mix(in srgb, var(--color-text) 28%, transparent);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-bg-elevated) 85%, transparent);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+	backdrop-filter: blur(8px);
+	color: var(--color-text);
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, translate 0.2s var(--ease-out);
+}
+
+.d-chip input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.d-chip__dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	border: 1px solid var(--color-text-muted);
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.d-chip:hover {
+	border-color: var(--color-accent);
+	translate: 0 -2px;
+}
+
+/* The picked chip is filled with the accent, like the main button */
+.d-chip:has(input:checked) {
+	border-color: var(--color-accent);
+	background: var(--color-accent);
+	color: var(--color-on-accent);
+	font-weight: 600;
+	box-shadow: 0 0 0 4px var(--color-accent-soft), 0 0 36px var(--d-glow-soft);
+}
+
+.d-chip:has(input:checked) .d-chip__dot {
+	border-color: var(--color-on-accent);
+	background: var(--color-on-accent);
+}
+
+.d-chip:has(input:focus-visible) {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 3px;
+}
+
+.d-panel {
+	display: none;
+	grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+	gap: clamp(32px, 5vw, 72px);
+	align-items: center;
+	flex: 1;
+}
+
+:root:has(#vibe-rov:checked) .d-panel--rov,
+:root:not(:has(input[name="vibe"]:checked)) .d-panel--rov,
+:root:has(#vibe-school:checked) .d-panel--school,
+:root:has(#vibe-drill:checked) .d-panel--drill,
+:root:has(#vibe-iot:checked) .d-panel--iot,
+:root:has(#vibe-web:checked) .d-panel--web {
+	display: grid;
+	animation: d-in 0.6s var(--ease-out);
+}
+
+@keyframes d-in {
+	from { opacity: 0; translate: 0 16px; }
+}
+
+.d-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.d-copy h1 {
+	font: 300 var(--d-h1) / 1.02 var(--d-display);
+	letter-spacing: -0.04em;
+}
+
+.d-copy h1 strong {
+	font-weight: 700;
+	color: var(--color-text);
+	text-shadow: 0 0 60px var(--d-glow-soft);
+}
+
+:root:has(#vibe-school:checked) .d-copy h1 {
+	font-weight: 400;
+	line-height: 1.35;
+	letter-spacing: 0;
+}
+
+:root:has(#vibe-school:checked) .d-copy h1 strong {
+	font-weight: 400;
+	color: var(--color-accent);
+	text-shadow: 4px 4px 0 #ff5c8a;
+}
+
+:root:has(#vibe-iot:checked) .d-copy h1 {
+	letter-spacing: -0.03em;
+}
+
+:root:has(#vibe-iot:checked) .d-copy h1 strong {
+	color: var(--color-accent);
+}
+
+.d-lede {
+	max-width: 36rem;
+	font-size: clamp(17px, 1.4vw, 19px);
+	line-height: 1.65;
+	color: var(--color-text-muted);
+}
+
+.d-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.d-actions .btn {
+	min-height: 54px;
+	padding: 0 1.7rem;
+	font-size: 1rem;
+	border: 1.5px solid color-mix(in srgb, var(--color-text) 35%, transparent);
+	background: color-mix(in srgb, var(--color-bg-elevated) 80%, transparent);
+	transition: border-color 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease, translate 0.2s var(--ease-out);
+}
+
+.d-actions .btn:hover {
+	translate: 0 -2px;
+}
+
+.deep .btn--primary,
+.d-actions .btn--primary {
+	border-color: var(--color-accent);
+	background: var(--color-accent);
+	box-shadow: 0 0 0 4px var(--color-accent-soft), 0 8px 40px var(--d-glow-soft);
+}
+
+.deep .btn--primary:hover {
+	box-shadow: 0 0 0 6px var(--color-accent-soft), 0 10px 48px var(--d-glow-soft);
+}
+
+/* ---- hero visuals ---- */
+.d-visual {
+	position: relative;
+	justify-self: center;
+	width: 100%;
+	max-width: 560px;
+}
+
+.d-visual--rov img {
+	width: 100%;
+	height: auto;
+	filter: drop-shadow(0 0 40px var(--d-glow-soft));
+	animation: d-bob 6s ease-in-out infinite;
+}
+
+@keyframes d-bob {
+	50% { translate: 0 -10px; }
+}
+
+.d-tags {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 16px;
+	list-style: none;
+}
+
+.d-tags li {
+	padding: 6px 12px;
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
+	background: var(--d-card);
+	font: 12px var(--font-mono);
+	color: var(--color-text-muted);
+}
+
+.d-card-quest {
+	padding: 28px;
+	border: 3px solid var(--color-accent);
+	background: var(--d-card);
+	box-shadow: 10px 10px 0 #ff5c8a;
+	font: 13px var(--font-mono);
+}
+
+.d-card-quest__head {
+	display: flex;
+	justify-content: space-between;
+	font: 12px "Press Start 2P", monospace;
+	color: var(--color-accent);
+}
+
+.d-card-quest__title {
+	margin: 18px 0;
+	font: 15px/1.6 "Press Start 2P", monospace;
+}
+
+.d-card-quest ul {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	list-style: none;
+	color: var(--color-text-muted);
+}
+
+.d-card-quest li::before {
+	content: "■ ";
+	color: #7cf29c;
+}
+
+.d-xp {
+	height: 14px;
+	margin-top: 22px;
+	border: 2px solid var(--color-accent);
+}
+
+.d-xp i {
+	display: block;
+	width: 92%;
+	height: 100%;
+	background: var(--color-accent);
+}
+
+.d-card-rig {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 24px;
+	align-items: end;
+	padding: 28px;
+	border: 1px solid var(--color-border);
+	background: var(--d-card);
+	color: #9cc8ff;
+}
+
+.d-card-rig svg {
+	width: 100%;
+	height: auto;
+}
+
+.d-rig__pipe {
+	stroke: var(--color-accent);
+	stroke-width: 2.5;
+}
+
+.d-leds {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	list-style: none;
+	font: 12px var(--font-mono);
+	color: var(--color-text-muted);
+}
+
+.d-leds li {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 10px 12px;
+	border: 1px solid var(--color-border);
+}
+
+.d-leds b {
+	font-weight: 500;
+	color: #7cf29c;
+}
+
+.d-leds b::before {
+	content: "● ";
+}
+
+.d-card-term {
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	background: #000;
+	box-shadow: 0 0 60px var(--d-glow-soft);
+	overflow: hidden;
+}
+
+.d-card-term__bar {
+	display: flex;
+	gap: 6px;
+	padding: 12px 14px;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.d-card-term__bar i {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--color-border);
+}
+
+.d-card-term pre {
+	padding: 20px;
+	font: 14px/1.8 var(--font-mono);
+	color: var(--color-text-muted);
+	white-space: pre-wrap;
+}
+
+.d-card-term .cmd {
+	color: var(--color-accent);
+}
+
+.d-card-term .blink {
+	animation: d-blink 1s steps(1) infinite;
+}
+
+.d-card-dash {
+	padding: 24px;
+	border: 1px solid var(--color-border);
+	border-radius: 18px;
+	background: var(--color-bg-elevated);
+	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+}
+
+.d-kpis {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.d-kpis div {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 14px;
+	border: 1px solid var(--color-border);
+	border-radius: 12px;
+}
+
+.d-kpis small {
+	font: 11px var(--font-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+}
+
+.d-kpis b {
+	font-size: 20px;
+}
+
+.d-bars {
+	display: flex;
+	align-items: flex-end;
+	gap: 10px;
+	height: 180px;
+	margin-top: 20px;
+	padding-top: 12px;
+	border-top: 1px solid var(--color-border);
+}
+
+.d-bars i {
+	flex: 1;
+	height: calc(var(--h) * 1%);
+	border-radius: 6px 6px 0 0;
+	background: linear-gradient(180deg, var(--color-accent), var(--d-glow-2));
+}
+
+/* ---- stations ---- */
+.d-stations {
+	max-width: 84rem;
+	margin-inline: auto;
+	padding: 48px clamp(16px, 5vw, 72px) 120px;
+	scroll-margin-top: 80px;
+}
+
+.d-stations__head {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 36px;
+}
+
+.d-stations__head h2 {
+	font: 600 clamp(36px, 5vw, 60px) / 1.04 var(--d-display);
+	letter-spacing: -0.03em;
+}
+
+:root:has(#vibe-school:checked) .d-stations__head h2 {
+	font-size: clamp(22px, 3vw, 36px);
+	letter-spacing: 0;
+}
+
+.d-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+	gap: 20px;
+}
+
+.d-card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 28px;
+	border: 1px solid var(--color-border);
+	border-radius: 22px;
+	background: var(--d-card);
+	transition: border-color 0.3s ease, box-shadow 0.3s ease, translate 0.3s var(--ease-out);
+}
+
+.d-card:hover {
+	translate: 0 -3px;
+	border-color: var(--color-accent);
+}
+
+.d-card__tag {
+	font: 500 12px var(--font-mono);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-accent);
+}
+
+.d-card h3 {
+	font: 600 28px / 1.15 var(--d-display);
+	letter-spacing: -0.02em;
+}
+
+:root:has(#vibe-school:checked) .d-card h3 {
+	font-size: 17px;
+	line-height: 1.5;
+	letter-spacing: 0;
+}
+
+.d-card p:not(.d-card__tag) {
+	flex: 1;
+	color: var(--color-text-muted);
+	font-size: 16px;
+}
+
+.d-card__link {
+	align-self: flex-start;
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--color-accent);
+	font: 600 15px var(--font-sans);
+	cursor: pointer;
+}
+
+/* On cards, the link becomes an outlined pill */
+.d-card .d-card__link {
+	padding: 0 18px;
+	border: 1.5px solid var(--color-accent);
+	border-radius: 999px;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.d-card .d-card__link:hover {
+	background: var(--color-accent);
+	color: var(--color-on-accent);
+}
+
+/* The picked project's station leads and glows */
+:root:has(#vibe-rov:checked) .d-card--rov,
+:root:has(#vibe-school:checked) .d-card--school,
+:root:has(#vibe-drill:checked) .d-card--drill,
+:root:has(#vibe-iot:checked) .d-card--iot,
+:root:has(#vibe-web:checked) .d-card--web {
+	order: -1;
+	border-color: var(--color-accent);
+	box-shadow: 0 0 60px var(--d-glow-soft);
+}
+
+/* Three columns on desktop: the picked card takes two, so five fill two rows */
+@media (min-width: 1000px) {
+	.d-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	:root:has(#vibe-rov:checked) .d-card--rov,
+	:root:has(#vibe-school:checked) .d-card--school,
+	:root:has(#vibe-drill:checked) .d-card--drill,
+	:root:has(#vibe-iot:checked) .d-card--iot,
+	:root:has(#vibe-web:checked) .d-card--web {
+		grid-column: span 2;
+	}
+}
+
+/* ---- skills, about, contact on this page ---- */
+.d-plain {
+	background: transparent;
+}
+
+.d-plain .skills li {
+	background: var(--d-card);
+}
+
+/* ---- phones ---- */
+@media (max-width: 900px) {
+	.d-hero {
+		min-height: 0;
+	}
+
+	.d-panel {
+		grid-template-columns: 1fr;
+	}
+
+	.d-visual {
+		max-width: 480px;
+	}
+
+	.d-pick__row {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		margin-inline: calc(-1 * clamp(16px, 5vw, 72px));
+		padding: 4px clamp(16px, 5vw, 72px) 8px;
+		scrollbar-width: none;
+	}
+
+	.d-chip {
+		flex-shrink: 0;
+	}
+}
+
+@media (max-width: 480px) {
+	.d-card-rig {
+		grid-template-columns: 1fr;
+	}
+
+	.d-card-quest {
+		box-shadow: 6px 6px 0 #ff5c8a;
+	}
+}
+
+/* ---- view switch: Overview / Full dive ---- */
+.d-view {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	gap: 4px;
+	margin-bottom: -16px;
+	padding: 4px;
+	border: 1.5px solid color-mix(in srgb, var(--color-text) 28%, transparent);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-bg-elevated) 85%, transparent);
+	backdrop-filter: blur(8px);
+	min-width: 0;
+}
+
+.d-view legend {
+	float: left;
+	padding: 0 10px 0 12px;
+	font: 500 11px var(--font-mono);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+}
+
+.d-view__opt {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 18px;
+	border-radius: 999px;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--color-text);
+	cursor: pointer;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.d-view__opt input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.d-view__opt:hover {
+	background: var(--color-accent-soft);
+}
+
+.d-view__opt:has(input:checked) {
+	background: var(--color-text);
+	color: var(--color-bg);
+	font-weight: 600;
+}
+
+.d-view__opt:has(input:focus-visible) {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+/* Things that belong to one view only */
+.only-dive,
+:root:has(#view-dive:checked) .only-overview {
+	display: none;
+}
+
+:root:has(#view-dive:checked) .only-dive {
+	display: inline-flex;
+}
+
+/* ---- the full dive (ROV page, deep style) ---- */
+.d-dive {
+	display: none;
+	/* always ocean, whichever mood is picked */
+	--water: #2c7896;
+	--deep: 0;
+	--fg: #e6f4f8;
+	--muted: #a9c8d3;
+	--line: rgba(230, 244, 248, 0.2);
+	--hi: #6ff7d8;
+	--color-text: var(--fg);
+	--color-text-muted: var(--muted);
+	--color-accent: #6ff7d8;
+	--color-accent-soft: rgba(111, 247, 216, 0.14);
+	--color-on-accent: #01231c;
+	--color-border: var(--line);
+	--color-bg-elevated: #06223a;
+	--d-glow-soft: rgba(111, 247, 216, 0.28);
+	position: relative;
+	color: var(--fg);
+	background: linear-gradient(180deg, transparent 0, var(--water) 220px, var(--water) calc(100% - 220px), transparent);
+	scroll-margin-top: 72px;
+	transition: background-color 0.3s linear;
+}
+
+:root:has(#view-dive:checked) .d-dive {
+	display: block;
+}
+
+.d-dive__deep {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: var(--deep);
+	mix-blend-mode: screen;
+	pointer-events: none;
+}
+
+.d-dive__layout {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+	gap: clamp(24px, 4vw, 56px);
+	max-width: 84rem;
+	margin-inline: auto;
+	padding: 0 clamp(16px, 5vw, 72px);
+}
+
+.d-dive__story {
+	display: flex;
+	flex-direction: column;
+}
+
+.d-sec {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 22px;
+	min-height: 100svh;
+	padding: 80px 0;
+}
+
+.d-depth {
+	align-self: flex-start;
+	padding: 6px 12px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: rgba(1, 7, 15, 0.35);
+	font: 500 13px var(--font-mono);
+	color: var(--hi);
+	text-shadow: 0 0 12px var(--d-glow-soft);
+}
+
+.d-depth span {
+	color: var(--muted);
+}
+
+.d-sec h2 {
+	font: 700 clamp(44px, 6vw, 84px) / 1 "Sora Variable", var(--font-sans);
+	letter-spacing: -0.04em;
+	text-shadow: 0 0 60px var(--d-glow-soft);
+}
+
+.d-sec h3 {
+	font: 600 clamp(30px, 3.6vw, 46px) / 1.08 "Sora Variable", var(--font-sans);
+	letter-spacing: -0.03em;
+}
+
+.d-muted {
+	color: var(--muted);
+	font-size: 17px;
+	line-height: 1.65;
+}
+
+.d-facts {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+}
+
+.d-facts div {
+	display: grid;
+	gap: 4px;
+	padding: 14px 16px;
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	background: rgba(1, 7, 15, 0.35);
+	backdrop-filter: blur(6px);
+}
+
+.d-facts dt {
+	font: 500 11px var(--font-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--hi);
+}
+
+.d-facts dd {
+	font-size: 16px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+.d-feed {
+	display: grid;
+	gap: 10px;
+}
+
+.d-feed__frame {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	border: 1px solid var(--line);
+	border-radius: 18px;
+	overflow: hidden;
+	box-shadow: 0 0 60px var(--d-glow-soft), 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+.d-feed video {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.d-feed__tag {
+	position: absolute;
+	left: 12px;
+	top: 12px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(1, 7, 15, 0.7);
+	font: 500 11px var(--font-mono);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.d-feed__tag i {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #ff5a4f;
+	animation: d-blink 1.6s steps(2, start) infinite;
+}
+
+.d-feed figcaption {
+	font-size: 14px;
+}
+
+.d-diagram {
+	width: 100%;
+	max-width: 380px;
+	height: auto;
+	overflow: visible;
+}
+
+.d-diagram rect {
+	fill: rgba(1, 7, 15, 0.45);
+	stroke: var(--line);
+	stroke-width: 1.2;
+}
+
+.d-diagram text {
+	fill: var(--fg);
+	font: 500 11px var(--font-mono);
+}
+
+.d-diagram text.small {
+	fill: var(--muted);
+	font-size: 9.5px;
+	letter-spacing: 0.08em;
+}
+
+.d-diagram text.lbl {
+	fill: var(--hi);
+	font-size: 10.5px;
+}
+
+.d-diagram .cmd {
+	stroke: var(--hi);
+	stroke-width: 1.8;
+	fill: none;
+	filter: drop-shadow(0 0 4px var(--hi));
+}
+
+.d-diagram .cmd.tether {
+	stroke-width: 3;
+}
+
+.d-diagram .m-cmd {
+	fill: var(--hi);
+}
+
+.d-diagram .vid {
+	stroke: var(--fg);
+	stroke-width: 1.4;
+	fill: none;
+	stroke-dasharray: 4 3;
+}
+
+.d-diagram .vid.solid {
+	stroke-dasharray: none;
+}
+
+.d-diagram .m-vid {
+	fill: var(--fg);
+}
+
+.d-diagram .waterline {
+	stroke: var(--muted);
+	stroke-width: 1;
+	fill: none;
+	stroke-dasharray: 2 4;
+}
+
+.d-legend {
+	font: 13px var(--font-mono);
+	color: var(--muted);
+}
+
+.d-legend b {
+	font-weight: 500;
+	color: var(--hi);
+	text-shadow: 0 0 10px var(--hi);
+}
+
+.d-legend span {
+	color: var(--fg);
+	border-bottom: 1.5px dashed var(--fg);
+}
+
+.d-work {
+	display: grid;
+	gap: 12px;
+}
+
+.d-work article {
+	display: grid;
+	gap: 6px;
+	padding: 18px 20px;
+	border: 1px solid var(--line);
+	border-radius: 16px;
+	background: rgba(1, 7, 15, 0.35);
+	backdrop-filter: blur(6px);
+}
+
+.d-work h4 {
+	font: 600 17px "Sora Variable", var(--font-sans);
+	color: var(--hi);
+}
+
+.d-work p {
+	color: var(--muted);
+	font-size: 15px;
+}
+
+/* The 3D stage: sticky beside the story, with its own depth gauge */
+.d-dive__stagecol {
+	min-width: 0;
+}
+
+.d-stage {
+	position: sticky;
+	top: 88px;
+	height: calc(100svh - 112px);
+	margin-block: 24px;
+}
+
+.d-stage canvas {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity 0.8s ease;
+}
+
+.d-stage.live canvas {
+	opacity: 1;
+}
+
+.d-stage__poster {
+	position: absolute;
+	left: 0;
+	right: 100px;
+	top: 50%;
+	width: calc(100% - 100px);
+	height: auto;
+	translate: 0 -50%;
+	filter: drop-shadow(0 0 40px var(--d-glow-soft));
+	transition: opacity 0.8s ease;
+}
+
+.d-stage.live .d-stage__poster {
+	opacity: 0;
+}
+
+.d-stage__cap {
+	position: absolute;
+	left: 0;
+	bottom: 8px;
+	padding: 6px 12px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: rgba(1, 7, 15, 0.5);
+	font: 500 12px var(--font-mono);
+	color: var(--fg);
+}
+
+.d-stage__status {
+	position: absolute;
+	left: 0;
+	top: 8px;
+	font: 11px var(--font-mono);
+	color: var(--muted);
+}
+
+.d-ping {
+	position: absolute;
+	left: 40%;
+	top: 50%;
+	width: 24px;
+	height: 24px;
+	margin: -12px 0 0 -12px;
+	border: 1px solid var(--hi);
+	border-radius: 50%;
+	pointer-events: none;
+	animation: d-ping 1.6s cubic-bezier(0.2, 0.6, 0.3, 1) forwards;
+}
+
+@keyframes d-ping {
+	from { transform: scale(1); opacity: 0.9; }
+	to { transform: scale(14); opacity: 0; }
+}
+
+.d-gauge {
+	position: absolute;
+	right: 0;
+	top: 8%;
+	bottom: 8%;
+	width: 84px;
+	font: 11px var(--font-mono);
+	color: var(--muted);
+}
+
+.d-gauge__rail {
+	position: absolute;
+	right: 24px;
+	top: 0;
+	bottom: 0;
+	width: 1px;
+	background: var(--line);
+}
+
+.d-gauge__tick {
+	position: absolute;
+	right: 24px;
+	width: 6px;
+	height: 1px;
+	background: var(--line);
+}
+
+.d-gauge__tick.major {
+	width: 12px;
+	background: var(--muted);
+}
+
+.d-gauge__num {
+	position: absolute;
+	right: 0;
+	translate: 0 -50%;
+	font-variant-numeric: tabular-nums;
+}
+
+.d-gauge__marker {
+	position: absolute;
+	right: 18px;
+	width: 13px;
+	height: 13px;
+	margin-top: -6.5px;
+	border-radius: 50%;
+	background: var(--hi);
+	box-shadow: 0 0 0 4px rgba(111, 247, 216, 0.25), 0 0 18px var(--hi);
+}
+
+.d-gauge__read {
+	position: absolute;
+	right: 40px;
+	translate: 0 -50%;
+	padding: 4px 8px;
+	border-radius: 999px;
+	background: rgba(1, 7, 15, 0.7);
+	color: var(--fg);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+/* Phones: the stage becomes a sticky band at the top, the story scrolls under it */
+@media (max-width: 900px) {
+	.d-dive__layout {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+
+	.d-dive__stagecol {
+		position: sticky;
+		top: 72px;
+		z-index: 1;
+		height: 40svh;
+		margin-inline: calc(-1 * clamp(16px, 5vw, 72px));
+		background: linear-gradient(180deg, var(--water) 75%, transparent);
+	}
+
+	.d-stage {
+		position: absolute;
+		inset: 0;
+		height: auto;
+		margin: 0;
+	}
+
+	.d-stage__poster {
+		left: 16px;
+		width: calc(100% - 80px);
+	}
+
+	.d-stage__cap {
+		left: 16px;
+	}
+
+	.d-stage__status {
+		left: 16px;
+	}
+
+	.d-gauge {
+		width: 48px;
+		right: 8px;
+	}
+
+	.d-gauge__num {
+		display: none;
+	}
+
+	.d-gauge__rail,
+	.d-gauge__tick {
+		right: 8px;
+	}
+
+	.d-gauge__marker {
+		right: 2px;
+	}
+
+	.d-gauge__read {
+		right: 22px;
+	}
+
+	.d-sec {
+		min-height: 0;
+		padding: 56px 0;
+	}
+
+	.d-facts {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.d-feed__tag i {
+		animation: none;
+	}
+}
+
+.d-gauge {
+	transition: opacity 0.4s ease;
+}
+
+.d-stage.surface .d-gauge {
+	opacity: 0;
+}
+
+/* The 3D model is the picture now; the still image is only a fallback for
+   when the 3D can't run (reduced motion, no WebGL). */
+.d-stage__poster {
+	display: none;
+}
+
+.d-stage.fallback .d-stage__poster {
+	display: block;
+}
+
+/* Full dive: the hero has no ROV picture; the 3D model lives in the dive. */
+:root:has(#view-dive:checked) .d-visual--rov img {
+	display: none;
+}
