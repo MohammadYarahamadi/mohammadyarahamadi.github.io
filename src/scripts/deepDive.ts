@@ -1,12 +1,12 @@
 /**
- * The "Full dive" view on /projects/: the ROV project page rebuilt in the deep
+ * The ROV's full dive on /projects/: the ROV project page rebuilt in the deep
  * style. Maps scroll through the dive section to 0–30 m and drives the
  * depth gauge, water colour, captions, pings and footage, like descent.ts
  * does on the ROV page. The 3D scene from that page (descentScene.ts) loads
  * the first time the dive comes near the screen; until then, and with
  * reduced motion, the stage shows a still image.
  *
- * Everything sleeps while the Overview view is picked (the section is
+ * Everything sleeps while another project is picked (the section is
  * display: none then).
  */
 
@@ -24,9 +24,9 @@ const marker = document.getElementById("d-g-marker")!;
 const read = document.getElementById("d-g-read")!;
 const deepbg = document.getElementById("d-deepbg") as HTMLVideoElement;
 const feed = document.getElementById("d-feed") as HTMLVideoElement;
-const viewDive = document.getElementById("view-dive") as HTMLInputElement;
+const rovPicked = document.getElementById("vibe-rov") as HTMLInputElement;
 
-const on = () => viewDive.checked;
+const on = () => rovPicked.checked;
 let depth = 0;
 
 // Water colour by depth, as on the ROV page: teal → blue-green → near-black.
@@ -147,7 +147,7 @@ document.fonts?.ready.then(() => {
 	queue();
 });
 document.addEventListener("deep:change", () => {
-	// the mood and view change the page's height above and inside the dive
+	// the mood changes the page's height above and inside the dive
 	requestAnimationFrame(() => {
 		measure();
 		queue();

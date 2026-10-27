@@ -1,6 +1,6 @@
 /**
- * Remembers the choices on /projects/ (the mood and the view): restores
- * each from its URL parameter (?vibe=, ?view=) or localStorage on load, and
+ * Remembers the choices on /projects/ (the picked project): restores it
+ * from its URL parameter (?vibe=) or localStorage on load, and
  * saves it on change. The homepage's project doors link here with ?vibe=.
  * The restyling itself is pure CSS (deep.css reads the checked radios), so
  * this file is optional.
@@ -14,7 +14,7 @@ function stored(key: string): string | null {
 	}
 }
 
-for (const name of ["vibe", "view"]) {
+for (const name of ["vibe"]) {
 	const key = `deep-${name}`;
 	const radios = [...document.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)];
 	const wanted = new URLSearchParams(location.search).get(name) ?? stored(key);

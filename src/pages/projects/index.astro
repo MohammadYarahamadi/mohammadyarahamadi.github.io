@@ -61,18 +61,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 	<span id="top" aria-hidden="true"></span>
 	<section class="d-hero" id="projects" aria-labelledby="d-pick-legend">
-		<fieldset class="d-view">
-			<legend>View</legend>
-			<label class="d-view__opt">
-				<input type="radio" name="view" value="overview" id="view-overview" checked />
-				<span>Overview</span>
-			</label>
-			<label class="d-view__opt">
-				<input type="radio" name="view" value="dive" id="view-dive" />
-				<span>Full dive</span>
-			</label>
-		</fieldset>
-
 		<fieldset class="d-pick">
 			<legend id="d-pick-legend">Pick a project</legend>
 			<div class="d-pick__row">
@@ -96,8 +84,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					laptop down to six thrusters, and the network that brings the camera back up.
 				</p>
 				<div class="d-actions">
-					<a class="btn btn--primary only-overview" href="/projects/rov/">Take the 3D dive →</a>
-					<a class="btn btn--primary only-dive" href="#dive">Start the dive ↓</a>
+					<a class="btn btn--primary" href="#dive">Start the dive ↓</a>
 					<a class="btn" href="#work">See all five</a>
 				</div>
 			</div>
@@ -204,7 +191,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 		</div>
 	</section>
 
-	{/* Full dive view only: the ROV project page, rebuilt in the deep style.
+	{/* The ROV's full dive, shown while the ROV is picked: the ROV project page, rebuilt in the deep style.
 	    src/scripts/deepDive.ts maps scroll to 0–30 m here and lazy-loads the
 	    3D scene from the ROV page (src/scripts/descentScene.ts). */}
 	<section class="d-dive" id="dive" aria-labelledby="dive-title">
@@ -343,8 +330,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				<p class="d-card__tag">01 · Hardware</p>
 				<h3>ROV</h3>
 				<p>Controller to thrusters, video back up, and a leak sensor that surfaces it on its own.</p>
-				<a class="d-card__link only-overview" href="/projects/rov/">Take the 3D dive →</a>
-				<a class="d-card__link only-dive" href="#dive">Back to the dive ↑</a>
+				<a class="d-card__link" href="?vibe=rov#dive">Take the dive ↓</a>
 			</article>
 			<article class="d-card d-card--school">
 				<p class="d-card__tag">02 · Software</p>
