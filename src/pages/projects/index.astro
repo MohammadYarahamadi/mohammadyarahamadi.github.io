@@ -18,10 +18,12 @@ const vibes = [
 	{ id: "web", label: "Web & Enterprise" },
 ];
 
-// The ROV hero card's stack, by layer (from src/content/projects/rov.md)
+// The ROV hero card's stack, by layer
 const rovStack: [string, string[]][] = [
 	["Hardware", ["Raspberry Pi", "ESP32", "IP camera", "Leak sensor (own design)"]],
+	["Code", ["Python", "Embedded C"]],
 	["Links", ["Bluetooth", "UDP", "Wi-Fi", "Tether", "USB serial"]],
+	["Video", ["RTSP", "ONVIF"]],
 	["Control", ["PWM", "6 thrusters"]],
 ];
 
@@ -213,7 +215,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 		<div class="d-dive__layout">
 			<div class="d-dive__story">
 				<section class="d-sec" data-depth="0" data-cap="At the surface">
-					<span class="d-depth">0 m <span>· Surface</span></span>
 					<h2 id="dive-title">The full dive</h2>
 					<p class="d-lede">
 						A tethered underwater vehicle driven with a controller. I built the whole chain,
@@ -224,7 +225,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				</section>
 
 				<section class="d-sec" data-depth="5" data-cap="LEDs switch on automatically in the dark">
-					<span class="d-depth">5 m <span>· The vehicle</span></span>
 					<h3>Six thrusters, a camera and two lights</h3>
 					<p class="d-muted">
 						An operator on the surface drives the ROV with a controller and watches its camera on
@@ -246,7 +246,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				</section>
 
 				<section class="d-sec" data-depth="12" data-cap="Camera · front centre, behind acrylic">
-					<span class="d-depth">12 m <span>· System overview</span></span>
 					<h3>From the controller to the thrusters</h3>
 					<p class="d-muted">
 						Commands go down: controller to laptop, over Wi-Fi to the modem buoy, down the tether
@@ -294,7 +293,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				</section>
 
 				<section class="d-sec" data-depth="20" data-cap="Exploded view · 6 thrusters">
-					<span class="d-depth">20 m <span>· What I built</span></span>
 					<h3>The whole chain, controller to propeller</h3>
 					<div class="d-work">
 						<article><h4>Controller &amp; laptop</h4><p>Reads the controller over Bluetooth and sends the operator's commands as UDP packets.</p></article>
@@ -306,7 +304,6 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				</section>
 
 				<section class="d-sec" data-depth="30" data-cap="Max depth · 30 m">
-					<span class="d-depth">30 m <span>· Outcome</span></span>
 					<h3>Down to 30 metres</h3>
 					<p class="d-muted">
 						Driven with a controller, with live camera video on the laptop and a leak sensor that

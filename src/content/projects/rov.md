@@ -2,7 +2,7 @@
 title: "ROV (Remotely Operated Vehicle)"
 summary: "A tethered underwater vehicle with six thrusters, a camera and two LEDs, driven with a controller down to 30 m."
 role: "Networking, embedded, controls"
-tags: ["networking", "embedded", "robotics", "UDP"]
+tags: ["networking", "embedded", "robotics", "UDP", "Python", "Embedded C", "RTSP", "ONVIF"]
 status: "completed"
 page: "/projects/rov/"
 order: 20

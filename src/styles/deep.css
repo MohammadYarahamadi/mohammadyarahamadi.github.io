@@ -1008,21 +1008,6 @@ body.deep {
 	padding: 80px 0;
 }
 
-.d-depth {
-	align-self: flex-start;
-	padding: 6px 12px;
-	border: 1px solid var(--line);
-	border-radius: 999px;
-	background: rgba(1, 7, 15, 0.35);
-	font: 500 13px var(--font-mono);
-	color: var(--hi);
-	text-shadow: 0 0 12px var(--d-glow-soft);
-}
-
-.d-depth span {
-	color: var(--muted);
-}
-
 .d-sec h2 {
 	font: 700 clamp(44px, 6vw, 84px) / 1 "Sora Variable", var(--font-sans);
 	letter-spacing: -0.04em;
