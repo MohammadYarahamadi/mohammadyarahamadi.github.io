@@ -94,7 +94,8 @@ through the design canvas. **No dates are known yet**, and the bodies end with
 
 1. **ROV (flagship hardware):** see §5. Its own 3D dive page.
 2. **Gamified School (flagship software):** a learning platform that turns programming into
-   quests, with Docker and PostgreSQL simulated inside the app. Full-stack.
+   quests, built with AI for the college students Mohyar was teaching. Courses: Git, Docker,
+   PostgreSQL and system design; Docker and PostgreSQL are simulated inside the app.
 3. **Drilling Simulation:** a physical well-drilling simulator built for a company. ESP32 boards
    simulate the rig's control panels as real hardware.
 4. **IoT, three builds:**

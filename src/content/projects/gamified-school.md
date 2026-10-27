@@ -1,20 +1,25 @@
 ---
 title: "Gamified School"
-summary: "A learning platform that turns programming concepts into quests, with Docker and PostgreSQL simulated inside the app."
-role: "Full-stack"
-tags: ["full-stack", "education", "Docker (simulated)", "PostgreSQL (simulated)"]
+summary: "A learning platform I built with AI for the college students I was teaching, with courses on Git, Docker, PostgreSQL and system design."
+role: "Teacher · built with AI"
+tags: ["education", "AI-assisted", "Git", "Docker (simulated)", "PostgreSQL (simulated)", "system design"]
 hasDemo: false
 order: 20
 ---
 
-A learning platform that turns programming concepts into quests. It fully
-simulates Docker and PostgreSQL engines inside the app, so learners practise
-real commands with nothing to install.
+A learning platform that turns programming concepts into quests. I built it
+with AI for the college students I was teaching, so they could practise
+real tools hands-on, with nothing to install.
+
+### Courses
+
+- Git
+- Docker
+- PostgreSQL
+- System design
 
 ### How it works
 
 - Lessons are quests with objectives, XP and levels
 - A simulated Docker engine and a simulated PostgreSQL engine run entirely
   in the app, so every lesson is hands-on
-
-[More details to come: the stack, who it is for, and screenshots.]
