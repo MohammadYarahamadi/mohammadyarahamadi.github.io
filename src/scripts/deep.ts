@@ -3,6 +3,10 @@
  * from its URL parameter (?vibe=, ?view=) or localStorage on load, and
  * saves it on change. The restyling itself is pure CSS (deep.css reads the
  * checked radios), so this file is optional.
+ *
+ * It also switches the page between the plain welcome colours and the
+ * picked mood: data-zone="welcome" stays on <html> until the project
+ * picker comes up to the middle of the screen.
  */
 
 function stored(key: string): string | null {
@@ -42,5 +46,26 @@ const row = chip?.parentElement;
 if (chip && row && row.scrollWidth > row.clientWidth) {
 	row.scrollLeft = chip.offsetLeft - row.offsetLeft - 16;
 }
+
+// ---- welcome zone ----
+const root = document.documentElement;
+const projects = document.getElementById("projects")!;
+let queued = false;
+function zone() {
+	queued = false;
+	const welcome = projects.getBoundingClientRect().top > innerHeight * 0.5;
+	if (welcome) root.dataset.zone = "welcome";
+	else delete root.dataset.zone;
+}
+const queue = () => {
+	if (!queued) {
+		queued = true;
+		requestAnimationFrame(zone);
+	}
+};
+addEventListener("scroll", queue, { passive: true });
+addEventListener("resize", queue);
+document.addEventListener("deep:change", queue);
+zone();
 
 export {};

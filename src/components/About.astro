@@ -1,4 +1,5 @@
 ---
+const { eyebrow = "07 · About" } = Astro.props;
 const steps = [
 	["Education", "Computer Engineering degree", "Foundations in digital systems, networks and programming."],
 	["Engineering", "ESP32 and Raspberry Pi systems", "From an underwater ROV to an industrial drilling simulator."],
@@ -11,7 +12,7 @@ const steps = [
 
 <section class="j-section about" id="about" data-world="plain" data-chapter="07 · About" aria-labelledby="about-title">
 	<div class="j-section__head">
-		<p class="eyebrow">07 · About</p>
+		<p class="eyebrow">{eyebrow}</p>
 		<h2 id="about-title">Engineer by degree, teacher by choice</h2>
 		<p>
 			I studied Computer Engineering and ended up where hardware meets software. I also teach

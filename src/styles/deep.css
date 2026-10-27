@@ -276,7 +276,7 @@ body.deep {
 	max-width: 84rem;
 	min-height: calc(100svh - 73px);
 	margin-inline: auto;
-	/* keep the picker clear of the sticky nav when jumping to #top */
+	/* keep the picker clear of the sticky nav when jumping to #projects */
 	scroll-margin-top: 80px;
 	padding: clamp(32px, 5vw, 64px) clamp(16px, 5vw, 72px) 64px;
 }
@@ -1427,4 +1427,114 @@ body.deep {
 /* Full dive: the hero has no ROV picture; the 3D model lives in the dive. */
 :root:has(#view-dive:checked) .d-visual--rov img {
 	display: none;
+}
+
+/* ---- welcome ----
+   The page opens in the site's plain colours (global.css): a welcome, About
+   and Skills, then a prompt to see the projects. deep.ts sets
+   data-zone="welcome" until the project picker scrolls into view, and the
+   mood picked there takes over. The #top in :has() is only there to outrank
+   the vibe rules above, which carry an id. */
+:root[data-zone="welcome"]:has(#top) {
+	--color-bg: #05070a;
+	--color-bg-elevated: #0c1117;
+	--color-text: #e8edf2;
+	--color-text-muted: #9aa6b5;
+	--color-accent: #00e5ff;
+	--color-accent-strong: #5ff0ff;
+	--color-accent-soft: rgba(0, 229, 255, 0.12);
+	--color-on-accent: #00151a;
+	--color-border: #1a222c;
+	--d-display: "Sora Variable", var(--font-sans);
+	--d-glow: #00e5ff;
+	--d-glow-2: #00e5ff;
+	--d-glow-soft: rgba(0, 229, 255, 0.24);
+	--d-card: rgba(12, 17, 23, 0.8);
+	--d-p-radius: 50%;
+	--d-p-rotate: 0deg;
+	--d-p-anim: d-rise;
+	color-scheme: dark;
+}
+
+.d-sea__welcome {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.8s ease;
+	background:
+		radial-gradient(circle at 85% 0%, rgba(0, 229, 255, 0.12), transparent 45%),
+		radial-gradient(circle at 5% 95%, rgba(0, 229, 255, 0.06), transparent 40%),
+		#05070a;
+}
+
+:root[data-zone="welcome"]:has(#top) .d-sea__welcome {
+	opacity: 1;
+}
+
+:root[data-zone="welcome"]:has(#top) .d-particle {
+	opacity: 0.45;
+	box-shadow: 0 0 calc(var(--s) * 3) var(--d-glow);
+}
+
+.d-welcome {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 24px;
+	max-width: 84rem;
+	min-height: calc(100svh - 73px);
+	margin-inline: auto;
+	padding: clamp(48px, 8vw, 96px) clamp(16px, 5vw, 72px);
+}
+
+.d-welcome h1 {
+	font: 300 clamp(48px, 8vw, 112px) / 1 var(--d-display);
+	letter-spacing: -0.045em;
+}
+
+.d-welcome h1 strong {
+	font-weight: 700;
+	text-shadow: 0 0 60px var(--d-glow-soft);
+}
+
+.d-welcome__role {
+	font: 500 clamp(13px, 1.2vw, 15px) var(--font-mono);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--color-text);
+}
+
+.d-welcome .d-actions {
+	margin-top: 8px;
+}
+
+.d-prompt {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	max-width: 46rem;
+	min-height: 70svh;
+	margin-inline: auto;
+	padding: 64px clamp(16px, 5vw, 48px) 96px;
+	text-align: center;
+}
+
+.d-prompt h2 {
+	font: 700 clamp(40px, 6vw, 76px) / 1.05 var(--d-display);
+	letter-spacing: -0.04em;
+	text-shadow: 0 0 60px var(--d-glow-soft);
+}
+
+.d-prompt p:not(.eyebrow) {
+	font-size: clamp(17px, 1.4vw, 19px);
+	line-height: 1.65;
+	color: var(--color-text-muted);
+}
+
+.d-prompt .btn {
+	min-height: 54px;
+	padding: 0 1.7rem;
+	font-size: 1rem;
 }

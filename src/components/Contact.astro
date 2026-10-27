@@ -1,10 +1,11 @@
 ---
+const { eyebrow = "08 · Contact" } = Astro.props;
 const email = "mohyar1380@gmail.com";
 ---
 
 <section class="j-section contact" id="contact" data-world="plain" data-chapter="08 · Contact" aria-labelledby="contact-title">
 	<div>
-		<p class="eyebrow">08 · Contact</p>
+		<p class="eyebrow">{eyebrow}</p>
 		<h2 id="contact-title">Have hardware that needs a brain?</h2>
 		<p>Projects, teaching, or a question about ESP32s. My inbox is open.</p>
 		<div class="j-actions">

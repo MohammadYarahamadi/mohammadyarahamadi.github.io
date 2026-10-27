@@ -8,10 +8,13 @@ import "../styles/journey.css";
 import "../styles/deep.css";
 
 // Direction B ("Bioluminescent Deep") from the Portfolio Glow-up canvas, as
-// a prototype next to the current homepage. The project picker at the top
-// sets the whole page's mood: each choice is a radio button, and deep.css
-// restyles the page from :root:has(...:checked), so it works without JS.
-// src/scripts/deep.ts only remembers the choice (?vibe= and localStorage).
+// a prototype next to the current homepage. The visitor is welcomed first
+// (who I am, what I work with) in the site's plain colours, then sent on to
+// the projects. There a project picker sets the whole page's mood: each
+// choice is a radio button, and deep.css restyles the page from
+// :root:has(...:checked), so it works without JS. src/scripts/deep.ts
+// remembers the choice (?vibe= and localStorage) and switches between the
+// plain welcome colours and the mood as you scroll.
 const vibes = [
 	{ id: "rov", label: "ROV" },
 	{ id: "school", label: "Gamified School" },
@@ -48,11 +51,14 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 	bodyClass="deep"
 >
 	<meta slot="head" name="robots" content="noindex" />
+	<!-- start in the plain welcome colours; deep.ts updates this on scroll -->
+	<script slot="head" is:inline>document.documentElement.dataset.zone = "welcome";</script>
 
 	<div class="d-sea" aria-hidden="true">
 		{vibes.map((v) => <div class={`d-sea__layer d-sea__layer--${v.id}`}></div>)}
 		<img class="d-sea__photo" src="/media/rov-deep.jpg" alt="" width="640" height="360" />
 		<div class="d-sea__rays"></div>
+		<div class="d-sea__welcome"></div>
 		{
 			particles.map((p) => (
 				<span
@@ -63,7 +69,37 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 		}
 	</div>
 
-	<section class="d-hero" id="top" aria-labelledby="d-pick-legend">
+	<section class="d-welcome" id="top" aria-labelledby="d-welcome-title">
+		<p class="eyebrow">Welcome to my portfolio</p>
+		<h1 id="d-welcome-title">Hi, I'm <strong>Mohyar</strong>.</h1>
+		<p class="d-welcome__role">Embedded software engineer · IoT · Web</p>
+		<p class="d-lede">
+			I write the code that makes hardware think, talk and dive: firmware for ESP32 and
+			Raspberry Pi, networked video, and the web apps on top. Here's who I am and what I work
+			with. Then pick a project and the page changes to match it.
+		</p>
+		<div class="d-actions">
+			<a class="btn btn--primary" href="#projects">Check out the projects ↓</a>
+			<a class="btn" href="#about">About me</a>
+		</div>
+	</section>
+
+	<div class="j-plain d-plain d-plain--welcome">
+		<About eyebrow="About" />
+		<Skills eyebrow="What I work with" />
+	</div>
+
+	<section class="d-prompt" aria-labelledby="d-prompt-title">
+		<p class="eyebrow">The projects</p>
+		<h2 id="d-prompt-title">Now, the work.</h2>
+		<p>
+			Five projects, each with its own mood. Pick one and the whole page changes with it: the
+			colours, the type and the background.
+		</p>
+		<a class="btn btn--primary" href="#projects">Check out the projects ↓</a>
+	</section>
+
+	<section class="d-hero" id="projects" aria-labelledby="d-pick-legend">
 		<fieldset class="d-view">
 			<legend>View</legend>
 			<label class="d-view__opt">
@@ -377,9 +413,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 	</section>
 
 	<div class="j-plain d-plain">
-		<Skills />
-		<About />
-		<Contact />
+		<Contact eyebrow="Contact" />
 	</div>
 
 	<ProjectModals slot="overlays" />
