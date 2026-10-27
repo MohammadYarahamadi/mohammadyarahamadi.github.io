@@ -9,12 +9,15 @@ interface Props {
 	description?: string;
 	/** Lets a page restyle the body, e.g. a page with its own background. */
 	bodyClass?: string;
+	/** The homepage scroll journey (chapter pill and progress in the nav). */
+	journey?: boolean;
 }
 
 const {
 	title,
 	description = "Portfolio of hardware, embedded, and software projects.",
 	bodyClass,
+	journey = false,
 } = Astro.props;
 ---
 
@@ -35,7 +38,7 @@ const {
 		<slot name="head" />
 	</head>
 	<body class={bodyClass}>
-		<Nav />
+		<Nav journey={journey} />
 		<main>
 			<slot />
 		</main>

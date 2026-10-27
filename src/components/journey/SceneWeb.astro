@@ -1,0 +1,41 @@
+---
+const bars = [38, 56, 44, 72, 64, 90];
+---
+
+<section class="j-scene w-web" id="web" data-world="web" data-chapter={"05 · Web & Enterprise · Dashboard"} aria-label="Web and Enterprise">
+	<div class="j-stick">
+		<div class="j-copy">
+			<p class="j-tag rv">05 · Web &amp; Enterprise</p>
+			<h2 class="rv" style="--d:60ms">Websites and ERP that businesses run on</h2>
+			<p class="j-lede rv" style="--d:120ms">
+				Company websites, currently Dealfdi, plus Odoo ERP and CRM services for businesses.
+				Before that I sold the websites our team built, so I know the client's side of the
+				table too.
+			</p>
+			<ul class="pills rv" style="--d:180ms">
+				<li>Company sites</li>
+				<li>Odoo ERP</li>
+				<li>Odoo CRM</li>
+				<li>Sales</li>
+			</ul>
+			<div class="j-actions rv" style="--d:240ms">
+				<button class="btn" type="button" data-open-project="web-enterprise">Read more</button>
+			</div>
+		</div>
+		<div class="dash rv" style="--d:160ms" aria-hidden="true">
+			<div class="dash__head">
+				<span>Overview</span>
+				<div class="dash__tabs"><span>Sites</span><span>ERP</span><span>CRM</span></div>
+			</div>
+			<div class="tiles">
+				<div><p>Current site</p><strong>Dealfdi</strong></div>
+				<div><p>Platform</p><strong>Odoo</strong></div>
+				<div><p>Modules</p><strong>ERP · CRM</strong></div>
+			</div>
+			<div class="bars">
+				{bars.map((h) => <i style={`--h:${h}`} />)}
+			</div>
+			<p class="dash__note">Illustrative chart</p>
+		</div>
+	</div>
+</section>

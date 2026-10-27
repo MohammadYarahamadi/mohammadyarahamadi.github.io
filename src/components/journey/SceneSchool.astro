@@ -1,0 +1,44 @@
+---
+const objectives = [
+	"docker pull postgres",
+	"docker run -d postgres",
+	"CREATE TABLE heroes (...);",
+	"SELECT * FROM heroes;",
+];
+---
+
+<section class="j-scene w-school" id="school" data-world="school" data-chapter="02 · Gamified School · Game" aria-label="Gamified School project">
+	<div class="j-stick">
+		<div class="j-copy">
+			<p class="j-tag rv">02 · Flagship software</p>
+			<h2 class="rv" style="--d:60ms"><span>GAMIFIED</span><span>SCHOOL</span></h2>
+			<p class="j-lede rv" style="--d:140ms">
+				A learning platform that turns programming concepts into quests. It fully simulates
+				Docker and PostgreSQL engines inside the app, so you practise real commands with
+				nothing to install.
+			</p>
+			<ul class="tags rv" style="--d:200ms">
+				<li>DOCKER · SIMULATED</li>
+				<li>POSTGRESQL · SIMULATED</li>
+				<li class="y">FULL-STACK</li>
+			</ul>
+			<div class="j-actions rv" style="--d:260ms">
+				<button class="btn" type="button" data-open-project="gamified-school">Read more</button>
+			</div>
+		</div>
+		<div class="rv" style="--d:220ms" aria-hidden="true">
+			<div class="quest up" data-quest>
+				<div class="quest__head"><span>QUEST 04</span><span>LVL <span data-lvl>4</span></span></div>
+				<p class="quest__title">Ship your first database</p>
+				<ul>
+					{objectives.map((o) => <li class="done">{o}</li>)}
+				</ul>
+				<div>
+					<div class="xp__row"><span>XP</span><span><span data-xp>1000</span> / 1000</span></div>
+					<div class="xp__bar"><i></i></div>
+				</div>
+				<div class="levelup">LEVEL UP!</div>
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,38 +1,24 @@
 ---
-title: "Backup-Power Camera System"
-summary: "A camera system that stays online during power outages using battery backup and a cellular (SIM) uplink."
+title: "Backup-Power Camera"
+summary: "An ESP32-CAM wireless camera that keeps recording through power cuts, with battery backup and a cellular (SIM) uplink."
 role: "Solo builder"
-tags: ["embedded", "power management", "cellular", "IoT"]
-period: "2023"
+tags: ["ESP32-CAM", "embedded", "power management", "cellular", "IoT"]
 status: "completed"
 hasDemo: true
 demoComponent: "CameraSystemDiagram"
-order: 60
+order: 50
 ---
 
-Built a camera system designed to keep working through power outages — the
-exact scenario where security cameras are most needed and most likely to go
-dark.
+A camera that keeps working through power outages, the moment security
+cameras are most needed and most likely to go dark.
 
-### Problem
+### How it works
 
-Most home/small-site camera systems fail the moment mains power (and often
-the local internet/Wi-Fi router) goes down — precisely when they matter
-most.
+- An ESP32-CAM records and streams the video
+- A battery takes over when the mains power fails
+- A cellular (SIM) uplink keeps it reachable when the local internet is down
+  too
 
-### Approach
+The diagram below shows the switch-over.
 
-- **Battery backup**: a battery stage that seamlessly takes over powering
-  the camera and its controller when mains power is lost, with no gap in
-  recording
-- **Cellular (SIM) uplink**: a SIM-based cellular connection as the primary
-  or fallback network path, so the system stays reachable even if the local
-  router/internet is also down
-- Power-state monitoring so the system can report when it has switched to
-  battery, and how much runtime is left
-
-### Outcome
-
-A camera system that keeps recording and stays remotely reachable through a
-full local power outage — validated during real outages, not just bench
-tests.
+[More details to come: parts, runtime and photos.]

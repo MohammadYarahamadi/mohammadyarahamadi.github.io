@@ -4,9 +4,12 @@ import "../../styles/islands.css";
 export default function CameraSystemDiagram() {
 	const [outage, setOutage] = useState(false);
 
-	const mainsColor = outage ? "#23272c" : "#5eead4";
-	const batteryColor = outage ? "#5eead4" : "#23272c";
-	const cellularColor = outage ? "#5eead4" : "#23272c";
+	// Site tokens (global.css): accent for the live path, border for idle ones.
+	const ON = "#00e5ff";
+	const OFF = "#2a3442";
+	const mainsColor = outage ? OFF : ON;
+	const batteryColor = outage ? ON : OFF;
+	const cellularColor = outage ? ON : OFF;
 
 	return (
 		<div className="demo">
@@ -33,12 +36,13 @@ export default function CameraSystemDiagram() {
 				<text x={16} y={45} fontSize={4} fill={batteryColor} textAnchor="middle">Battery</text>
 
 				{/* Camera unit */}
-				<rect x={42} y={24} width={22} height={12} rx={2} fill="none" stroke="#eef1f5" strokeWidth={1} />
-				<text x={53} y={31} fontSize={4} fill="#eef1f5" textAnchor="middle">Camera</text>
+				<rect x={42} y={24} width={22} height={12} rx={2} fill="none" stroke="#e8edf2" strokeWidth={1} />
+				<text x={53} y={31} fontSize={4} fill="#e8edf2" textAnchor="middle">Camera</text>
 
 				{/* Cellular / SIM uplink */}
 				<rect x={73} y={24} width={22} height={12} rx={2} fill="none" stroke={cellularColor} strokeWidth={1} />
-				<text x={84} y={31} fontSize={3.5} fill={cellularColor} textAnchor="middle">Cellular (SIM)</text>
+				<text x={84} y={29.2} fontSize={3.5} fill={cellularColor} textAnchor="middle">Cellular</text>
+				<text x={84} y={33.4} fontSize={3.5} fill={cellularColor} textAnchor="middle">(SIM)</text>
 
 				{/* Power lines */}
 				<line x1={27} y1={16} x2={42} y2={28} stroke={mainsColor} strokeWidth={1} />

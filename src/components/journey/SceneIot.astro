@@ -1,0 +1,52 @@
+---
+// Each build opens its project modal; the camera and sous vide ones carry
+// their live demos.
+const builds = [
+	["backup-power-camera", "ESP32-CAM wireless camera", "A wireless camera that keeps recording through a power cut, with battery backup and a SIM uplink.", "Open details + live diagram"],
+	["sous-vide", "Sous vide controller", "A personal project: a temperature controller for sous vide cooking.", "Open details + live demo"],
+	["ac-remote", "Smart AC remote", "An ESP32-based smart remote for the air conditioner.", "Open details"],
+];
+const lines: [string, boolean][] = [
+	["$ iot --list", true],
+	["  esp32-cam   sous-vide   ac-remote", false],
+	["$ esp32-cam --status", true],
+	["  power ....... battery backup", false],
+	["  stream ...... recording", false],
+	["$ sousvide --status", true],
+	["  heater ...... holding temperature", false],
+	["$ ac-remote --send power", true],
+	["  ir .......... sent", false],
+];
+---
+
+<section class="j-scene w-iot" id="iot" data-world="iot" data-chapter="04 · IoT · Terminal" aria-label="IoT projects">
+	<div class="j-stick">
+		<div class="j-copy">
+			<p class="j-tag rv">04 · Three builds</p>
+			<h2 class="rv" style="--d:60ms">&gt; IoT Projects<span class="blink" aria-hidden="true">_</span></h2>
+			<p class="j-lede rv" style="--d:120ms">Small ESP32 builds for everyday problems. Open one to read more.</p>
+			<div class="builds rv" style="--d:180ms">
+				{
+					builds.map(([id, title, text, cta], i) => (
+						<details open={i === 0}>
+							<summary>
+								<span class="chev" aria-hidden="true">▸</span>[{i + 1}] {title}
+							</summary>
+							<div class="body">
+								<p>{text}</p>
+								<button type="button" data-open-project={id}>{cta}</button>
+							</div>
+						</details>
+					))
+				}
+			</div>
+		</div>
+		<div class="terminal rv" style="--d:160ms" aria-hidden="true">
+			<div class="terminal__bar"><span>mohyar@iot: ~</span><span>tty1</span></div>
+			<div class="terminal__body" data-term>
+				{lines.map(([text, cmd]) => <div class={cmd ? "cmd" : undefined}>{text}</div>)}
+				<div><span class="cmd">$ </span><span class="cursor blink"></span></div>
+			</div>
+		</div>
+	</div>
+</section>

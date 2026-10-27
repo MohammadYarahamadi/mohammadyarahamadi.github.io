@@ -2,52 +2,20 @@
 const email = "mohyar1380@gmail.com";
 ---
 
-<section id="contact" class="contact" data-reveal>
-	<div class="container">
-		<h2 class="section-title">Get in touch</h2>
-		<p class="contact__body">
-			Have a project in mind, or want to talk hardware, embedded systems, or
-			ERP work? I'd like to hear from you.
-		</p>
-		<a class="button button--primary" href={`mailto:${email}`}>{email}</a>
+<section class="j-section contact" id="contact" data-world="plain" data-chapter="08 · Contact" aria-labelledby="contact-title">
+	<div>
+		<p class="eyebrow">08 · Contact</p>
+		<h2 id="contact-title">Have hardware that needs a brain?</h2>
+		<p>Projects, teaching, or a question about ESP32s. My inbox is open.</p>
+		<div class="j-actions">
+			<a class="btn btn--primary" href={`mailto:${email}`}>
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+				{email}
+			</a>
+			<a class="btn" href="#top">
+				Back to the surface
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
+			</a>
+		</div>
 	</div>
 </section>
-
-<style>
-	.contact {
-		padding-block: var(--space-6);
-		border-top: 1px solid var(--color-border);
-	}
-
-	.section-title {
-		font-size: 1.75rem;
-		letter-spacing: -0.01em;
-		margin-bottom: var(--space-3);
-	}
-
-	.contact__body {
-		max-width: 55ch;
-		color: var(--color-text-muted);
-		margin-bottom: var(--space-4);
-	}
-
-	.button {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.75rem 1.25rem;
-		border-radius: var(--radius);
-		font-weight: 600;
-		transition: transform 0.2s var(--ease-out), background 0.2s var(--ease-out);
-	}
-
-	.button--primary {
-		background: var(--color-accent);
-		color: #04211c;
-	}
-
-	.button--primary:hover,
-	.button--primary:focus-visible {
-		transform: translateY(-2px);
-		background: var(--color-accent-strong);
-	}
-</style>

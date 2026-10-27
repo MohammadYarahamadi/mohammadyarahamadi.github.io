@@ -1,0 +1,54 @@
+---
+// Icons: inline stroke SVGs (Lucide-style paths), decorative.
+const skills = [
+	{
+		title: "Embedded firmware",
+		text: "ESP32 and Raspberry Pi 5: sensors, PWM control and the code that ties them together.",
+		icon: '<rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
+	},
+	{
+		title: "Networking and video",
+		text: "Live video over RTSP and ONVIF, UDP control links, and dependable connections between devices.",
+		icon: '<path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M2 9a15 15 0 0 1 20 0"/><circle cx="12" cy="19.5" r="0.8"/>',
+	},
+	{
+		title: "IoT devices",
+		text: "Small connected builds that keep working: cameras, controllers and remotes.",
+		icon: '<path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/>',
+	},
+	{
+		title: "Full-stack web",
+		text: "Interactive web apps and company sites, including 3D in the browser with Three.js.",
+		icon: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M9 14l-2 2 2 2M15 14l2 2-2 2"/>',
+	},
+	{
+		title: "Odoo ERP / CRM",
+		text: "Setting up and extending Odoo for businesses that want their operations in one place.",
+		icon: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+	},
+	{
+		title: "Learning: LLM systems",
+		text: "Studying how LLM systems work, and writing notes along the way.",
+		icon: '<path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h8M8 11h6"/>',
+		learning: true,
+	},
+];
+---
+
+<section class="j-section" id="skills" data-world="plain" data-chapter="06 · What I work with" aria-labelledby="skills-title">
+	<div class="j-section__head">
+		<p class="eyebrow">06 · What I work with</p>
+		<h2 id="skills-title">From the pin to the browser</h2>
+	</div>
+	<ul class="skills">
+		{
+			skills.map((s) => (
+				<li class={s.learning ? "learning" : undefined}>
+					<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={s.icon} />
+					<h3>{s.title}</h3>
+					<p>{s.text}</p>
+				</li>
+			))
+		}
+	</ul>
+</section>

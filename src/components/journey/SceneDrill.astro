@@ -1,0 +1,66 @@
+---
+const panels = ["A", "B", "C"];
+---
+
+<section class="j-scene w-drill" id="drilling" data-world="drill" data-chapter="03 · Drilling sim · Blueprint" aria-label="Drilling Simulation project">
+	<div class="j-stick">
+		<div class="j-copy">
+			<p class="j-tag rv">03 · Industrial · Oil &amp; gas</p>
+			<h2 class="rv" style="--d:60ms"><span>Drilling</span><span>Simulation</span></h2>
+			<p class="j-lede rv" style="--d:140ms">
+				A physical well-drilling simulator built for a company. ESP32 boards simulate the
+				rig's different control panels as real hardware, not just a screen.
+			</p>
+			<ul class="panels rv" style="--d:200ms" aria-hidden="true">
+				{
+					panels.map((p) => (
+						<li class="on" data-panel>
+							<b><span class="led" />PANEL {p}</b>
+							<small>ESP32 · <span data-state>ONLINE</span></small>
+						</li>
+					))
+				}
+			</ul>
+			<div class="j-actions rv" style="--d:260ms">
+				<button class="btn" type="button" data-open-project="drilling-simulation">Read more</button>
+			</div>
+		</div>
+		<div class="rig rv" style="--d:180ms">
+			<svg viewBox="0 0 520 720" role="img" aria-label="Blueprint of a drilling rig with the drill bit descending">
+				<g fill="none" stroke="#CFE3FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M20 210H500"></path>
+					<path d="M40 210L28 226M80 210L68 226M120 210L108 226M160 210L148 226M360 210L348 226M400 210L388 226M440 210L428 226M480 210L468 226"></path>
+					<path d="M200 210L248 30L296 210"></path>
+					<path d="M212 165H284M224 120H272M236 75H260"></path>
+					<path d="M212 165L272 120M284 165L224 120"></path>
+					<rect x="236" y="18" width="24" height="12"></rect>
+					<rect x="160" y="190" width="40" height="20"></rect>
+					<line x1="248" y1="30" x2="248" y2="680" stroke-dasharray="6 5" data-pipe></line>
+				</g>
+				<g fill="none" stroke="#CFE3FF" stroke-width="1" opacity="0.35">
+					<path d="M20 330H500M20 470H500M20 610H500" stroke-dasharray="2 6"></path>
+				</g>
+				<path d="M240 0H256L248 16Z" fill="#FF8A3D" transform="translate(0 680)" data-bit></path>
+				<g stroke="#FF8A3D" stroke-width="1.2" fill="none">
+					<line x1="400" y1="210" x2="400" y2="680" data-dim></line>
+					<path d="M392 210H408"></path>
+					<line x1="392" y1="680" x2="408" y2="680" data-dimend></line>
+				</g>
+				<g transform="translate(0 445)" data-dimlabel>
+					<text x="414" y="0" fill="#FF8A3D" font-family="JetBrains Mono Variable, monospace" font-size="16" font-weight="600"><tspan data-bitdepth>2400</tspan> m</text>
+					<text x="414" y="16" fill="#CFE3FF" font-family="JetBrains Mono Variable, monospace" font-size="10" opacity="0.8">BIT DEPTH (SIM)</text>
+				</g>
+				<circle cx="320" cy="96" r="12" fill="none" stroke="#CFE3FF" stroke-width="1.2"></circle>
+				<text x="316" y="100" fill="#CFE3FF" font-family="JetBrains Mono Variable, monospace" font-size="11">A</text>
+				<path d="M332 96H372" stroke="#CFE3FF" stroke-width="1"></path>
+				<text x="378" y="100" fill="#CFE3FF" font-family="JetBrains Mono Variable, monospace" font-size="11">DERRICK</text>
+				<text x="30" y="324" fill="#CFE3FF" opacity="0.6" font-family="JetBrains Mono Variable, monospace" font-size="10">STRATUM 1</text>
+				<text x="30" y="464" fill="#CFE3FF" opacity="0.6" font-family="JetBrains Mono Variable, monospace" font-size="10">STRATUM 2</text>
+				<text x="30" y="604" fill="#CFE3FF" opacity="0.6" font-family="JetBrains Mono Variable, monospace" font-size="10">STRATUM 3</text>
+			</svg>
+		</div>
+		<div class="titleblock rv" style="--d:300ms" aria-hidden="true">
+			<span>DWG 03</span><span>DRILLING SIM</span><span>SCALE NTS</span><span>REV A</span>
+		</div>
+	</div>
+</section>

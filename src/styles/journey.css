@@ -1,0 +1,1250 @@
+/* Homepage "scroll journey": one full-screen world per project.
+   Markup: src/components/journey/*. Scroll state: src/scripts/journey.ts,
+   which sets --p (0–1 progress) on each world and toggles .on on the active
+   world and its background layer. Without JS every world shows its final
+   state on its own background. */
+@import "@fontsource/press-start-2p";
+
+.journey {
+	--stage-pad-top: 96px;
+	--rail-w: 140px;
+	position: relative;
+}
+
+/* ---- background layers (fixed, cross-fading) ---- */
+.j-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background: var(--color-bg);
+}
+
+.j-layer {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	opacity: 0;
+	transition: opacity 0.9s ease;
+}
+
+.j-layer.on {
+	opacity: 1;
+}
+
+.bg-intro,
+.bg-plain {
+	background-color: var(--color-bg);
+	background-image:
+		radial-gradient(circle at 78% 28%, var(--color-accent-soft), transparent 42%),
+		linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+	background-size: auto, 48px 48px, 48px 48px;
+}
+
+.bg-rov {
+	background: linear-gradient(180deg, #0e4a66 0%, #062a3d 45%, #010910 100%);
+}
+
+.bg-rov .rays {
+	position: absolute;
+	top: 0;
+	left: 18%;
+	width: 64%;
+	height: 75%;
+	background: repeating-linear-gradient(100deg, rgba(160, 225, 255, 0.07) 0 38px, transparent 38px 120px);
+	mask-image: linear-gradient(to bottom, #000, transparent);
+}
+
+.bg-rov .dark {
+	position: absolute;
+	inset: 0;
+	background: #000;
+	opacity: calc(var(--p-rov, 0) * 0.55);
+}
+
+.bubble {
+	position: absolute;
+	bottom: -20px;
+	border-radius: 50%;
+	border: 1px solid rgba(190, 235, 255, 0.55);
+	animation: j-rise 9s linear infinite;
+}
+
+@keyframes j-rise {
+	0% { transform: translateY(0); opacity: 0; }
+	10% { opacity: 0.7; }
+	100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+.bg-school {
+	background-color: #110d22;
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+	background-size: 24px 24px;
+}
+
+.bg-school span {
+	position: absolute;
+}
+
+.bg-drill {
+	background-color: #0b2a4a;
+	background-image:
+		linear-gradient(rgba(170, 205, 255, 0.16) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(170, 205, 255, 0.16) 1px, transparent 1px),
+		linear-gradient(rgba(170, 205, 255, 0.07) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(170, 205, 255, 0.07) 1px, transparent 1px);
+	background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+}
+
+.bg-iot {
+	background-color: #010302;
+	background-image:
+		radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.75) 100%),
+		repeating-linear-gradient(0deg, rgba(167, 243, 192, 0.035) 0 1px, transparent 1px 4px);
+}
+
+.bg-web {
+	background-color: #eef2f6;
+	background-image: radial-gradient(rgba(15, 23, 42, 0.07) 1px, transparent 1px);
+	background-size: 22px 22px;
+}
+
+/* No JS: no fixed layers; each world paints its own background. */
+html:not(.js) .j-backdrop { display: none; }
+html:not(.js) .w-intro { background: var(--color-bg); }
+html:not(.js) .w-rov { background: linear-gradient(180deg, #0e4a66, #010910); }
+html:not(.js) .w-school { background: #110d22; }
+html:not(.js) .w-drill { background: #0b2a4a; }
+html:not(.js) .w-iot { background: #010302; }
+html:not(.js) .w-web { background: #eef2f6; }
+
+/* ---- worlds ---- */
+.j-scene {
+	--p: 1;
+	position: relative;
+	z-index: 1;
+	height: 200vh;
+}
+
+.j-scene.w-intro {
+	height: 100vh;
+	height: 100svh;
+}
+
+.j-stick {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	height: 100svh;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: clamp(32px, 4vw, 64px);
+	align-items: center;
+	max-width: 1440px;
+	margin-inline: auto;
+	padding: var(--stage-pad-top) var(--rail-w) 48px clamp(16px, 8vw, 120px);
+}
+
+.j-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	min-width: 0;
+}
+
+.j-copy > * {
+	margin: 0;
+}
+
+.j-tag {
+	font: 500 13px var(--font-mono);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.j-lede {
+	font-size: 17px;
+	max-width: 32em;
+}
+
+.j-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 8px;
+}
+
+/* reveal: only once JS is running, and only on the active world */
+.js .j-scene .rv {
+	opacity: 0;
+	transform: translateY(32px);
+	transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+	transition-delay: var(--d, 0ms);
+}
+
+.js .j-scene.on .rv {
+	opacity: 1;
+	transform: none;
+}
+
+/* ---- 00 intro ---- */
+.w-intro .j-stick {
+	grid-template-columns: minmax(0, 1fr);
+	align-content: center;
+}
+
+.w-intro h1 {
+	font: 600 clamp(48px, 8vw, 104px) / 0.98 var(--font-display);
+	letter-spacing: -0.045em;
+}
+
+.w-intro h1 span {
+	display: block;
+}
+
+.w-intro h1 span + span {
+	color: var(--color-accent);
+}
+
+.w-intro .j-lede {
+	font-size: clamp(17px, 1.6vw, 20px);
+	color: var(--color-text-muted);
+	max-width: 34em;
+}
+
+.j-worlds {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	list-style: none;
+	padding: 0;
+}
+
+.j-worlds a {
+	min-height: 36px;
+	transition: border-color 0.2s ease;
+}
+
+.j-worlds a:hover {
+	border-color: var(--color-accent);
+}
+
+.j-worlds i {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+}
+
+.j-cue {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	margin-top: 24px;
+	font: 12px var(--font-mono);
+	letter-spacing: 0.12em;
+	color: #8a96a6;
+}
+
+.nudge {
+	animation: j-nudge 1.6s ease-in-out infinite;
+}
+
+@keyframes j-nudge {
+	50% { transform: translateY(6px); }
+}
+
+/* ---- 01 ROV ---- */
+.w-rov {
+	color: #e6f7ff;
+}
+
+.w-rov .j-tag {
+	color: #7fd8f0;
+}
+
+.w-rov h2 {
+	font: 700 clamp(72px, 10vw, 140px) / 0.88 var(--font-display);
+	letter-spacing: -0.05em;
+}
+
+.w-rov .sub {
+	font: 500 clamp(20px, 2vw, 26px) var(--font-display);
+}
+
+.w-rov .j-lede {
+	color: #a8cfe0;
+}
+
+.specs {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px 28px;
+	margin: 8px 0 0;
+}
+
+.specs div {
+	border-top: 1px solid rgba(127, 216, 240, 0.3);
+	padding-top: 10px;
+}
+
+.specs dt {
+	font: 11px var(--font-mono);
+	letter-spacing: 0.1em;
+	color: #7fd8f0;
+}
+
+.specs dd {
+	margin: 2px 0 0;
+	font-size: 15px;
+}
+
+.w-rov .btn--primary {
+	background: #7fd8f0;
+	border-color: #7fd8f0;
+	color: #021622;
+}
+
+.w-rov .btn:not(.btn--primary) {
+	border-color: rgba(205, 240, 255, 0.35);
+}
+
+.rov-visual {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 0;
+}
+
+.rov-visual img {
+	width: 100%;
+	max-width: 560px;
+	height: auto;
+	filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+}
+
+.float {
+	animation: j-float 5s ease-in-out infinite;
+}
+
+@keyframes j-float {
+	50% { transform: translateY(-14px); }
+}
+
+/* room between the model and the chapter rail for the depth gauge */
+.w-rov .j-stick {
+	padding-right: calc(var(--rail-w) + 110px);
+}
+
+.rov-gauge {
+	position: absolute;
+	right: calc(var(--rail-w) + 20px);
+	top: 22%;
+	bottom: 22%;
+	width: 2px;
+	background: rgba(205, 240, 255, 0.25);
+}
+
+.rov-gauge > i {
+	position: absolute;
+	left: -6px;
+	width: 14px;
+	height: 1px;
+	background: rgba(205, 240, 255, 0.5);
+}
+
+.rov-gauge__read {
+	position: absolute;
+	right: 10px;
+	top: calc(var(--p) * 100%);
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	white-space: nowrap;
+	font: 600 28px var(--font-mono);
+}
+
+.rov-gauge__read small {
+	font-size: 14px;
+	color: #7fd8f0;
+}
+
+.rov-gauge__read::after {
+	content: "";
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: #7fd8f0;
+	box-shadow: 0 0 14px #7fd8f0;
+}
+
+/* ---- 02 Gamified School ---- */
+.w-school {
+	color: #ede7ff;
+}
+
+.pixel {
+	font-family: "Press Start 2P", var(--font-mono);
+	font-weight: 400;
+}
+
+.w-school .j-tag {
+	font: 11px/1.8 "Press Start 2P", var(--font-mono);
+	color: #ffd23f;
+}
+
+.w-school h2 {
+	font: 400 clamp(26px, 3.6vw, 50px) / 1.35 "Press Start 2P", var(--font-mono);
+	letter-spacing: 0;
+	color: #ffd23f;
+	text-shadow: 5px 5px 0 #ff4d8d;
+}
+
+.w-school h2 span {
+	display: block;
+}
+
+.w-school .j-lede {
+	color: #cfc6f0;
+}
+
+.w-school .tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	list-style: none;
+	padding: 0;
+	font: 600 12px var(--font-mono);
+}
+
+.w-school .tags li {
+	padding: 8px 12px;
+	border: 2px solid #7cf29c;
+	color: #7cf29c;
+}
+
+.w-school .tags li.y {
+	border-color: #ffd23f;
+	color: #ffd23f;
+}
+
+.w-school .btn {
+	border-radius: 0;
+	border: 2px solid #ffd23f;
+	color: #ffd23f;
+	box-shadow: 4px 4px 0 #ff4d8d;
+}
+
+.quest {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	padding: 28px;
+	background: #1b1535;
+	border: 3px solid #ffd23f;
+	box-shadow: 10px 10px 0 #ffd23f;
+	font-family: var(--font-mono);
+}
+
+.quest__head {
+	display: flex;
+	justify-content: space-between;
+	font: 11px "Press Start 2P", var(--font-mono);
+	color: #ffd23f;
+}
+
+.quest__title {
+	margin: 0;
+	font: 15px/1.7 "Press Start 2P", var(--font-mono);
+	color: #fff;
+}
+
+.quest ul {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	list-style: none;
+	padding: 0;
+}
+
+.quest li {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 34px;
+	font-size: 14px;
+	color: #ede7ff;
+}
+
+.quest li::before {
+	content: "";
+	flex-shrink: 0;
+	width: 16px;
+	height: 16px;
+	border: 2px solid #7cf29c;
+}
+
+.quest li.done {
+	color: #8f86b8;
+	text-decoration: line-through;
+}
+
+.quest li.done::before {
+	background: #7cf29c;
+}
+
+.xp__row {
+	display: flex;
+	justify-content: space-between;
+	font-size: 12px;
+	color: #cfc6f0;
+}
+
+.xp__bar {
+	height: 16px;
+	margin-top: 8px;
+	background: #2c2450;
+	border: 2px solid #0b0816;
+}
+
+.xp__bar i {
+	display: block;
+	height: 100%;
+	width: calc(var(--p) * 100%);
+	background: #ffd23f;
+}
+
+.levelup {
+	position: absolute;
+	top: -26px;
+	right: -26px;
+	padding: 12px 16px;
+	background: #ff4d8d;
+	border: 3px solid #0b0816;
+	box-shadow: 4px 4px 0 #0b0816;
+	font: 12px "Press Start 2P", var(--font-mono);
+	color: #fff;
+	visibility: hidden;
+	animation: j-bob 1.2s ease-in-out infinite;
+}
+
+.quest.up .levelup {
+	visibility: visible;
+}
+
+@keyframes j-bob {
+	50% { transform: translateY(-6px) rotate(-4deg); }
+}
+
+/* ---- 03 Drilling Simulation ---- */
+.w-drill {
+	color: #dcebff;
+}
+
+.w-drill .j-tag {
+	color: #ff8a3d;
+	letter-spacing: 0.12em;
+}
+
+.w-drill h2 {
+	font: 700 clamp(40px, 4.6vw, 66px) / 1.02 var(--font-mono);
+	letter-spacing: -0.02em;
+	text-transform: uppercase;
+}
+
+.w-drill h2 span {
+	display: block;
+}
+
+.w-drill .j-lede {
+	color: #a9c4e6;
+}
+
+.panels {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	list-style: none;
+	padding: 0;
+}
+
+.panels li {
+	width: 150px;
+	padding: 14px 16px;
+	border: 1px solid rgba(207, 227, 255, 0.5);
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	font-family: var(--font-mono);
+}
+
+.panels b {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 12px;
+}
+
+.panels small {
+	font-size: 11px;
+	color: #a9c4e6;
+}
+
+.led {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #28415f;
+	transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.on > b > .led,
+.led.on {
+	background: #ff8a3d;
+	box-shadow: 0 0 12px #ff8a3d;
+}
+
+.w-drill .btn {
+	border-radius: 0;
+	border-color: rgba(207, 227, 255, 0.6);
+}
+
+.w-drill .btn:hover {
+	border-color: #ff8a3d;
+}
+
+.rig {
+	height: min(660px, calc(100svh - 160px));
+	display: flex;
+	justify-content: center;
+}
+
+.rig svg {
+	height: 100%;
+	width: auto;
+	max-width: 100%;
+}
+
+.titleblock {
+	position: absolute;
+	right: var(--rail-w);
+	bottom: 28px;
+	display: grid;
+	grid-template-columns: repeat(4, auto);
+	border: 1px solid rgba(207, 227, 255, 0.6);
+	font: 10px var(--font-mono);
+	color: #cfe3ff;
+}
+
+.titleblock span {
+	padding: 6px 12px;
+}
+
+.titleblock span + span {
+	border-left: 1px solid rgba(207, 227, 255, 0.6);
+}
+
+/* ---- 04 IoT ---- */
+.w-iot {
+	color: #a7f3c0;
+	font-family: var(--font-mono);
+}
+
+.w-iot .j-tag {
+	color: #6fa884;
+	letter-spacing: 0.12em;
+}
+
+.w-iot h2 {
+	font: 700 clamp(40px, 4.4vw, 64px) / 1.05 var(--font-mono);
+	letter-spacing: -0.02em;
+}
+
+.w-iot .j-lede {
+	font-size: 15px;
+	color: #cdefd8;
+}
+
+.blink {
+	animation: j-blink 1s steps(1) infinite;
+}
+
+@keyframes j-blink {
+	50% { opacity: 0; }
+}
+
+.builds {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.builds details {
+	border: 1px solid #23402f;
+	background: rgba(167, 243, 192, 0.03);
+}
+
+.builds summary {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 52px;
+	padding: 0 18px;
+	font-size: 15px;
+	font-weight: 600;
+	list-style: none;
+	cursor: pointer;
+}
+
+.builds summary::-webkit-details-marker {
+	display: none;
+}
+
+.chev {
+	display: inline-block;
+	transition: transform 0.2s ease;
+}
+
+.builds details[open] .chev {
+	transform: rotate(90deg);
+}
+
+.builds .body {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 0 18px 18px 46px;
+	font-size: 14px;
+	color: #cdefd8;
+}
+
+.builds .body p {
+	margin: 0;
+}
+
+.builds button {
+	min-height: 44px;
+	padding: 0 14px;
+	border: 1px solid #3b6b4c;
+	background: transparent;
+	color: #a7f3c0;
+	font: 600 13px var(--font-mono);
+	cursor: pointer;
+}
+
+.builds button:hover {
+	border-color: #a7f3c0;
+}
+
+.terminal {
+	border: 1px solid #23402f;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.terminal__bar {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 16px;
+	border-bottom: 1px solid #23402f;
+	font-size: 12px;
+	color: #6fa884;
+}
+
+.terminal__body {
+	min-height: 340px;
+	padding: 20px 22px;
+	font-size: 14px;
+	line-height: 1.9;
+}
+
+.terminal__body div {
+	white-space: pre;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.terminal__body .cmd {
+	color: #e8edf2;
+}
+
+.terminal__body [hidden] {
+	display: none;
+}
+
+.cursor {
+	display: inline-block;
+	width: 9px;
+	height: 16px;
+	vertical-align: -3px;
+	background: #a7f3c0;
+}
+
+/* ---- 05 Web & Enterprise (light dashboard) ---- */
+.w-web {
+	color: #0f172a;
+}
+
+.w-web .j-stick {
+	grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.w-web .j-tag {
+	color: #0e7490;
+}
+
+.w-web h2 {
+	font: 600 clamp(36px, 4.2vw, 60px) / 1.04 var(--font-display);
+	letter-spacing: -0.03em;
+}
+
+.w-web .j-lede {
+	color: #475569;
+}
+
+.w-web .pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	list-style: none;
+	padding: 0;
+	font: 12px var(--font-mono);
+}
+
+.w-web .pills li {
+	padding: 6px 12px;
+	border: 1px solid #dce3eb;
+	border-radius: 999px;
+	background: #fff;
+}
+
+.w-web .btn {
+	border-color: #cbd5e1;
+	color: #0f172a;
+}
+
+.w-web .btn:hover {
+	border-color: #0e7490;
+}
+
+.w-web :focus-visible {
+	outline-color: #0e7490;
+}
+
+.dash {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 24px;
+	background: #fff;
+	border: 1px solid #dce3eb;
+	border-radius: 18px;
+	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+}
+
+.dash__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	font: 600 18px var(--font-display);
+}
+
+.dash__tabs {
+	display: flex;
+	gap: 6px;
+	font: 500 12px var(--font-sans);
+}
+
+.dash__tabs span {
+	padding: 6px 12px;
+	border-radius: 999px;
+	border: 1px solid #dce3eb;
+}
+
+.dash__tabs span:first-child {
+	background: #0e7490;
+	border-color: #0e7490;
+	color: #fff;
+}
+
+.tiles {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.tiles div {
+	padding: 16px;
+	border-radius: 12px;
+	background: #f4f7fa;
+}
+
+.tiles p {
+	margin: 0;
+	font-size: 12px;
+	color: #475569;
+}
+
+.tiles strong {
+	display: block;
+	margin-top: 4px;
+	font: 600 22px var(--font-display);
+	overflow-wrap: anywhere;
+}
+
+.bars {
+	display: flex;
+	align-items: flex-end;
+	gap: 14px;
+	height: 200px;
+	border-bottom: 1px solid #dce3eb;
+}
+
+.bars i {
+	flex: 1;
+	height: calc(6% + var(--h) * var(--p) * 0.94%);
+	border-radius: 6px 6px 0 0;
+	background: #cbd5e1;
+}
+
+.bars i:last-child {
+	background: #0e7490;
+}
+
+.dash__note {
+	margin: -8px 0 0;
+	font-size: 12px;
+	color: #475569;
+}
+
+/* ---- plain sections: skills, about, contact ---- */
+.j-plain {
+	position: relative;
+	z-index: 1;
+	background: var(--color-bg);
+}
+
+.j-section {
+	max-width: var(--max-width);
+	margin-inline: auto;
+	padding: clamp(80px, 12vw, 140px) clamp(16px, 5vw, 48px);
+	scroll-margin-top: 0;
+}
+
+.j-section + .j-section {
+	border-top: 1px solid var(--color-border);
+}
+
+.j-section__head {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	max-width: 44rem;
+	margin-bottom: 48px;
+}
+
+.j-section__head h2 {
+	font: 600 clamp(36px, 5vw, 60px) / 1.04 var(--font-display);
+	letter-spacing: -0.03em;
+}
+
+.j-section__head p:not(.eyebrow) {
+	color: var(--color-text-muted);
+	font-size: 18px;
+}
+
+.skills {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+	gap: 16px;
+	list-style: none;
+	padding: 0;
+}
+
+.skills li {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 24px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius);
+	background: var(--color-bg-elevated);
+}
+
+.skills svg {
+	color: var(--color-accent);
+	margin-bottom: 8px;
+}
+
+.skills h3 {
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.skills p {
+	color: var(--color-text-muted);
+	font-size: 15px;
+}
+
+.skills .learning {
+	border-style: dashed;
+}
+
+.about {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+	gap: clamp(32px, 6vw, 96px);
+}
+
+.about .j-section__head {
+	margin: 0;
+}
+
+.timeline {
+	display: flex;
+	flex-direction: column;
+	list-style: none;
+	padding: 0;
+	border-left: 1px solid var(--color-border);
+}
+
+.timeline li {
+	position: relative;
+	padding: 0 0 32px 28px;
+}
+
+.timeline li:last-child {
+	padding-bottom: 0;
+}
+
+.timeline li::before {
+	content: "";
+	position: absolute;
+	left: -5px;
+	top: 6px;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: var(--color-bg);
+	border: 1px solid var(--color-accent);
+}
+
+.timeline li.now::before {
+	background: var(--color-accent);
+}
+
+.timeline small {
+	font: 500 11px var(--font-mono);
+	letter-spacing: 0.1em;
+	color: var(--color-accent);
+}
+
+.timeline h3 {
+	margin-top: 4px;
+	font-size: 19px;
+	font-weight: 600;
+}
+
+.timeline p {
+	margin-top: 4px;
+	color: var(--color-text-muted);
+	font-size: 15px;
+}
+
+.contact {
+	background:
+		radial-gradient(circle at 30% 40%, var(--color-accent-soft), transparent 45%);
+	max-width: none;
+}
+
+.contact > div {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 26px;
+	max-width: var(--max-width);
+	margin-inline: auto;
+}
+
+.contact h2 {
+	max-width: 11em;
+	font: 600 clamp(44px, 7vw, 96px) / 1 var(--font-display);
+	letter-spacing: -0.04em;
+}
+
+.contact p {
+	color: var(--color-text-muted);
+	font-size: 19px;
+}
+
+/* ---- chapter rail ---- */
+.j-rail {
+	position: fixed;
+	right: 28px;
+	top: 50%;
+	z-index: 5;
+	transform: translateY(-50%);
+	color: var(--j-fg, var(--color-text));
+	transition: color 0.4s ease;
+}
+
+.j-rail ul {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 2px;
+	list-style: none;
+	padding: 0;
+}
+
+.j-rail a {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+	min-height: 40px;
+	min-width: 44px;
+	padding: 0 4px;
+	font: 11px var(--font-mono);
+	letter-spacing: 0.08em;
+}
+
+.j-rail .bar {
+	display: block;
+	width: 14px;
+	height: 2px;
+	background: currentColor;
+	opacity: 0.45;
+	transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.j-rail .lbl {
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.j-rail a[aria-current] .bar {
+	width: 36px;
+	opacity: 1;
+}
+
+.j-rail a[aria-current] .lbl,
+.j-rail a:hover .lbl,
+.j-rail a:focus-visible .lbl {
+	opacity: 1;
+}
+
+/* ---- tablets and phones: worlds stack, no sticky stage ---- */
+@media (max-width: 900px) {
+	.journey {
+		--stage-pad-top: 88px;
+		--rail-w: 16px;
+	}
+
+	.j-rail {
+		display: none;
+	}
+
+	.j-scene {
+		height: auto;
+	}
+
+	.j-scene.w-intro {
+		height: auto;
+	}
+
+	.j-stick,
+	.w-web .j-stick {
+		position: relative;
+		height: auto;
+		min-height: 100svh;
+		grid-template-columns: minmax(0, 1fr);
+		align-content: center;
+		padding: var(--stage-pad-top) 16px 64px;
+	}
+
+	.w-rov .j-stick {
+		padding-right: 16px;
+	}
+
+	/* the stacked layout has no free edge for the depth gauge */
+	.rov-gauge {
+		display: none;
+	}
+
+	.rig {
+		height: 420px;
+	}
+
+	.titleblock {
+		position: static;
+		justify-self: start;
+	}
+
+	.quest {
+		margin-right: 10px;
+	}
+
+	.levelup {
+		right: -10px;
+	}
+
+	.terminal__body {
+		min-height: 0;
+		font-size: 12.5px;
+	}
+
+	.about {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.tiles {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (max-width: 480px) {
+	.titleblock {
+		grid-template-columns: repeat(2, auto);
+	}
+
+	.titleblock span:nth-child(3) {
+		border-left: 0;
+	}
+
+	.titleblock span:nth-child(n + 3) {
+		border-top: 1px solid rgba(207, 227, 255, 0.6);
+	}
+
+	.panels li {
+		width: calc(50% - 6px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.j-layer,
+	.js .j-scene .rv,
+	.led,
+	.j-rail .bar,
+	.j-rail .lbl {
+		transition: none;
+	}
+
+	.float,
+	.blink,
+	.nudge,
+	.levelup {
+		animation: none;
+	}
+
+	.bubble {
+		display: none;
+	}
+}

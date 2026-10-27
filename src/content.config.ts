@@ -1,4 +1,5 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 
 const projects = defineCollection({
@@ -8,8 +9,9 @@ const projects = defineCollection({
 		summary: z.string(),
 		role: z.string(),
 		tags: z.array(z.string()),
-		period: z.string(),
-		status: z.enum(["completed", "ongoing"]),
+		// Left out rather than guessed when the real dates aren't known yet.
+		period: z.string().optional(),
+		status: z.enum(["completed", "ongoing"]).optional(),
 		thumbnail: z.string().optional(),
 		gallery: z.array(z.string()).optional(),
 		links: z

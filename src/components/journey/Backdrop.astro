@@ -1,0 +1,35 @@
+---
+// Fixed background layers behind the worlds; journey.ts fades in the one
+// matching the active world (data-layer = the world's data-world).
+const bubbles = [
+	[12, 8, 0, 9], [24, 5, 2.5, 11], [41, 10, 5, 9], [55, 6, 1.2, 8],
+	[63, 4, 6.5, 9], [72, 9, 3.8, 12], [84, 5, 7.4, 9], [33, 7, 8.6, 10],
+];
+---
+
+<div class="j-backdrop" aria-hidden="true">
+	<div class="j-layer bg-intro on" data-layer="intro"></div>
+	<div class="j-layer bg-rov" data-layer="rov">
+		<div class="rays"></div>
+		{
+			bubbles.map(([left, size, delay, dur]) => (
+				<span
+					class="bubble"
+					style={`left:${left}%;width:${size}px;height:${size}px;animation-delay:${delay}s;animation-duration:${dur}s`}
+				/>
+			))
+		}
+		<div class="dark"></div>
+	</div>
+	<div class="j-layer bg-school" data-layer="school">
+		<span style="top:14%;left:8%;width:24px;height:24px;background:#ffd23f;opacity:.35"></span>
+		<span style="top:72%;left:46%;width:12px;height:12px;background:#7cf29c;opacity:.4"></span>
+		<span style="top:22%;left:58%;width:12px;height:12px;background:#ff4d8d;opacity:.4"></span>
+		<span style="top:84%;left:12%;width:36px;height:12px;background:#7cf29c;opacity:.25"></span>
+		<span style="top:9%;left:82%;width:12px;height:36px;background:#ffd23f;opacity:.25"></span>
+	</div>
+	<div class="j-layer bg-drill" data-layer="drill"></div>
+	<div class="j-layer bg-iot" data-layer="iot"></div>
+	<div class="j-layer bg-web" data-layer="web"></div>
+	<div class="j-layer bg-plain" data-layer="plain"></div>
+</div>

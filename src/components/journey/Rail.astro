@@ -1,0 +1,29 @@
+---
+// Chapter rail. Plain anchor links, so it works without JS; journey.ts marks
+// the active chapter with aria-current.
+const chapters = [
+	["top", "Intro"],
+	["rov", "ROV"],
+	["school", "School"],
+	["drilling", "Drilling"],
+	["iot", "IoT"],
+	["web", "Web"],
+	["about", "About"],
+	["contact", "Contact"],
+];
+---
+
+<nav class="j-rail" aria-label="Chapters">
+	<ul>
+		{
+			chapters.map(([id, label]) => (
+				<li>
+					<a href={`#${id}`} data-rail={id}>
+						<span class="lbl">{label.toUpperCase()}</span>
+						<span class="bar" aria-hidden="true" />
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>

@@ -1,36 +1,32 @@
 ---
+const steps = [
+	["Education", "Computer Engineering degree", "Foundations in digital systems, networks and programming."],
+	["Engineering", "ESP32 and Raspberry Pi systems", "From an underwater ROV to an industrial drilling simulator."],
+	["Sales", "Selling the websites our team built", "Finding customers and working out what they actually needed."],
+	["Teaching", "Arduino for kids", "Teaching children to build and code at a robotics house."],
+	["Teaching", "Sales and negotiation", "Taught sales and negotiation at college."],
+	["Now", "Learning AI / LLM systems", "Working through how LLMs are built and used, and writing it up."],
+];
 ---
 
-<section id="about" class="about" data-reveal>
-	<div class="container">
-		<h2 class="section-title">About</h2>
-		<p class="about__body">
-			I'm an engineer who moves easily between hardware and software: wiring
-			up sensors and microcontrollers, writing the embedded firmware and
-			backend services that talk to them, and getting the networking right in
-			between. I've also spent time on the business side — selling websites
-			to customers as part of a small team — which shaped how I think about
-			building things people actually need. These days I'm working on ERP
-			systems, applying the same systems-thinking to business software.
+<section class="j-section about" id="about" data-world="plain" data-chapter="07 · About" aria-labelledby="about-title">
+	<div class="j-section__head">
+		<p class="eyebrow">07 · About</p>
+		<h2 id="about-title">Engineer by degree, teacher by choice</h2>
+		<p>
+			I studied Computer Engineering and ended up where hardware meets software. I also teach
+			Arduino to children at a robotics house, which keeps my explanations honest.
 		</p>
 	</div>
+	<ol class="timeline">
+		{
+			steps.map(([when, title, text], i) => (
+				<li class={i === steps.length - 1 ? "now" : undefined}>
+					<small>{when.toUpperCase()}</small>
+					<h3>{title}</h3>
+					<p>{text}</p>
+				</li>
+			))
+		}
+	</ol>
 </section>
-
-<style>
-	.about {
-		padding-block: var(--space-6);
-		border-top: 1px solid var(--color-border);
-	}
-
-	.section-title {
-		font-size: 1.75rem;
-		letter-spacing: -0.01em;
-		margin-bottom: var(--space-3);
-	}
-
-	.about__body {
-		max-width: 65ch;
-		color: var(--color-text-muted);
-		font-size: 1.0625rem;
-	}
-</style>

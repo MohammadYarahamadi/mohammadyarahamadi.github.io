@@ -1,0 +1,46 @@
+---
+const worlds = [
+	["rov", "01 Ocean", "#2a8fb8", "50%"],
+	["school", "02 Game", "#ffd23f", "0"],
+	["drilling", "03 Blueprint", "#cfe3ff", "50%"],
+	["iot", "04 Terminal", "#a7f3c0", "50%"],
+	["web", "05 Dashboard", "#e8edf2", "50%"],
+];
+---
+
+<section class="j-scene w-intro" id="top" data-world="intro" data-chapter="00 · Intro" aria-label="Intro">
+	<div class="j-stick">
+		<div class="j-copy">
+			<p class="eyebrow rv">mohyar_ / Embedded software engineer · IoT · Web</p>
+			<h1 class="rv" style="--d:80ms">
+				<span>Five projects.</span>
+				<span>Five different worlds.</span>
+			</h1>
+			<p class="j-lede rv" style="--d:160ms">
+				I write the code that makes hardware think, talk, and dive: firmware for ESP32 and
+				Raspberry Pi, networked video, and the web apps on top. Scroll to move through the
+				work. Each project changes the room around you, from the bottom of the sea to an
+				oil rig's control panels.
+			</p>
+			<ul class="j-worlds rv" style="--d:240ms">
+				{
+					worlds.map(([id, label, color, radius]) => (
+						<li>
+							<a class="chip" href={`#${id}`}>
+								<i style={`background:${color};border-radius:${radius}`} aria-hidden="true" />
+								{label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<p class="j-cue rv" aria-hidden="true" style="--d:400ms">
+				<svg width="22" height="34" viewBox="0 0 22 34" fill="none" stroke="currentColor" stroke-width="1.5">
+					<rect x="1" y="1" width="20" height="32" rx="10"></rect>
+					<path class="nudge" d="M11 8v6" stroke-linecap="round"></path>
+				</svg>
+				SCROLL TO DIVE
+			</p>
+		</div>
+	</div>
+</section>

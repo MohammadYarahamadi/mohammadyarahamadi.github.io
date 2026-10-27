@@ -1,0 +1,54 @@
+---
+const specs = [
+	["Raspberry Pi 5", "Connections and sensors"],
+	["ESP32", "PWM to six thrusters"],
+	["RTSP / ONVIF", "Live camera streaming"],
+	["Three.js", "3D model in the browser"],
+];
+---
+
+<section class="j-scene w-rov" id="rov" data-world="rov" data-chapter="01 · ROV · Ocean descent" aria-label="ROV project">
+	<div class="j-stick">
+		<div class="j-copy">
+			<p class="j-tag rv">01 · Flagship hardware</p>
+			<h2 class="rv" style="--d:60ms">ROV</h2>
+			<p class="sub rv" style="--d:120ms">Remotely Operated Vehicle</p>
+			<p class="j-lede rv" style="--d:180ms">
+				A tethered underwater vehicle with six thrusters, tested to 30 m. I built the software,
+				embedded and networking layers, from the controller on the laptop down to the
+				thrusters, and a 3D model of it that runs in the browser.
+			</p>
+			<dl class="specs rv" style="--d:240ms">
+				{
+					specs.map(([dt, dd]) => (
+						<div>
+							<dt>{dt.toUpperCase()}</dt>
+							<dd>{dd}</dd>
+						</div>
+					))
+				}
+			</dl>
+			<div class="j-actions rv" style="--d:300ms">
+				<a class="btn btn--primary" href="/projects/rov/">
+					Take the 3D dive
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+				</a>
+			</div>
+		</div>
+		<div class="rov-visual rv" style="--d:200ms">
+			<img
+				class="float"
+				src="/models/rov-poster.webp"
+				alt="The ROV in the team's light-blue livery, seen from the front"
+				width="1200"
+				height="800"
+				loading="lazy"
+				decoding="async"
+			/>
+		</div>
+		<div class="rov-gauge" aria-hidden="true">
+			<i style="top:0"></i><i style="top:25%"></i><i style="top:50%"></i><i style="top:75%"></i><i style="top:100%"></i>
+			<div class="rov-gauge__read"><span data-depth>−30</span><small>&nbsp;m</small></div>
+		</div>
+	</div>
+</section>

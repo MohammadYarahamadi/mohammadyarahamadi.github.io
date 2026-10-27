@@ -28,7 +28,7 @@ const { Content } = await render(project);
 			&times;
 		</button>
 		<p class="modal__meta">
-			{status === "ongoing" ? "Current" : period} · {role}
+			{[status === "ongoing" ? "Current" : period, role].filter(Boolean).join(" · ")}
 		</p>
 		<h2 class="modal__title" id={`modal-title-${project.id}`}>{title}</h2>
 		<ul class="modal__tags">
@@ -100,6 +100,17 @@ const { Content } = await render(project);
 
 	.modal[data-open] .modal__panel {
 		transform: none;
+	}
+
+	@media (max-width: 600px) {
+		.modal {
+			padding: var(--space-2);
+		}
+
+		.modal__panel {
+			max-height: 92vh;
+			padding: var(--space-4) var(--space-3);
+		}
 	}
 
 	.modal__close {

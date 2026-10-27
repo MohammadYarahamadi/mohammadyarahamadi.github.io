@@ -15,9 +15,10 @@
 	--line: rgba(234, 245, 249, 0.28);
 	--hi: #ffb547;             /* ROV safety orange: gauge, my-work highlights */
 	--hi-ink: #1d1203;
-	--display: "Archivo", "Arial Narrow", sans-serif;
-	--body: "Archivo", system-ui, sans-serif;
-	--mono: "IBM Plex Mono", ui-monospace, monospace;
+	/* the site's self-hosted fonts (global.css) */
+	--display: var(--font-display);
+	--body: var(--font-sans);
+	--mono: var(--font-mono);
 	--gauge-w: 92px;
 	color-scheme: dark;
 }

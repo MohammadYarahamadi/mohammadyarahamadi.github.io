@@ -4,19 +4,49 @@ const year = new Date().getFullYear();
 
 <footer class="footer">
 	<div class="container footer__inner">
-		<p>&copy; {year} — Built with Astro.</p>
+		<p>&copy; {year} Mohyar · Embedded Software Engineer</p>
+		<nav aria-label="Footer">
+			<ul>
+				<li><a href="/#rov">Work</a></li>
+				<li><a href="/#about">About</a></li>
+				<li><a href="/#contact">Contact</a></li>
+			</ul>
+		</nav>
 	</div>
 </footer>
 
 <style>
 	.footer {
+		position: relative;
 		border-top: 1px solid var(--color-border);
-		margin-top: var(--space-6);
+		background: var(--color-bg);
 	}
 
 	.footer__inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-3);
 		padding-block: var(--space-4);
 		color: var(--color-text-muted);
 		font-size: 0.875rem;
+	}
+
+	.footer ul {
+		display: flex;
+		gap: var(--space-2);
+		list-style: none;
+	}
+
+	.footer a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding-inline: 0.5rem;
+	}
+
+	.footer a:hover {
+		color: var(--color-text);
 	}
 </style>
