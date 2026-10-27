@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Contact from "../../components/Contact.astro";
 import ProjectModals from "../../components/ProjectModals.astro";
+import SalesPipeline from "../../components/islands/SalesPipeline";
 import "../../styles/journey.css";
 import "../../styles/deep.css";
 
@@ -194,15 +195,9 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					<a class="btn" href="#next">Next project ↓</a>
 				</div>
 			</div>
-			<div class="d-visual d-card-dash" aria-hidden="true">
-				<div class="d-kpis">
-					<div><small>Websites</small><b>Dealfdi</b></div>
-					<div><small>ERP</small><b>Odoo</b></div>
-					<div><small>Sales</small><b>CRM</b></div>
-				</div>
-				<div class="d-bars">
-					<i style="--h:38"></i><i style="--h:52"></i><i style="--h:45"></i><i style="--h:63"></i><i style="--h:58"></i><i style="--h:76"></i><i style="--h:70"></i><i style="--h:88"></i>
-				</div>
+			{/* a small CRM with made-up deals, in the style of Odoo */}
+			<div class="d-visual d-card-pipe">
+				<SalesPipeline client:visible />
 			</div>
 		</div>
 	</section>

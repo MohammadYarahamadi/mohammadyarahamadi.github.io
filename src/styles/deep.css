@@ -734,55 +734,28 @@ body.deep {
 	animation: d-blink 1s steps(1) infinite;
 }
 
-.d-card-dash {
-	padding: 24px;
-	border: 1px solid var(--color-border);
+/* Web: a working sales pipeline (src/components/islands/SalesPipeline.tsx) */
+.d-panel--web {
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+/* the board needs about 520px, so the panel stacks before it gets squeezed */
+@media (max-width: 1100px) {
+	.d-panel--web {
+		grid-template-columns: 1fr;
+	}
+}
+
+.d-card-pipe {
+	max-width: 600px;
+}
+
+.d-card-pipe .demo {
+	margin: 0;
+	padding: 20px;
 	border-radius: 18px;
 	background: var(--color-bg-elevated);
 	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-}
-
-.d-kpis {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 12px;
-}
-
-.d-kpis div {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	padding: 14px;
-	border: 1px solid var(--color-border);
-	border-radius: 12px;
-}
-
-.d-kpis small {
-	font: 11px var(--font-mono);
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var(--color-text-muted);
-}
-
-.d-kpis b {
-	font-size: 20px;
-}
-
-.d-bars {
-	display: flex;
-	align-items: flex-end;
-	gap: 10px;
-	height: 180px;
-	margin-top: 20px;
-	padding-top: 12px;
-	border-top: 1px solid var(--color-border);
-}
-
-.d-bars i {
-	flex: 1;
-	height: calc(var(--h) * 1%);
-	border-radius: 6px 6px 0 0;
-	background: linear-gradient(180deg, var(--color-accent), var(--d-glow-2));
 }
 
 /* ---- next project ----
