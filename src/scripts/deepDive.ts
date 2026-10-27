@@ -1,5 +1,5 @@
 /**
- * The "Full dive" view on /deep/: the ROV project page rebuilt in the deep
+ * The "Full dive" view on /projects/: the ROV project page rebuilt in the deep
  * style. Maps scroll through the dive section to 0–30 m and drives the
  * depth gauge, water colour, captions, pings and footage, like descent.ts
  * does on the ROV page. The 3D scene from that page (descentScene.ts) loads

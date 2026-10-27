@@ -1,51 +1,100 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Backdrop from "../components/journey/Backdrop.astro";
-import Rail from "../components/journey/Rail.astro";
-import SceneIntro from "../components/journey/SceneIntro.astro";
-import SceneRov from "../components/journey/SceneRov.astro";
-import SceneSchool from "../components/journey/SceneSchool.astro";
-import SceneDrill from "../components/journey/SceneDrill.astro";
-import SceneIot from "../components/journey/SceneIot.astro";
-import SceneWeb from "../components/journey/SceneWeb.astro";
-import Stack from "../components/home/Stack.astro";
-import AboutMe from "../components/home/AboutMe.astro";
-import ContactBlock from "../components/home/ContactBlock.astro";
-import ProjectModals from "../components/ProjectModals.astro";
+import Skills from "../components/journey/Skills.astro";
+import About from "../components/About.astro";
+import Contact from "../components/Contact.astro";
 import "../styles/journey.css";
-import "../styles/home.css";
+import "../styles/deep.css";
+
+// The homepage, in the "Bioluminescent Deep" style (src/styles/deep.css):
+// who I am, what I work with, then five doors into the projects. Each door
+// previews its project's mood and opens /projects/ with that project picked
+// (?vibe=), where the whole page takes on the mood. This page stays in the
+// plain welcome colours throughout (data-zone="welcome").
+const doors = [
+	{ id: "rov", tag: "01 · Hardware", title: "ROV", text: "An underwater vehicle, from the controller down to six thrusters, taken to 30 m." },
+	{ id: "school", tag: "02 · Software", title: "Gamified School", text: "Git, Docker, PostgreSQL and system design as quests, for my college students." },
+	{ id: "drill", tag: "03 · Simulation", title: "Drilling Simulation", text: "A well-drilling simulator with ESP32 boards as the rig's real control panels." },
+	{ id: "iot", tag: "04 · IoT", title: "IoT builds", text: "A backup-power camera, a sous vide controller and a smart AC remote." },
+	{ id: "web", tag: "05 · Web", title: "Web & Enterprise", text: "Company websites, Odoo ERP and CRM, and the sales side behind them." },
+];
+
+// Decorative particles: position, size, speed and delay per particle.
+const particles = Array.from({ length: 18 }, (_, i) => ({
+	x: (i * 37 + 11) % 100,
+	y: (i * 53 + 7) % 100,
+	s: 3 + ((i * 7) % 6),
+	d: 14 + ((i * 11) % 16),
+	l: -((i * 13) % 20),
+}));
 ---
 
-{/* The homepage is a scroll journey: each project is a full-screen world
-    with its own look (src/styles/journey.css), driven by
-    src/scripts/journey.ts. The skills stack, about and contact
-    (src/components/home/, shared with /overview/) follow in the plain
-    site style. Project details open in modals; the ROV has its own page. */}
 <BaseLayout
 	title="Mohyar · Embedded software engineer"
 	description="Embedded software, IoT and web: an underwater ROV, a gamified programming school, a drilling simulator, ESP32 builds, and websites and Odoo ERP for businesses."
-	journey
+	bodyClass="deep"
 >
-	<div class="journey">
-		<Backdrop />
-		<Rail />
-		<SceneIntro />
-		{/* the nav's Work link lands on the first world */}
-		<span id="work" aria-hidden="true"></span>
-		<SceneRov />
-		<SceneSchool />
-		<SceneDrill />
-		<SceneIot />
-		<SceneWeb />
-		<div class="j-plain">
-			<Stack journey />
-			<AboutMe journey />
-			<ContactBlock journey />
-		</div>
+	<script slot="head" is:inline>document.documentElement.dataset.zone = "welcome";</script>
+
+	<div class="d-sea" aria-hidden="true">
+		<div class="d-sea__welcome"></div>
+		{
+			particles.map((p) => (
+				<span
+					class="d-particle"
+					style={`--x:${p.x}%;--y:${p.y}%;--s:${p.s}px;--dur:${p.d}s;--delay:${p.l}s`}
+				/>
+			))
+		}
 	</div>
-	<ProjectModals slot="overlays" />
-	<script>
-		import "../scripts/journey.ts";
-		import "../scripts/home.ts";
-	</script>
+
+	<section class="d-welcome" id="top" aria-labelledby="d-welcome-title">
+		<p class="eyebrow">Welcome to my portfolio</p>
+		<h1 id="d-welcome-title">Hi, I'm <strong>Mohyar</strong>.</h1>
+		<p class="d-welcome__role">Embedded software engineer · IoT · Web</p>
+		<p class="d-lede">
+			I write the code that makes hardware think, talk and dive: firmware for ESP32 and
+			Raspberry Pi, networked video, and the web apps on top. Here's who I am and what I work
+			with. Then pick a project and step into its world.
+		</p>
+		<div class="d-actions">
+			<a class="btn btn--primary" href="#work">Check out the projects ↓</a>
+			<a class="btn" href="#about">About me</a>
+		</div>
+	</section>
+
+	<div class="j-plain d-plain d-plain--welcome">
+		<About eyebrow="About" />
+		<Skills eyebrow="What I work with" />
+	</div>
+
+	<section class="d-doors" id="work" aria-labelledby="work-title">
+		<div class="d-doors__head">
+			<p class="eyebrow">The projects</p>
+			<h2 id="work-title">Now, the work.</h2>
+			<p>
+				Five projects, each with its own world. Pick one and the page changes to match it: the
+				colours, the type and the background.
+			</p>
+		</div>
+		<ul class="d-doors__grid">
+			{
+				doors.map((d) => (
+					<li class={`d-door d-door--${d.id}`}>
+						<a href={`/projects/?vibe=${d.id}`}>
+							<span class="d-door__tag">{d.tag}</span>
+							<span class="d-door__title">{d.title}</span>
+							<span class="d-door__text">{d.text}</span>
+							<span class="d-door__go" aria-hidden="true">Enter →</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+		<a class="btn btn--primary d-doors__all" href="/projects/">Browse all projects →</a>
+	</section>
+
+	<div class="j-plain d-plain">
+		<Contact eyebrow="Contact" />
+	</div>
 </BaseLayout>

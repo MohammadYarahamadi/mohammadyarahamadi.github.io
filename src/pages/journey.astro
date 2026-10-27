@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Backdrop from "../components/journey/Backdrop.astro";
+import Rail from "../components/journey/Rail.astro";
+import SceneIntro from "../components/journey/SceneIntro.astro";
+import SceneRov from "../components/journey/SceneRov.astro";
+import SceneSchool from "../components/journey/SceneSchool.astro";
+import SceneDrill from "../components/journey/SceneDrill.astro";
+import SceneIot from "../components/journey/SceneIot.astro";
+import SceneWeb from "../components/journey/SceneWeb.astro";
+import Stack from "../components/home/Stack.astro";
+import AboutMe from "../components/home/AboutMe.astro";
+import ContactBlock from "../components/home/ContactBlock.astro";
+import ProjectModals from "../components/ProjectModals.astro";
+import "../styles/journey.css";
+import "../styles/home.css";
+---
+
+{/* The earlier homepage, kept at /journey/ (noindex, not linked): a scroll journey: each project is a full-screen world
+    with its own look (src/styles/journey.css), driven by
+    src/scripts/journey.ts. The skills stack, about and contact
+    (src/components/home/, shared with /overview/) follow in the plain
+    site style. Project details open in modals; the ROV has its own page. */}
+<BaseLayout
+	title="Mohyar · Embedded software engineer"
+	description="Embedded software, IoT and web: an underwater ROV, a gamified programming school, a drilling simulator, ESP32 builds, and websites and Odoo ERP for businesses."
+	journey
+>
+	<meta slot="head" name="robots" content="noindex" />
+	<div class="journey">
+		<Backdrop />
+		<Rail />
+		<SceneIntro />
+		{/* the nav's Work link lands on the first world */}
+		<span id="work" aria-hidden="true"></span>
+		<SceneRov />
+		<SceneSchool />
+		<SceneDrill />
+		<SceneIot />
+		<SceneWeb />
+		<div class="j-plain">
+			<Stack journey />
+			<AboutMe journey />
+			<ContactBlock journey />
+		</div>
+	</div>
+	<ProjectModals slot="overlays" />
+	<script>
+		import "../scripts/journey.ts";
+		import "../scripts/home.ts";
+	</script>
+</BaseLayout>
