@@ -1,5 +1,5 @@
 ---
-const { eyebrow = "06 · What I work with" } = Astro.props;
+const { eyebrow = "06 · What I work with", title = "From the pin to the browser" } = Astro.props;
 // Icons: inline stroke SVGs (Lucide-style paths), decorative.
 const skills = [
 	{
@@ -38,8 +38,8 @@ const skills = [
 
 <section class="j-section" id="skills" data-world="plain" data-chapter="06 · What I work with" aria-labelledby="skills-title">
 	<div class="j-section__head">
-		<p class="eyebrow">{eyebrow}</p>
-		<h2 id="skills-title">From the pin to the browser</h2>
+		{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+		<h2 id="skills-title">{title}</h2>
 	</div>
 	<ul class="skills">
 		{

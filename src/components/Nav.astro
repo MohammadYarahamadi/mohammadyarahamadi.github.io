@@ -9,7 +9,7 @@ const { journey = false } = Astro.props;
 
 const links = [
 	// Root-relative so the links also work from project pages.
-	{ href: "/projects/", label: "Work" },
+	{ href: "/projects/", label: "Projects" },
 	{ href: "/#about", label: "About" },
 	{ href: "/#contact", label: "Contact" },
 ];
@@ -30,7 +30,7 @@ const links = [
 			<ul class="nav__links">
 				{
 					links.map((link) => (
-						<li class:list={{ "nav__dup": link.label === "Contact" }}>
+						<li class:list={{ "nav__dup": link.label === "Contact", "nav__about": link.label === "About" }}>
 							<a href={link.href}>{link.label}</a>
 						</li>
 					))
@@ -159,6 +159,17 @@ const links = [
 
 		.nav__cta a {
 			padding-inline: 0.85rem;
+		}
+	}
+
+	/* small phones: About drops out (it's a scroll away on the homepage) */
+	@media (max-width: 400px) {
+		.nav__about {
+			display: none;
+		}
+
+		.nav__cta a {
+			padding-inline: 0.75rem;
 		}
 	}
 
