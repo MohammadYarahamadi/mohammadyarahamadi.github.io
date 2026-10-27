@@ -214,6 +214,14 @@
 	visibility: hidden;
 }
 
+/* full-size touch targets for fingers */
+@media (pointer: coarse) {
+	.pipe__moves button {
+		min-width: 44px;
+		min-height: 44px;
+	}
+}
+
 @media (max-width: 520px) {
 	.pipe__kpis {
 		grid-template-columns: 1fr 1fr;

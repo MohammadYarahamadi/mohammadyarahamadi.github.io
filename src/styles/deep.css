@@ -741,8 +741,9 @@ body.deep {
 
 /* the board needs about 520px, so the panel stacks before it gets squeezed */
 @media (max-width: 1100px) {
-	.d-panel--web {
-		grid-template-columns: 1fr;
+	.d-panel.d-panel--web {
+		/* minmax(0, …) so the board scrolls inside its card instead of widening it */
+		grid-template-columns: minmax(0, 1fr);
 	}
 }
 
