@@ -1,6 +1,7 @@
 ---
 import SousVideDashboard from "./islands/SousVideDashboard";
 import CameraSystemDiagram from "./islands/CameraSystemDiagram";
+import SalesPipeline from "./islands/SalesPipeline";
 
 interface Props {
 	demoComponent?: string;
@@ -11,3 +12,4 @@ const { demoComponent } = Astro.props;
 
 {demoComponent === "SousVideDashboard" && <SousVideDashboard client:visible />}
 {demoComponent === "CameraSystemDiagram" && <CameraSystemDiagram client:visible />}
+{demoComponent === "SalesPipeline" && <SalesPipeline client:visible />}
