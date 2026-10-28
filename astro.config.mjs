@@ -5,10 +5,11 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  // Served by GitHub Pages from a subfolder: mohyarp.github.io/portfolio-website/.
-  // With a custom domain (or a repo named mohyarp.github.io), set base to "/".
+  // Served by GitHub Pages from the user-site repo (mohyarp.github.io), so at
+  // the domain root. If the site ever moves into a subfolder (a repo with
+  // another name), set base to that folder, e.g. '/portfolio-website/'.
   site: 'https://mohyarp.github.io',
-  base: '/portfolio-website/',
+  base: '/',
   integrations: [react()],
   vite: {
     build: {
