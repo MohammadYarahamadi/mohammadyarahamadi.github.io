@@ -1,4 +1,5 @@
 ---
+import { url } from "../../lib/url";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Contact from "../../components/Contact.astro";
 import { getEntry } from "astro:content";
@@ -65,7 +66,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 >
 	<div class="d-sea" aria-hidden="true">
 		{vibes.map((v) => <div class={`d-sea__layer d-sea__layer--${v.id}`}></div>)}
-		<img class="d-sea__photo" src="/media/rov-deep.jpg" alt="" width="640" height="360" />
+		<img class="d-sea__photo" src={url("/media/rov-deep.jpg")} alt="" width="640" height="360" />
 		<div class="d-sea__rays"></div>
 		{
 			particles.map((p) => (
@@ -204,7 +205,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 	    src/scripts/deepDive.ts maps scroll to 0–30 m here and lazy-loads the
 	    3D scene from the ROV page (src/scripts/descentScene.ts). */}
 	<section class="d-dive" id="dive" aria-labelledby="dive-title">
-		<video class="d-dive__deep" id="d-deepbg" src="/media/rov-deep.mp4" poster="/media/rov-deep.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+		<video class="d-dive__deep" id="d-deepbg" src={url("/media/rov-deep.mp4")} poster={url("/media/rov-deep.jpg")} muted loop playsinline preload="none" aria-hidden="true"></video>
 		<div class="d-dive__layout">
 			<div class="d-dive__story">
 				<section class="d-sec" data-depth="0" data-cap="At the surface">
@@ -248,7 +249,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 					</p>
 					<figure class="d-feed">
 						<div class="d-feed__frame">
-							<video id="d-feed" src="/media/rov-feed.mp4" poster="/media/rov-feed.jpg" muted loop playsinline preload="metadata" aria-label="Footage from the ROV's camera: a school of fish around a structure's leg, with the tether in view"></video>
+							<video id="d-feed" src={url("/media/rov-feed.mp4")} poster={url("/media/rov-feed.jpg")} muted loop playsinline preload="metadata" aria-label="Footage from the ROV's camera: a school of fish around a structure's leg, with the tether in view"></video>
 							<span class="d-feed__tag"><i></i>IP camera · on the laptop</span>
 						</div>
 						<figcaption class="d-muted">The ROV's own camera: fish around the legs of an offshore platform, with the yellow tether in view.</figcaption>
@@ -310,7 +311,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 
 			<div class="d-dive__stagecol" aria-hidden="true">
 				<div class="d-stage" id="d-stage">
-					<img class="d-stage__poster" alt="" src="/models/rov-poster.webp" width="1000" height="640" loading="lazy" />
+					<img class="d-stage__poster" alt="" src={url("/models/rov-poster.webp")} width="1000" height="640" loading="lazy" />
 					<span class="d-stage__status" id="d-status" role="status"></span>
 					<span class="d-stage__cap" id="d-cap">At the surface</span>
 					<div class="d-gauge" id="d-gauge">

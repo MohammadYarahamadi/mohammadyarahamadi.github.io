@@ -1,4 +1,5 @@
 ---
+import { url } from "../../lib/url";
 const specs = [
 	["Raspberry Pi 5", "Connections and sensors"],
 	["ESP32", "PWM to six thrusters"],
@@ -29,7 +30,7 @@ const specs = [
 				}
 			</dl>
 			<div class="j-actions rv" style="--d:300ms">
-				<a class="btn btn--primary" href="/projects/rov/">
+				<a class="btn btn--primary" href={url("/projects/rov/")}>
 					Take the 3D dive
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
 				</a>
@@ -38,7 +39,7 @@ const specs = [
 		<div class="rov-visual rv" style="--d:200ms">
 			<img
 				class="float"
-				src="/models/rov-poster.webp"
+				src={url("/models/rov-poster.webp")}
 				alt="The ROV in the team's light-blue livery, seen from the front"
 				width="1200"
 				height="800"

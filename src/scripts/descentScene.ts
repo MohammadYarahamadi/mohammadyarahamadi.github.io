@@ -47,7 +47,7 @@ import {
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
-const MODEL_URL = "/models/rov-v2.glb";
+const MODEL_URL = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/models/rov-v2.glb`;
 
 export interface SceneOpts {
 	stage: HTMLElement;

@@ -1,4 +1,5 @@
 ---
+import { url } from "../lib/url";
 const year = new Date().getFullYear();
 ---
 
@@ -7,10 +8,10 @@ const year = new Date().getFullYear();
 		<p>&copy; {year} Mohyar · Embedded Software Engineer</p>
 		<nav aria-label="Footer">
 			<ul>
-				<li><a href="/projects/">Projects</a></li>
-				<li><a href="/#about">About</a></li>
-				<li><a href="/#contact">Contact</a></li>
-				<li><a href="/overview/">1-minute overview</a></li>
+				<li><a href={url("/projects/")}>Projects</a></li>
+				<li><a href={url("/#about")}>About</a></li>
+				<li><a href={url("/#contact")}>Contact</a></li>
+				<li><a href={url("/overview/")}>1-minute overview</a></li>
 			</ul>
 		</nav>
 	</div>

@@ -1,4 +1,5 @@
 ---
+import { url } from "../lib/url";
 interface Props {
 	/** The homepage journey: adds the chapter pill and the progress bar, and
 	    lets the header take its colours from the active world. */
@@ -9,16 +10,16 @@ const { journey = false } = Astro.props;
 
 const links = [
 	// Root-relative so the links also work from project pages.
-	{ href: "/projects/", label: "Projects" },
-	{ href: "/#about", label: "About" },
-	{ href: "/#contact", label: "Contact" },
+	{ href: url("/projects/"), label: "Projects" },
+	{ href: url("/#about"), label: "About" },
+	{ href: url("/#contact"), label: "Contact" },
 ];
 ---
 
 <header class:list={["nav", { "nav--journey": journey }]}>
 	{journey && <div class="nav__progress" id="j-progress" aria-hidden="true"></div>}
 	<div class="nav__inner">
-		<a href="/#top" class="nav__brand">mohyar<span>_</span></a>
+		<a href={url("/#top")} class="nav__brand">mohyar<span>_</span></a>
 		{
 			journey && (
 				<p class="nav__chapter" id="j-chapter" aria-live="polite">
@@ -36,7 +37,7 @@ const links = [
 					))
 				}
 				<li class="nav__cta">
-					<a href="/#contact">Get in touch</a>
+					<a href={url("/#contact")}>Get in touch</a>
 				</li>
 			</ul>
 		</nav>

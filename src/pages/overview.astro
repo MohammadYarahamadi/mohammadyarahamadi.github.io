@@ -1,4 +1,5 @@
 ---
+import { url } from "../lib/url";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectModals from "../components/ProjectModals.astro";
 import Stack from "../components/home/Stack.astro";
@@ -100,12 +101,12 @@ const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 				</div>
 			</div>
 
-			<a class="h-hero__visual" href="/projects/rov/" aria-label="ROV project: take the 3D dive">
+			<a class="h-hero__visual" href={url("/projects/rov/")} aria-label="ROV project: take the 3D dive">
 				<div class="h-hud" aria-hidden="true">
 					<span>ROV · flagship</span>
 					<span>Max depth 30 m</span>
 				</div>
-				<img src="/models/rov-poster.webp" alt="" width="1000" height="640" fetchpriority="high" />
+				<img src={url("/models/rov-poster.webp")} alt="" width="1000" height="640" fetchpriority="high" />
 				<div class="h-hud h-hud--bottom" aria-hidden="true">
 					<span>716 × 550 × 120 mm</span>
 					<span class="h-hud__cta">Take the 3D dive →</span>
@@ -140,7 +141,7 @@ const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 			<!-- Featured: ROV -->
 			<article class="h-feature" id="rov" aria-labelledby="rov-title">
 				<figure class="h-feed">
-					<video src="/media/rov-feed.mp4" poster="/media/rov-feed.jpg" muted loop playsinline preload="none" width="640" height="360" data-feed aria-label="Footage from the ROV's camera"></video>
+					<video src={url("/media/rov-feed.mp4")} poster={url("/media/rov-feed.jpg")} muted loop playsinline preload="none" width="640" height="360" data-feed aria-label="Footage from the ROV's camera"></video>
 					<div class="h-feed__hud" aria-hidden="true">
 						<span class="h-rec">CAM</span>
 						<span>ROV camera</span>
@@ -162,7 +163,7 @@ const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 						<div><dt>Safety</dt><dd>Leak sensor: it surfaces by itself</dd></div>
 					</dl>
 					<div class="h-case-actions">
-						<a class="btn btn--primary" href="/projects/rov/">
+						<a class="btn btn--primary" href={url("/projects/rov/")}>
 							Take the 3D dive
 							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={arrow} />
 						</a>

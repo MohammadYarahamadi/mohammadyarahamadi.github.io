@@ -1,4 +1,5 @@
 ---
+import { url } from "../../lib/url";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/descent.css";
 ---
@@ -13,7 +14,7 @@ import "../../styles/descent.css";
 	bodyClass="descent"
 >
 	<div class="rays" aria-hidden="true"></div>
-	<video class="deepbg" id="deepbg" src="/media/rov-deep.mp4" poster="/media/rov-deep.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+	<video class="deepbg" id="deepbg" src={url("/media/rov-deep.mp4")} poster={url("/media/rov-deep.jpg")} muted loop playsinline preload="none" aria-hidden="true"></video>
 	<canvas id="particles" aria-hidden="true"></canvas>
 
 	<div class="sky">
@@ -61,7 +62,7 @@ import "../../styles/descent.css";
 					<p class="muted">Commands go down: controller to laptop, over Wi-Fi to the modem buoy, down the tether to a switch inside the ROV, then to the Raspberry Pi. The Pi decodes them and sends PWM values to the ESP32, which drives the thrusters. The camera's video takes the same network back up to the laptop.</p>
 					<figure class="feed">
 						<div class="feed__frame">
-							<video id="feed" src="/media/rov-feed.mp4" poster="/media/rov-feed.jpg" muted loop playsinline preload="metadata" aria-label="Footage from the ROV's camera: a school of fish around a structure's leg, with the tether in view"></video>
+							<video id="feed" src={url("/media/rov-feed.mp4")} poster={url("/media/rov-feed.jpg")} muted loop playsinline preload="metadata" aria-label="Footage from the ROV's camera: a school of fish around a structure's leg, with the tether in view"></video>
 							<span class="feed__tag"><i></i>IP camera · on the laptop</span>
 						</div>
 						<figcaption class="muted">The ROV's own camera: fish around the legs of an offshore platform, with the yellow tether in view.</figcaption>
@@ -121,7 +122,7 @@ import "../../styles/descent.css";
 					<p class="muted">Driven with a controller, with live camera video on the laptop and a leak sensor that brings it back up on its own, taken down to 30 m.</p>
 					<div class="links">
 						<a class="btn" href="#top" data-top>Back to the surface</a>
-						<a class="btn btn--ghost" href="/#projects">All projects</a>
+						<a class="btn btn--ghost" href={url("/#projects")}>All projects</a>
 					</div>
 					<p class="muted">Want to talk about it? <span class="email">mohyar1380@gmail.com</span></p>
 				</div>
@@ -130,7 +131,7 @@ import "../../styles/descent.css";
 
 		<div class="stage-col" aria-hidden="true">
 			<div class="stage" id="stage">
-				<img class="stage__poster" alt="" src="/models/rov-poster.webp" width="1000" height="640">
+				<img class="stage__poster" alt="" src={url("/models/rov-poster.webp")} width="1000" height="640">
 				<span class="stage__status" id="status" role="status">Loading 3D model…</span>
 				<span class="stage__cap" id="cap">At the surface</span>
 			</div>

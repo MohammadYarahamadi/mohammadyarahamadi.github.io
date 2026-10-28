@@ -1,4 +1,5 @@
 ---
+import { url } from "../lib/url";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Skills from "../components/journey/Skills.astro";
 import About from "../components/About.astro";
@@ -79,7 +80,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 			{
 				doors.map((d) => (
 					<li class={`d-door d-door--${d.id}`}>
-						<a href={`/projects/?vibe=${d.id}`}>
+						<a href={url(`/projects/?vibe=${d.id}`)}>
 							<span class="d-door__title">{d.title}</span>
 							<span class="d-door__text">{d.text}</span>
 							<span class="d-door__go" aria-hidden="true">Enter →</span>
@@ -88,7 +89,7 @@ const particles = Array.from({ length: 18 }, (_, i) => ({
 				))
 			}
 		</ul>
-		<a class="btn btn--primary d-doors__all" href="/projects/">Browse all projects →</a>
+		<a class="btn btn--primary d-doors__all" href={url("/projects/")}>Browse all projects →</a>
 	</section>
 
 	<div class="j-plain d-plain">
